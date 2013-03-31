@@ -101,6 +101,7 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			'URL', 'IMG',
 			'MEDIA',
 			'CODE', 'PHP',
+			'TAG', // check for our own bb code tag
 			'VIDEO', /* legacy support */
 		);
 
@@ -125,7 +126,7 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			}
 		}
 		
-		return $found;
+		return false;
 	}
 	
 }

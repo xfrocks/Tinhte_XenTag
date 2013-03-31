@@ -30,7 +30,7 @@ class Tinhte_XenTag_FileSums
   'library/Tinhte/XenTag/XenForo/DataWriter/Discussion/Thread.php' => 'a5e0bbe70761d05d981b8edc575c0d16',
   'library/Tinhte/XenTag/XenForo/DataWriter/DiscussionMessage/Post.php' => '8e67e7f6cf0377750713e3f772c82854',
   'library/Tinhte/XenTag/XenForo/Importer/vBulletin.php' => 'd7f2a864ac255f674eb0cb25326c97fd',
-  'library/Tinhte/XenTag/XenForo/Model/Post.php' => '4a164f315c745b8adf01ba8bbe86b752',
+  'library/Tinhte/XenTag/XenForo/Model/Post.php' => '224f0180b2756be1d0afc8439a3c3477',
   'library/Tinhte/XenTag/XenForo/Model/Search.php' => '1fa5ba9ec0f133477fdb2bd61a17ddfb',
   'library/Tinhte/XenTag/XenForo/Search/DataHandler/Post.php' => '234908da2a6ed03c898b7dcd2578830a',
   'library/Tinhte/XenTag/XenForo/Search/DataHandler/Thread.php' => '45963f3e334c124d866cadf35c8de226',
