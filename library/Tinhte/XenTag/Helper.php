@@ -36,13 +36,37 @@ class Tinhte_XenTag_Helper {
 	}
 	
 	public static function explodeTags($tagsStr) {
-		// sondh@2012-08-12
-		// try to use mb_split if possible to avoid splitting the wrong separator in UTF8 strings
-		if (function_exists('mb_split')) {
-			return mb_split(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $tagsStr);
-		} else {
-			return preg_split('/' . Tinhte_XenTag_Constants::REGEX_SEPARATOR . '/', $tagsStr, -1, PREG_SPLIT_NO_EMPTY);
+		// sondh@2013-03-27
+		// process the string manually to make sure unicode character works
+		$len = utf8_strlen($tagsStr);
+		$tags = array();
+		
+		$start = 0;
+		$i = 0;
+		while ($i <= $len) {
+			if ($i < $len) {
+				$char = utf8_substr($tagsStr, $i, 1);
+			} else {
+				$char = false;
+			}
+			
+			if ($char === false OR preg_match('/^' . Tinhte_XenTag_Constants::REGEX_SEPARATOR . '$/', $char)) {
+				// this is a separator
+				$tagLen = $i - $start;
+				if ($tagLen > 0) {
+					$tags[] = utf8_substr($tagsStr, $start, $tagLen);
+				}
+				
+				// skip the separator for the next tag
+				$start = $i + 1;
+			} else {
+				// this is some other character
+			}
+			
+			$i++;
 		}
+		
+		return $tags;
 	}
 	
 	public static function isTagContainingSeparator($tagText) {
