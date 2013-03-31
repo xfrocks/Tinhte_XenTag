@@ -171,6 +171,7 @@ class Tinhte_XenTag_Integration {
 		
 		foreach ($tags as $tag) {
 			$offset = 0;
+			$tagLength = utf8_strlen($tag);
 			
 			while (true) {
 				$pos = Tinhte_XenTag_Helper::utf8_stripos($html, $tag, $offset);
@@ -184,9 +185,9 @@ class Tinhte_XenTag_Integration {
 						// start replacing
 						$replacement = '<a href="'
 							. XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), $tag)
-							. '">' . utf8_substr($html, $pos, strlen($tag)) . '</a>';
+							. '">' . utf8_substr($html, $pos, $tagLength) . '</a>';
 						
-						$html = utf8_substr_replace($html, $replacement, $pos, strlen($tag));
+						$html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
 						
 						$offset = $pos + utf8_strlen($replacement);
 						
@@ -196,7 +197,7 @@ class Tinhte_XenTag_Integration {
 							break; // while (true)
 						}
 					} else {
-						$offset = $pos + utf8_strlen($tag);
+						$offset = $pos + $tagLength;
 					}
 				} else {
 					// no match has been found, stop working with this tag
@@ -212,7 +213,7 @@ class Tinhte_XenTag_Integration {
 		$htmlLength = utf8_strlen($html);
 		
 		// look for <a> and </a>
-		$aBefore = Tinhte_XenTag_Helper::utf8_strripos($html, '<a>', $position - $htmlLength);
+		$aBefore = Tinhte_XenTag_Helper::utf8_strripos($html, '<a', $position - $htmlLength);
 		if ($aBefore !== false) {
 			$aAfter = Tinhte_XenTag_Helper::utf8_stripos($html, '</a>', $aBefore);
 			
