@@ -7,7 +7,17 @@ class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_A
 	protected function _insertIntoIndex(XenForo_Search_Indexer $indexer, array $data, array $parentData = null) {
 		$metadata = array();
 		
-		$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+		if (isset($data[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS])) {
+			// sondh@2012-11-05
+			// added isset check before trying to unserialize the tags
+			// or this may raise an exception (it happens because
+			// XenForo_DataWriter::getMergedData doesn't return an array with all the fields
+			// the array only includes new or existing data...
+			$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+		} else {
+			$tags = array();
+		}
+		
 		$metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags);
 		
 		$indexer->insertIntoIndex(
