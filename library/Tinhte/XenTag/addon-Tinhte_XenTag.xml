@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.1" version_id="34" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.1.1" version_id="35" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -21,6 +21,24 @@
 	
 	<input type="hidden" name="_xfConfirm" value="1" />
 </xen:form>]]></template>
+    <template title="tinhte_xentag_hook_admin_forum_edit_panes"><![CDATA[<li>
+	<xen:radiounit label="{xen:phrase option_Tinhte_XenTag_requiresTag}" name="tinhte_xentag_options[requiresTag]" value="{$forum.tinhte_xentag_options.requiresTag}" explain="{xen:phrase tinhte_xentag_forum_requires_tag_explain}">
+		<xen:option value="">{xen:phrase default} ({xen:if '{xen:helper Tinhte_XenTag_getOption, requiresTag} > 0', '{xen:phrase yes}', '{xen:phrase no}'})</xen:option>
+		<xen:option value="1">{xen:phrase yes}</xen:option>
+		<xen:option value="0">{xen:phrase no}</xen:option>
+	</xen:radiounit>
+	
+	<xen:radiounit label="{xen:phrase option_Tinhte_XenTag_maximumTags}" name="tinhte_xentag_options[maximumTags]" explain="{xen:phrase tinhte_xentag_forum_maximum_tags_explain}">
+		<xen:option value="" selected="{$forum.tinhte_xentag_options.maximumTags} == ''">{xen:phrase default} ({xen:if '{xen:helper Tinhte_XenTag_getOption, maximumTags} > 0', '{xen:helper Tinhte_XenTag_getOption, maximumTags}', '{xen:phrase unlimited}'})</xen:option>
+		<xen:option value="other" selected="{$forum.tinhte_xentag_options.maximumTags} != ''" inputclass="Disabler">{xen:phrase other}</xen:option>
+		<xen:html>
+			<div id="ctrl_tinhte_xentag_optionsmaximumTags_other_Disabler">
+				<xen:spinbox name="tinhte_xentag_options_maximumTags_value" value="{xen:calc '{$forum.tinhte_xentag_options.maximumTags} + 0'}" inputclass="OptOut" />
+			</div>
+		</xen:html>
+	</xen:radiounit>
+</li>]]></template>
+    <template title="tinhte_xentag_hook_admin_forum_edit_tabs"><![CDATA[<li><a>{xen:phrase tinhte_xentag_tags}</a></li>]]></template>
     <template title="tinhte_xentag_tag_delete"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_confirm_deletion}: {$tag.tag_text}</xen:title>
 <xen:h1>{xen:phrase tinhte_xentag_tag_confirm_deletion}</xen:h1>
 
@@ -149,6 +167,19 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
       <relation group_id="discussionOptions" display_order="12100"/>
       <relation group_id="Tinhte_XenTag" display_order="100"/>
     </option>
+    <option option_id="Tinhte_XenTag_maximumTags" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>10</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="60"/>
+    </option>
+    <option option_id="Tinhte_XenTag_requiresTag" edit_format="radio" data_type="unsigned_integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>1 = {xen:phrase yes}
+0 = {xen:phrase no}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="50"/>
+    </option>
     <option option_id="Tinhte_XenTag_tagMaxLength" edit_format="spinbox" data_type="positive_integer" can_backup="1" validation_class="Tinhte_XenTag_Option" validation_method="verifyTagMaxLength">
       <default_value>50</default_value>
       <edit_format_params></edit_format_params>
@@ -178,6 +209,10 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="15" version_string="0.9.8.5"><![CDATA[Enable this option to auto tag a tag once per post only.]]></phrase>
     <phrase title="option_Tinhte_XenTag_displayPosition" version_id="5" version_string="0.9.4"><![CDATA[Display Position]]></phrase>
     <phrase title="option_Tinhte_XenTag_displayPosition_explain" version_id="5" version_string="0.9.4"><![CDATA[[Tinhte] XenTag's display position. The tag will be displayed in the specified place only.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_maximumTags" version_id="34" version_string="1.1"><![CDATA[Maximum Tags]]></phrase>
+    <phrase title="option_Tinhte_XenTag_maximumTags_explain" version_id="34" version_string="1.1"><![CDATA[Set the maximum tags can be tagged in a thread. Set to 0 (zero) to have no limit. This option can be overridden in individual forum by updating its option to override global setting.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_requiresTag" version_id="34" version_string="1.1"><![CDATA[Requires Tag]]></phrase>
+    <phrase title="option_Tinhte_XenTag_requiresTag_explain" version_id="34" version_string="1.1"><![CDATA[Select "Yes" to require at least one tag in a new thread. This option can be overridden in individual forum by updating its option to override global setting.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength" version_id="6" version_string="0.9.5"><![CDATA[Maximum Tag Length]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength_explain" version_id="6" version_string="0.9.5"><![CDATA[You can set the maximum tag length here. There is a hard limitation of 100, you can't exceed it (the database can only hold a maximum of 100 characters).]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tag" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by self]]></phrase>
@@ -195,6 +230,8 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
     <phrase title="tinhte_xentag_display_position_post_message_below" version_id="5" version_string="0.9.4"><![CDATA[Below first post]]></phrase>
     <phrase title="tinhte_xentag_display_position_thread_qr_below" version_id="5" version_string="0.9.4"><![CDATA[Bottom of thread page]]></phrase>
     <phrase title="tinhte_xentag_edit_tags" version_id="1" version_string="0.9"><![CDATA[Edit Tags]]></phrase>
+    <phrase title="tinhte_xentag_forum_maximum_tags_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Set the maximum tags can be tagged in a thread. Set to 0 (zero) to have no limit.]]></phrase>
+    <phrase title="tinhte_xentag_forum_requires_tag_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Select Yes to requires at least one tag in a new thread.]]></phrase>
     <phrase title="tinhte_xentag_no_contents_has_been_found" version_id="1" version_string="0.9"><![CDATA[No contents has been found]]></phrase>
     <phrase title="tinhte_xentag_no_tags" version_id="5" version_string="0.9.4"><![CDATA[No tags]]></phrase>
     <phrase title="tinhte_xentag_please_confirm_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Please confirm that you want to delete ALL empty tags (without any contents tagged).]]></phrase>
@@ -217,9 +254,11 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
     <phrase title="tinhte_xentag_tag_not_found" version_id="1" version_string="0.9"><![CDATA[The requested Tag could not be found]]></phrase>
     <phrase title="tinhte_xentag_tag_no_results" version_id="1" version_string="0.9"><![CDATA[No clues of Tag at this moment...]]></phrase>
     <phrase title="tinhte_xentag_tag_please_confirm" version_id="1" version_string="0.9"><![CDATA[Please confirm that you want to delete the following Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_required" version_id="34" version_string="1.1"><![CDATA[This thread must be tagged with at least one tag.]]></phrase>
     <phrase title="tinhte_xentag_tag_save" version_id="1" version_string="0.9"><![CDATA[Save Tag]]></phrase>
     <phrase title="tinhte_xentag_tag_text" version_id="1" version_string="0.9"><![CDATA[Tag Text]]></phrase>
     <phrase title="tinhte_xentag_these_are_x_most_used_tags" version_id="1" version_string="0.9"><![CDATA[These are the {count} most used tags.]]></phrase>
+    <phrase title="tinhte_xentag_too_many_tags_x_of_y" version_id="34" version_string="1.1"><![CDATA[This thread has been tagged with too many tags ({count}) while the maximum number of tags allowed is only {maximum}.]]></phrase>
     <phrase title="tinhte_xentag_you_can_not_create_new_tag" version_id="5" version_string="0.9.4"><![CDATA[Sorry, you do not have the permission to create new tag. Please use existing tags only.]]></phrase>
   </phrases>
   <route_prefixes>

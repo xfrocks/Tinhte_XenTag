@@ -66,6 +66,8 @@ class Tinhte_XenTag_Integration {
 				}
 			}
 		}
+		
+		return count($existingTags) + count($newTags) - count($removedTags);
 	}
 	
 	public static function deleteTags($contentType, $contentId, XenForo_DataWriter $dw) {
@@ -85,6 +87,8 @@ class Tinhte_XenTag_Integration {
 			$dwTagged->setExistingData($data, true);
 			$dwTagged->delete();
 		}
+		
+		return count($existingTags);
 	}
 	
 	public static function insertIntoIndex(array $tags, XenForo_Search_DataHandler_Abstract $sdh) {

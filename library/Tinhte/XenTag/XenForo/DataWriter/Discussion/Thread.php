@@ -26,9 +26,24 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		// in import mode)
 		if ($this->_tagsNeedUpdated) {
 			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
-			Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tags, $this);
+			$tagsCount = Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tags, $this);
 			
 			$this->_tagsNeedUpdated = false;
+			
+			$forum = $this->_getForumData();
+			$options = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
+			$requiresTag = Tinhte_XenTag_Option::get('requiresTag');
+			$maximumTags = Tinhte_XenTag_Option::get('maximumTags');
+			if (isset($options['requiresTag']) AND $options['requiresTag'] !== '') $requiresTag = $options['requiresTag'];
+			if (isset($options['maximumTags']) AND $options['maximumTags'] !== '') $maximumTags = $options['maximumTags'];
+			
+			if ($requiresTag AND $tagsCount == 0) {
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_tag_required'), true);
+			}
+			
+			if ($maximumTags > 0 AND $tagsCount > $maximumTags) {
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_tags_x_of_y', array('maximum' => $maximumTags, 'count' => $tagsCount)), true);
+			}
 		}
 	}
 	

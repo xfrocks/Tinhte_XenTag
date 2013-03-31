@@ -6,6 +6,8 @@ class Tinhte_XenTag_Listener {
 		static $classes = array(
 			'XenForo_BbCode_Formatter_Base',
 
+			'XenForo_ControllerAdmin_Forum',
+		
 			'XenForo_ControllerPublic_Forum',
 			'XenForo_ControllerPublic_Post',
 			'XenForo_ControllerPublic_Search',
@@ -13,6 +15,7 @@ class Tinhte_XenTag_Listener {
 		
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
+			'XenForo_DataWriter_Forum',
 		
 			'XenForo_Model_Post',
 			'XenForo_Model_Search',
@@ -97,6 +100,9 @@ class Tinhte_XenTag_Listener {
 	
 	public static function template_hook($hookName, &$contents, array $hookParams, XenForo_Template_Abstract $template) {
 		switch ($hookName) {
+			case 'admin_forum_edit_tabs':
+			case 'admin_forum_edit_panes':
+			
 			case 'message_content':
 			case 'message_notices':
 			case 'post_private_controls':
