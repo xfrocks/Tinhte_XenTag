@@ -52,7 +52,14 @@ class Tinhte_XenTag_PostMessageWrapper {
 			// the thread tags are merged because sometimes the global tags are not the full list
 			$threadTags = Tinhte_XenTag_Helper::unserialize($this->_thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 			$globalTags = $this->_getTagModel()->getTagTextsFromCache();
-			$tags = array_unique(array_merge($threadTags, $globalTags));
+			
+			$tags = array();
+			foreach ($threadTags as $threadTag) {
+				$tags[Tinhte_XenTag_Helper::getNormalizedTagText($threadTag)] = $threadTag;
+			}
+			foreach ($globalTags as $globalTag) {
+				$tags[Tinhte_XenTag_Helper::getNormalizedTagText($globalTag)] = $globalTag;
+			}
 		}
 		
 		if ($mode == Tinhte_XenTag_Option::AUTO_TAG_MODE_THREAD_TAGS_FIRST_POST_ONLY
