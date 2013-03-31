@@ -140,7 +140,7 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			return true;
 		} else {
 			$c = substr($message, $pos, 1);
-			if (!preg_match('/[\s\(\)\.,!\?:;@\\\\]/', $c)) {
+			if (!preg_match('/[\s\(\)\.,!\?:;@\\\\\[\]{}]/', $c)) {
 				return true;
 			}
 		}

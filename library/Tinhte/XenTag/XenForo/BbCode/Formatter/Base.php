@@ -38,11 +38,19 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
 			'tag_text' => $tagText,
 		);
 
-		$template = $this->_view->createTemplateObject('tinhte_xentag_bb_code_tag_tag', array(
-			'tag' => $tag,
-			'displayText' => $displayText,
-		));
-		return $template->render();
+		if ($this->_view) {
+			$template = $this->_view->createTemplateObject('tinhte_xentag_bb_code_tag_tag', array(
+				'tag' => $tag,
+				'displayText' => $displayText,
+			));
+			return $template->render();
+		} else {
+			// sometime we don't have a view
+			// so just render everything ourself...
+			return '<a href="'
+				. XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), $tag)
+				. '">' . htmlentities($displayText) . '</a>';
+		}
 	}
 	
 }
