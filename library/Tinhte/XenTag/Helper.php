@@ -72,6 +72,16 @@ class Tinhte_XenTag_Helper {
 		return self::_getImplodedTags($tags, $getLinks);
 	}
 	
+	public static function getImplodedTagsFromForum($forum, $getLinks = false) {
+		if (is_array($forum) AND isset($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS])) {
+			$tags = self::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+		} else {
+			$tags = array();
+		}
+		
+		return self::_getImplodedTags($tags, $getLinks);
+	}
+	
 	protected static function _getImplodedTags(array $tags, $getLinks = false) {
 		$result = array();
 		

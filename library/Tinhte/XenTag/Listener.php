@@ -19,6 +19,7 @@ class Tinhte_XenTag_Listener {
 			'XenForo_DataWriter_Forum',
 			'XenForo_DataWriter_Page',
 		
+			'XenForo_Model_Forum',
 			'XenForo_Model_Post',
 			'XenForo_Model_Page',
 			'XenForo_Model_Search',
@@ -55,11 +56,13 @@ class Tinhte_XenTag_Listener {
 
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromthread'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromThread');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfrompage'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromPage');
+		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromforum'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromForum');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getoption'] = array('Tinhte_XenTag_Helper', 'getOption');
 	}
 
 	public static function template_create($templateName, array &$params, XenForo_Template_Abstract $template) {
 		switch ($templateName) {
+			case 'forum_view':
 			case 'post_edit':
 			case 'search_form':
 			case 'search_form_post':
@@ -106,6 +109,7 @@ class Tinhte_XenTag_Listener {
 	
 	public static function template_post_render($templateName, &$content, array &$containerData, XenForo_Template_Abstract $template) {
 		switch ($templateName) {
+			case 'forum_view':
 			case 'post_edit':
 			case 'search_form':
 			case 'search_form_post':	

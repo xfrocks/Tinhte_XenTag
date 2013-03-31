@@ -33,13 +33,23 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 	
 	protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template) {
 		$threads = array();
-		
-		if (isset($params['thread'])) {
-			// $thread is found in the template params
-			// assuming we are in the correct template (thread_view or something similar)
-			// start working
+		//var_dump(array_keys($params));exit;
+		if (isset($params['thread']) AND !empty($params['thread']['thread_id'])) {
+			// $thread is found in the template params, try to fetch the tags
 			$tagsText = Tinhte_XenTag_Helper::unserialize($params['thread'][Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-			
+		}
+		if (empty($tagsText) AND isset($params['page']) AND !empty($params['page']['node_id'])) {
+			// fetch page's tags
+			$tagsText = Tinhte_XenTag_Helper::unserialize($params['page'][Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+		}
+		if (empty($tagsText) AND is_array($params['forum']) AND !empty($params['forum']['node_id'])) {
+			// fetch forum's tags
+			$tagsText = Tinhte_XenTag_Helper::unserialize($params['forum'][Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+		}
+		
+		if (true) {
+			// hacky way to keep repo history
+			// I simply don't want to unindent this block of code
 			if (!empty($tagsText)) {
 				$core = WidgetFramework_Core::getInstance();
 				
@@ -66,7 +76,11 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 						foreach ($latest as $taggedContent) {
 							if ($taggedContent['content_type'] == 'thread') {
 								// ignore current thread id, obviously!!!
-								if ($taggedContent['content_id'] == $params['thread']['thread_id']) continue;
+								if (!empty($params['thread']['thread_id'])
+									AND $taggedContent['content_id'] == $params['thread']['thread_id']
+								) {
+									continue;
+								}
 								
 								$threadIds[] = $taggedContent['content_id'];
 							}

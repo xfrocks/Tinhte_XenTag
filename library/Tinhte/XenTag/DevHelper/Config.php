@@ -57,7 +57,8 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 			'tag_description' => array('name' => 'tag_description', 'type' => 'string')
 		),
 		'xf_forum' => array(
-			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized')
+			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized'),
+			'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized')
 		),
 		'xf_page' => array(
 			'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized')

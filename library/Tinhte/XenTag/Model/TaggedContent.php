@@ -9,6 +9,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 		
 		$this->_deleteTaggedContentsThreads($tag, $taggeds);
 		$this->_deleteTaggedContentsPages($tag, $taggeds);
+		$this->_deleteTaggedContentsForums($tag, $taggeds);
 	}
 	
 	protected function _deleteTaggedContentsThreads(array $tag, array $taggeds) {
@@ -54,7 +55,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 		
 		$nodeIds = array();
 		foreach ($taggeds as $tagged) {
-			if ($tagged['content_type'] == 'tinhte_xentag_page') {
+			if ($tagged['content_type'] == Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE) {
 				$nodeIds[] = $tagged['content_id'];
 			}
 		}
@@ -80,6 +81,43 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 				$dw->setExistingData($page, true); // save queries
 				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
 				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Page::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
+				$dw->save();
+			}
+		}
+	}
+	
+	protected function _deleteTaggedContentsForums(array $tag, array $taggeds) {
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+		$forumModel = $this->getModelFromCache('XenForo_Model_Forum');
+		
+		$nodeIds = array();
+		foreach ($taggeds as $tagged) {
+			if ($tagged['content_type'] == Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM) {
+				$nodeIds[] = $tagged['content_id'];
+			}
+		}
+		
+		$forums = $pageModel->Tinhte_XenTag_getForumsByIds($nodeIds);
+		
+		foreach ($forums as $forum) {
+			$tagTexts = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+			$filteredTagTexts = array();
+			
+			foreach ($tagTexts as $tagText) {
+				if ($tagModel->isTagIdenticalWithText($tag, $tagText)) {
+					// drop this tag
+				} else {
+					$filteredTagTexts[] = $tagText;
+				}
+			}
+			
+			if (count($tagTexts) != count($filteredTagTexts)) {
+				/* @var $dw XenForo_DataWriter_Discussion_Thread*/
+				$dw = XenForo_DataWriter::create('XenForo_DataWriter_Forum');
+				
+				$dw->setExistingData($forum, true); // save queries
+				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
+				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Forum::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
 				$dw->save();
 			}
 		}

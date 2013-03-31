@@ -1,20 +1,20 @@
 <?php
 
-class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_Abstract {
+class Tinhte_XenTag_Search_DataHandler_Forum extends XenForo_Search_DataHandler_Abstract {
 	
-	protected $_pageModel = null;
+	protected $_forumModel = null;
 
 	protected function _insertIntoIndex(XenForo_Search_Indexer $indexer, array $data, array $parentData = null) {
 		$metadata = array();
 		
-		if (isset($data[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS])) {
+		if (isset($data[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS])) {
 			// sondh@2012-11-05
 			// added isset check before trying to unserialize the tags
 			// or this may raise an exception (it happens because
 			// XenForo_DataWriter::getMergedData doesn't return an array with all the fields
 			// the array only includes new or existing data...
-			// similar to Tinhte_XenTag_Search_DataHandler_Forum
-			$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+			// similar to Tinhte_XenTag_Search_DataHandler_Page
+			$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
 		} else {
 			$tags = array();
 		}
@@ -22,14 +22,14 @@ class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_A
 		$metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags);
 		
 		$indexer->insertIntoIndex(
-			Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $data['node_id'],
+			Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $data['node_id'],
 			$data['title'], $data['description'],
-			$data['publish_date'], XenForo_Visitor::getUserId(), 0, $metadata
+			XenForo_Application::$time, XenForo_Visitor::getUserId(), 0, $metadata
 		);
 	}
 
 	protected function _updateIndex(XenForo_Search_Indexer $indexer, array $data, array $fieldUpdates) {
-		$indexer->updateIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $data['node_id'], $fieldUpdates);
+		$indexer->updateIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $data['node_id'], $fieldUpdates);
 	}
 
 	protected function _deleteFromIndex(XenForo_Search_Indexer $indexer, array $dataList) {
@@ -39,11 +39,11 @@ class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_A
 			$ids[] = $data['node_id'];
 		}
 
-		$indexer->deleteFromIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $ids);
+		$indexer->deleteFromIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $ids);
 	}
 
 	public function rebuildIndex(XenForo_Search_Indexer $indexer, $lastId, $batchSize) {
-		$ids = $this->_getPageModel()->Tinhte_XenTag_getPageIdsInRange($lastId, $batchSize);
+		$ids = $this->_getForumModel()->Tinhte_XenTag_getForumIdsInRange($lastId, $batchSize);
 		
 		if (!$ids) {
 			return false;
@@ -55,48 +55,51 @@ class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_A
 	}
 
 	public function quickIndex(XenForo_Search_Indexer $indexer, array $contentIds) {
-		$pages = $this->_getPageModel()->Tinhte_XenTag_getPagesByIds($contentIds);
+		$forums = $this->_getForumModel()->Tinhte_XenTag_getForumsByIds($contentIds);
 
-		foreach ($pages AS $page) {
-			$this->insertIntoIndex($indexer, $page);
+		foreach ($forums AS $forum) {
+			$this->insertIntoIndex($indexer, $forum);
 		}
 
 		return true;
 	}
 
 	public function getDataForResults(array $ids, array $viewingUser, array $resultsGrouped) {
-		$pages = $this->_getPageModel()->Tinhte_XenTag_getPagesByIds($ids);
+		$forums = $this->_getForumModel()->Tinhte_XenTag_getForumsByIds($ids);
 
-		return $pages;
+		return $forums;
 	}
 
 	public function canViewResult(array $result, array $viewingUser) {
-		return true;
+		$errorPhraseKey = '';
+		$null = null;
+		
+		return $this->_getForumModel()->canViewForum($result, $errorPhraseKey, $null, $viewingUser);
 	}
 
 	public function getResultDate(array $result) {
-		return $result['publish_date'];
+		return $result['last_post_date'];
 	}
 
 	public function renderResult(XenForo_View $view, array $result, array $search) {
-		return $view->createTemplateObject('tinhte_xentag_search_result_page', array(
-			'page' => $result,
+		return $view->createTemplateObject('tinhte_xentag_search_result_forum', array(
+			'forum' => $result,
 			'search' => $search
 		));
 	}
 
 	public function getSearchContentTypes() {
-		return array(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE);
+		return array(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM);
 	}
 	
 	/**
-	 * @return XenForo_Model_Page
+	 * @return XenForo_Model_Forum
 	 */
-	protected function _getPageModel() {
-		if (!$this->_pageModel) {
-			$this->_pageModel = XenForo_Model::create('XenForo_Model_Page');
+	protected function _getForumModel() {
+		if (!$this->_forumModel) {
+			$this->_forumModel = XenForo_Model::create('XenForo_Model_Forum');
 		}
 
-		return $this->_pageModel;
+		return $this->_forumModel;
 	}
 }

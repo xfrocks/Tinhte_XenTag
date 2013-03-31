@@ -11,6 +11,9 @@ class Tinhte_XenTag_Constants {
 	
 	const URI_PARAM_TAG_TEXT = 't';
 	
+	const CONTENT_TYPE_PAGE = 'tinhte_xentag_page';
+	const CONTENT_TYPE_FORUM = 'tinhte_xentag_forum';
+	
 	const FORM_TAGS_ARRAY = 'tinhte_xentag_tags';
 	const FORM_TAGS_TEXT = 'tinhte_xentag_tags_text';
 	const FORM_INCLUDED = 'tinhte_xentag_included';
@@ -19,6 +22,7 @@ class Tinhte_XenTag_Constants {
 	const FIELD_THREAD_TAGS = 'tinhte_xentag_tags';
 	const FIELD_FORUM_OPTIONS = 'tinhte_xentag_options';
 	const FIELD_PAGE_TAGS = 'tinhte_xentag_tags';
+	const FIELD_FORUM_TAGS = 'tinhte_xentag_tags';
 	
 	const SEARCH_TYPE_TAG = 'tinhte_xentag_tag';
 	const SEARCH_SEARCH_ID = 'x'; // something cool?

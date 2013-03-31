@@ -58,6 +58,13 @@ class Tinhte_XenTag_Installer {
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_options`'
 		),
 		array(
+			'table' => 'xf_forum',
+			'field' => 'tinhte_xentag_tags',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_tags\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_tags`'
+		),
+		array(
 			'table' => 'xf_page',
 			'field' => 'tinhte_xentag_tags',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_page` LIKE \'tinhte_xentag_tags\'',
@@ -107,6 +114,8 @@ class Tinhte_XenTag_Installer {
 		
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_page\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_page\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Page\')');
+		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_forum\', \'Tinhte_XenTag\')');
+		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
 		
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
@@ -116,6 +125,7 @@ class Tinhte_XenTag_Installer {
 		
 		$db->query('DELETE FROM xf_content_type WHERE addon_id = ?', array('Tinhte_XenTag'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
+		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
 		
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}

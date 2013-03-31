@@ -15,7 +15,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Page extends XFCP_Tinhte_XenTag_XenForo_D
 		
 		if ($force OR ($this->isChanged(Tinhte_XenTag_Constants::FIELD_PAGE_TAGS) AND empty($skip))) {
 			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_PAGE_TAGS));
-			$tagsCount = Tinhte_XenTag_Integration::updateTags('tinhte_xentag_page', $this->get('node_id'), XenForo_Visitor::getUserId(), $tags, $this);
+			$tagsCount = Tinhte_XenTag_Integration::updateTags(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $this->get('node_id'), XenForo_Visitor::getUserId(), $tags, $this);
 		}
 	}
 	
@@ -66,7 +66,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Page extends XFCP_Tinhte_XenTag_XenForo_D
 	}
 	
 	protected function _postDelete() {
-		Tinhte_XenTag_Integration::deleteTags('tinhte_xentag_page', $this->get('node_id'), $this);
+		Tinhte_XenTag_Integration::deleteTags(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $this->get('node_id'), $this);
 		$this->_Tinhte_XenTag_unindexFromSearch();
 		
 		return parent::_postDelete();
