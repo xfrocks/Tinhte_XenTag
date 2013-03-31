@@ -22,6 +22,8 @@ class Tinhte_XenTag_Listener {
 			'XenForo_Model_ThreadRedirect',
 		
 			'XenForo_Search_DataHandler_Thread',
+		
+			'XenForo_ViewPublic_Thread_View',
 		);
 		
 		if (in_array($class, $classes)) {
@@ -78,6 +80,10 @@ class Tinhte_XenTag_Listener {
 			$template->preloadTemplate('tinhte_xentag_hook_thread_view_form_before');
 			$template->preloadTemplate('tinhte_xentag_hook_thread_view_qr_before');
 			$template->preloadTemplate('tinhte_xentag_hook_thread_view_qr_after');
+		}
+		
+		if ($templateName == 'post') {
+			Tinhte_XenTag_PostMessageWrapper::wrap($params);
 		}
 	}
 	

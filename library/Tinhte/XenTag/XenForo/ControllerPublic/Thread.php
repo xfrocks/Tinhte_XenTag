@@ -7,10 +7,6 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 		
 		$viewParams['Tinhte_XenTag_canEdit'] = $tagModel->canTagThread($thread, $forum);
-		
-		foreach ($posts as &$post) {
-			$post = $this->_getPostModel()->Tinhte_XenTag_doAutoTag($post, $thread);
-		}
 
 		return parent::_getDefaultViewParams($forum, $thread, $posts, $page, $viewParams);
 	}

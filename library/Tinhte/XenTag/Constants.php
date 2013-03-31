@@ -6,6 +6,7 @@ class Tinhte_XenTag_Constants {
 	const GLOBALS_CONTROLLERPUBLIC_POST_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Post::actionSave';
 	const GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH = 'Tinhte_XenTag_XenForo_ControllerPublic_Search::actionSearch';
 	const GLOBALS_CONTROLLERPUBLIC_THREAD_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionSave';
+	const GLOBALS_SEARCH_SOURCEHANDLER_LOADED = 'Tinhte_XenTag_XenForo_Search_SourceHandler::loaded';
 	
 	const FORM_TAGS_ARRAY = 'tinhte_xentag_tags';
 	const FORM_TAGS_TEXT = 'tinhte_xentag_tags_text';

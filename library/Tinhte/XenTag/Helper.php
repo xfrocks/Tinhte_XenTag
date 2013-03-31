@@ -11,6 +11,30 @@ class Tinhte_XenTag_Helper {
 		return $array;
 	}
 	
+	public static function utf8_strrpos($haystack, $needle, $offset) {
+		if (UTF8_MBSTRING) {
+			return mb_strrpos($haystack, $needle, $offset);
+		} else {
+			return strrpos($haystack, $needle, $offset);
+		}
+	}
+	
+	public static function utf8_stripos($haystack, $needle, $offset) {
+		if (UTF8_MBSTRING) {
+			return mb_stripos($haystack, $needle, $offset);
+		} else {
+			return stripos($haystack, $needle, $offset);
+		}
+	}
+	
+	public static function utf8_strripos($haystack, $needle, $offset) {
+		if (UTF8_MBSTRING) {
+			return mb_strripos($haystack, $needle, $offset);
+		} else {
+			return strripos($haystack, $needle, $offset);
+		}
+	}
+	
 	public static function explodeTags($tagsStr) {
 		// sondh@2012-08-12
 		// try to use mb_split if possible to avoid splitting the wrong separator in UTF8 strings

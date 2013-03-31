@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.2.6" version_id="46" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.2.7" version_id="46" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -128,6 +128,7 @@
     <listener event_id="load_class_importer" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_importer" active="1" description=""/>
     <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
     <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
     <listener event_id="search_source_create" execute_order="9999" callback_class="Tinhte_XenTag_Listener" callback_method="search_source_create" active="1" description=""/>
     <listener event_id="template_create" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_create" active="1" description=""/>
     <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" description=""/>

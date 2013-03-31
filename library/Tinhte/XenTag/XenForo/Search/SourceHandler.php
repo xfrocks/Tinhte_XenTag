@@ -1,4 +1,7 @@
 <?php
+
+$GLOBALS[Tinhte_XenTag_Constants::GLOBALS_SEARCH_SOURCEHANDLER_LOADED] = true;
+
 class Tinhte_XenTag_XenForo_Search_SourceHandler extends XFCP_Tinhte_XenTag_XenForo_Search_SourceHandler {
 	
 	protected static $_extraMetaData = false;
