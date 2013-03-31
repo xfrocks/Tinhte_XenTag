@@ -51,6 +51,13 @@ class Tinhte_XenTag_Integration {
 			foreach ($newTags as $newTag) {
 				$newTagData = $tagModel->getTagFromArrayByText($newButExistingTags, $newTag);
 				
+				// sondh@2012-09-21
+				// remove duplicate
+				foreach (array_keys($newTagData) as $key) {
+					$newTagData[$key] = utf8_strtolower($newTagData[$key]);
+				}
+				$newTagData = array_unique($newTagData);
+				
 				if (empty($newTagData)) {
 					if (!$canCreateNew) {
 						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);

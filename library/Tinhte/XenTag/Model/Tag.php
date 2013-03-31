@@ -157,7 +157,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				unset($newTagsText[$key]); // remove it from checking
 			} else {
 				// this will be checked further
-				$newTagsText[$key] = strtolower($newTagsText[$key]);
+				$newTagsText[$key] = utf8_strtolower($newTagsText[$key]);
 			}
 		}
 		
@@ -178,7 +178,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 	
 	public function getTagFromArrayByText(array $tagsData, $text) {
-		$textLower = trim(strtolower($text));
+		$textLower = utf8_trim(utf8_strtolower($text));
 		
 		foreach ($tagsData as $tagData) {
 			if ($this->isTagIdenticalWithText($tagData, $textLower)) {
@@ -194,7 +194,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			if ($tagData['tagTextLower'] == $textLower) {
 				return true;
 			}
-		} elseif (strtolower($tagData['tag_text']) == $textLower) {
+		} elseif (utf8_strtolower($tagData['tag_text']) == $textLower) {
 			return true;
 		}
 		
