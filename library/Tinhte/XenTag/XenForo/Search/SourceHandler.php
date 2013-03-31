@@ -28,10 +28,16 @@ class Tinhte_XenTag_XenForo_Search_SourceHandler extends XFCP_Tinhte_XenTag_XenF
 	}
 	
 	public function getMetadataKey($keyName, $value) {
-		// TODO: bug report?
 		$result = parent::getMetadataKey($keyName, $value);
 		
-		if (is_array($result)) {
+		if ($keyName == Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS && is_array($result)) {
+			// we do this because if user wants more than one tags,
+			// it usually the case that he/she wants contents with all
+			// tags attached, not contents with one of the tags (if it's
+			// what he/she wants, redo the search may work better)
+			// sondh@2012-08-17 updated this method
+			// to limit the implode to our metadata keys only
+			// to reduce unexpected behaviors
 			$result = implode(' ', $result);
 		}
 		

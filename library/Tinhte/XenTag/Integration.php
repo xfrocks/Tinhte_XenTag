@@ -82,7 +82,7 @@ class Tinhte_XenTag_Integration {
 			$data = array(
 				'tag_id' => $tag['tag_id'],
 				'content_type' => 'thread',
-				'content_id' => $this->get('thread_id'),
+				'content_id' => $dw->get('thread_id'),
 			);
 			$dwTagged->setExistingData($data, true);
 			$dwTagged->delete();
@@ -103,6 +103,8 @@ class Tinhte_XenTag_Integration {
 			Tinhte_XenTag_XenForo_Search_SourceHandler::setExtraMetaData(array(
 				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS => Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags), 
 			));
+		} else {
+			throw new XenForo_Exception('Please make sure [Tinhte] XenTag has been installed properly, a problem with search handler occured. You may need to edit XenES file manually...', false);
 		}
 	}
 }

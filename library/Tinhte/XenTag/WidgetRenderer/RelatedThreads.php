@@ -11,7 +11,7 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			),
 			'useCache' => true,
 			'useUserCache' => true,
-			'cacheSeconds' => 60, // cache for 1 minute
+			'cacheSeconds' => 300, // cache for 5 minute
 		);
 	}
 	

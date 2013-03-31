@@ -8,7 +8,12 @@ class Tinhte_XenTag_XenForo_ControllerAdmin_Forum extends XFCP_Tinhte_XenTag_Xen
 		if ($response instanceof XenForo_ControllerResponse_View) {
 			if (isset($response->params['forum'])) {
 				$forum =& $response->params['forum'];
-				$forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS] = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
+				
+				if (isset($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS])) {
+					$forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS] = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
+				} else {
+					$forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS] = array();
+				}
 			}
 		}
 		
