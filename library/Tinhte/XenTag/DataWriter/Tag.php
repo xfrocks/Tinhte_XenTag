@@ -2,6 +2,14 @@
 
 class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	
+	protected function _postSave() {
+		if ($this->isInsert() OR $this->isChanged('tag_text')) {
+			$this->_rebuildCache();
+		}
+		
+		return parent::_postSave();
+	}
+	
 	protected function _postDelete() {
 		$taggedContentModel = $this->_getTaggedContentModel();
 		
@@ -32,6 +40,14 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 			$dw->Tinhte_XenTag_setTags($tags);
 			$dw->save();
 		}
+		
+		$this->_rebuildCache();
+		
+		return parent::_postDelete();
+	}
+	
+	protected function _rebuildCache() {
+		$this->_getTagModel()->rebuildCache();
 	}
 	
 	protected function _verifyText(&$text) {

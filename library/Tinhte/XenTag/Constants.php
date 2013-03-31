@@ -22,5 +22,7 @@ class Tinhte_XenTag_Constants {
 	const PERM_USER_TAG = 'Tinhte_XenTag_tag';
 	const PERM_USER_TAG_ALL = 'Tinhte_XenTag_tagAll';
 	const PERM_USER_CREATE_NEW = 'Tinhte_XenTag_createNew';
-	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';	
+	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
+
+	const DATA_REGISTRY_KEY = 'Tinhte_XenTag_tags';
 }

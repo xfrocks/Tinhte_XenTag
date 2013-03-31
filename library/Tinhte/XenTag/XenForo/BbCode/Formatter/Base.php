@@ -7,7 +7,6 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
 		$tags = parent::getTags();
 		
 		$tags['tag'] = array(
-			'hasOption' => false,
 			'plainChildren' => true,
 			'callback' => array($this, 'renderTagTag')
 		);
@@ -23,13 +22,25 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
 	
 	public function renderTagTag(array $tag, array $rendererStates) {
 		$tagText = $this->stringifyTree($tag['children']);
+		$displayText = $tagText;
+		
+		// support option version of this tag
+		// the tag text can be put as option (must be base64 encoded)
+		if (!empty($tag['option'])) {
+			$option = $tag['option'];
+			$optionDecoded = @base64_decode($option);
+			if (!empty($optionDecoded)) {
+				$tagText = $optionDecoded;
+			}
+		}
 
 		$tag = array(
 			'tag_text' => $tagText,
 		);
 
 		$template = $this->_view->createTemplateObject('tinhte_xentag_bb_code_tag_tag', array(
-			'tag' => $tag
+			'tag' => $tag,
+			'displayText' => $displayText,
 		));
 		return $template->render();
 	}

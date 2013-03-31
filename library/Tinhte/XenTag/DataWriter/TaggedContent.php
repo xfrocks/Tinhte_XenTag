@@ -11,6 +11,8 @@ class Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 				$this->get('tag_id')
 			);
 		}
+		
+		return parent::_postSave();
 	}
 	
 	protected function _postDelete() {
@@ -20,6 +22,8 @@ class Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 			WHERE tag_id = ?',
 			$this->get('tag_id')
 		);
+		
+		return parent::_postDelete();
 	}
 	
 	protected function _getFields() {
