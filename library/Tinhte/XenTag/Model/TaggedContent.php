@@ -97,7 +97,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 			}
 		}
 		
-		$forums = $pageModel->Tinhte_XenTag_getForumsByIds($nodeIds);
+		$forums = $forumModel->Tinhte_XenTag_getForumsByIds($nodeIds);
 		
 		foreach ($forums as $forum) {
 			$tagTexts = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
