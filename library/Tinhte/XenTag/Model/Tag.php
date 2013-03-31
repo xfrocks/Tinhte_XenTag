@@ -104,7 +104,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			$tags = $data[Tinhte_XenTag_Constants::FORM_TAGS_ARRAY];
 			
 			if (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT])) {
-				$tags2 = explode(',', $data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT]);
+				$tags2 = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT]);
 			} else {
 				$tags2 = array();
 			}
@@ -121,7 +121,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			// used as a checkbox in search bar
 			// so no *_included field is coming with it
 			// we just use it as it's is
-			return explode(',', $data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
+			return $tags2 = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
 		} else {
 			return false;
 		}
@@ -149,7 +149,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 	
 	public function validateTag($text) {
-		// $text = str_replace(',', '', $text); -- this must be taken care of in other places!
+		// $text = preg_replace(Tinhte_XenTag_Constants::REGEX_SEPARATOR, '', $text); -- this must be taken care of in other places!
 		$text = trim($text);
 		$text = strtolower($text);
 		

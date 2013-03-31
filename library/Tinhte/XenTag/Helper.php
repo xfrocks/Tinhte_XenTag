@@ -11,6 +11,10 @@ class Tinhte_XenTag_Helper {
 		return $array;
 	}
 	
+	public static function explodeTags($tagsStr) {
+		return preg_split(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $tagsStr, -1, PREG_SPLIT_NO_EMPTY);
+	}
+	
 	public static function getImplodedTagsFromThread($thread, $getLinks = false) {
 		$result = array();
 		
@@ -51,7 +55,8 @@ class Tinhte_XenTag_Helper {
 				'[', '{', ']', '}', '\\', '|',
 				';', ':', '\'', '"',
 				',', '<', '.', '>', '/', '?',
-				' '
+				' ',
+				'،', // Udu comma
 			), '_', $tagText);
 		}
 		

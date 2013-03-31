@@ -51,7 +51,7 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	}
 	
 	protected function _verifyText(&$text) {
-		if (strpos($text, ',') !== false) {
+		if (preg_match(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $text) == 1) {
 			$this->error(new XenForo_Phrase('tinhte_xentag_tag_can_not_contain_comma'), 'tag_text');
 			return false;
 		}

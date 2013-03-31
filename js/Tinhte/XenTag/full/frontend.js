@@ -8,7 +8,8 @@
 			this.$input = $ul.find('.Tinhte_XenTag_TagNewInput');
 			this.varName = $ul.data('varname');
 			
-			this.regex = /[,]+/gi;
+			this.regex = /[,،]+/gi;
+			this.separator = /[,،]/;
 			
 			// add the class (display purpose)
 			$ul.find('li').each(function(i) {
@@ -30,7 +31,7 @@
 			this.$input.keyup($.context(this, 'inputKeystroke'));
 			
 			// process old tags automatically
-			var tags = this.$input.val().split(',');
+			var tags = this.$input.val().split(this.separator);
 			for (var i in tags) {
 				var tag = this.validateInput(tags[i]);
 				this.createTag(tag);
@@ -52,6 +53,9 @@
 			var code = e.which;
 			
 			switch (code) {
+			// sondh@2012-08-12
+			// commented this out due to feedback from dihuta
+			/*
 			case 8: // backspace
 				if (this.$input.val() == '') {
 					// input is empty and backspace is pressed
@@ -59,6 +63,7 @@
 					this.$ul.find('.Tinhte_XenTag_Tag:last').remove();
 				}
 				break;
+			*/
 			case 13: // enter
 			case 44: // comma
 				// creates tag with input value
@@ -77,11 +82,11 @@
 				// process all other character
 				// to make sure comma is processed correctly
 				var text = this.$input.val();
-				if (text.indexOf(',') != -1) {
-					// a comma is found!
+				if (text.match(this.separator) !== null) {
+					// a separator is found!
 					e.preventDefault();
 
-					var parts = text.split(',');
+					var parts = text.split(this.separator);
 					for (var i = 0; i < parts.length; i++) {
 						// below code is similar to above code
 						parts[i] = this.validateInput(parts[i]);

@@ -34,7 +34,7 @@ class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetR
 	protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template) {
 		$threads = array();
 		
-		$tags = explode(',', $widget['options']['tags']);
+		$tags = Tinhte_XenTag_Helper::explodeTags($widget['options']['tags']);
 		$tagsText = array();
 		
 		foreach ($tags as $tag) {

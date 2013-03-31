@@ -27,4 +27,6 @@ class Tinhte_XenTag_Constants {
 	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
 
 	const DATA_REGISTRY_KEY = 'Tinhte_XenTag_tags';
+	
+	const REGEX_SEPARATOR = '/[,،]/';
 }
