@@ -6,12 +6,24 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			'name' => '[Tinhte] XenTag - Related Threads',
 			'options' => array(
 				'limit' => XenForo_Input::UINT,
+				'as_guest' => XenForo_Input::UINT,
 			),
+			'useCache' => true,
+			'useUserCache' => true,
+			'cacheSeconds' => 60, // cache for 1 minute
 		);
 	}
 	
 	protected function _getOptionsTemplate() {
 		return 'tinhte_xentag_widget_related_threads_options';
+	}
+	
+	protected function _validateOptionValue($optionKey, &$optionValue) {
+		if ('limit' == $optionKey) {
+			if (empty($optionValue)) $optionValue = 5;
+		}
+		
+		return true;
 	}
 	
 	protected function _getRenderTemplate(array $widget, $positionCode, array $params) {
@@ -63,11 +75,17 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 				
 				if (!empty($threadIds)) {
 					$threadIds = array_unique($threadIds);
-					$forumIds = $this->_helperGetForumIdsFromOption(array()); // quick way to get all viewable forum ids
+					$forumIds = $this->_helperGetForumIdsFromOption(
+						array(),
+						$params,
+						empty($widget['options']['as_guest']) ? false : true
+					); // quick way to get all viewable forum ids
 					
 					$conditions = array(
 						'node_id' => $forumIds,
 						'thread_id' => $threadIds,
+						'deleted' => false,
+						'moderated' => false,
 					);
 					$fetchOptions = array(
 						'limit' => $widget['options']['limit'],
@@ -84,5 +102,23 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 		$template->setParam('threads', $threads);
 		
 		return $template->render();
+	}
+	
+	public function useUserCache(array $widget) {
+		if (!empty($widget['options']['as_guest'])) {
+			// using guest permission
+			// there is no reason to use the user cache
+			return false;
+		}
+		
+		return parent::useUserCache($widget);
+	}
+	
+	protected function _getCacheId(array $widget, $positionCode, array $params, array $suffix = array()) {
+		if (isset($params['thread'])) {
+			$suffix[] = 't' . $params['thread']['thread_id'];
+		}
+		
+		return parent::_getCacheId($widget, $positionCode, $params, $suffix);
 	}
 }

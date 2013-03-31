@@ -8,12 +8,20 @@ class Tinhte_XenTag_WidgetRenderer_Cloud extends WidgetFramework_WidgetRenderer 
 				'limit' => XenForo_Input::UINT,
 			),
 			'useCache' => true,
-			'cacheSeconds' => 600, // cache for 10 minutes
+			'cacheSeconds' => 3600, // cache for 1 hour
 		);
 	}
 	
 	protected function _getOptionsTemplate() {
 		return 'tinhte_xentag_widget_cloud_options';
+	}
+	
+	protected function _validateOptionValue($optionKey, &$optionValue) {
+		if ('limit' == $optionKey) {
+			if (empty($optionValue)) $optionValue = 50;
+		}
+		
+		return true;
 	}
 	
 	protected function _getRenderTemplate(array $widget, $positionCode, array $params) {
