@@ -34,18 +34,41 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 				FROM ' . $prefix . 'thread
 			');
 		}
+		
+		$tableTagExists = !!$sDb->fetchOne('SHOW TABLES LIKE \'' . $prefix . 'tag\'');
+		$tableTagContentExists = !!$sDb->fetchOne('SHOW TABLES LIKE \'' . $prefix . 'tagcontent\'');
+		$tableTagThreadExists = !!$sDb->fetchOne('SHOW TABLES LIKE \'' . $prefix . 'tagthread\''); // vb37 and lower
+		
+		if (!$tableTagExists) return true;
+		if (!$tableTagContentExists AND !$tableTagThreadExists) return true;
 
-		$tags = $sDb->fetchAll(
-			'
-				SELECT tag.*, tagcontent.*
-				FROM ' . $prefix . 'tagcontent AS tagcontent
-				INNER JOIN ' . $prefix . 'tag AS tag ON (tag.tagid = tagcontent.tagid)
-				WHERE
-					tagcontent.contenttypeid = 2
-					AND tagcontent.contentid > ' . $sDb->quote($start) . '
-					AND tagcontent.contentid < ' . $sDb->quote($start + $options['limit']) . '
-			'
-		);
+		if ($tableTagContentExists)
+		{
+			$tags = $sDb->fetchAll(
+				'
+					SELECT tag.*, tagcontent.*
+					FROM ' . $prefix . 'tagcontent AS tagcontent
+					INNER JOIN ' . $prefix . 'tag AS tag ON (tag.tagid = tagcontent.tagid)
+					WHERE
+						tagcontent.contenttypeid = 2
+						AND tagcontent.contentid > ' . $sDb->quote($start) . '
+						AND tagcontent.contentid < ' . $sDb->quote($start + $options['limit']) . '
+				'
+			);
+		}
+		else 
+		{
+			$tags = $sDb->fetchAll(
+				'
+					SELECT tag.*, tagthread.threadid AS contentid
+					FROM ' . $prefix . 'tagthread AS tagthread
+					INNER JOIN ' . $prefix . 'tag AS tag ON (tag.tagid = tagthread.tagid)
+					WHERE
+						tagthread.threadid > ' . $sDb->quote($start) . '
+						AND tagthread.threadid < ' . $sDb->quote($start + $options['limit']) . '
+				'
+			);
+		}
 		
 		$next = 0;
 		$total = 0;
