@@ -282,7 +282,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 							$activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT],
 							XenForo_Link::buildPublicLink(
 								'canonical:' . Tinhte_XenTag_Option::get('routePrefix'),
-								array(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT => $activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT])
+								array('tag_text' => $activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT])
 							),
 							''
 						);
