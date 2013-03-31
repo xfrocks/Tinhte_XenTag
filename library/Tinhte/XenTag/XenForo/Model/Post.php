@@ -58,6 +58,10 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			// some tags found, start working
 			$message =& $post['message'];
 			
+			// sort tags with the longest one first
+			// since 1.0.3
+			usort($tags, array(__CLASS__, '_Tinhte_XenTag_sortTagsForAutoTagging'));
+			
 			foreach ($tags as $tag) {
 				$offset = 0;
 				
@@ -128,6 +132,22 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			}
 		}
 		
+		// special case: check to make sure we do not transform [TAG] -> [[TAG=@#$]TAG]
+		// since 1.0.3
+		$posOpen = strrpos($message, '[', $position - strlen($message));
+		if ($posOpen !== false) {
+			$posClose = strpos($message, ']', $posOpen);
+			
+			if ($posClose === false) {
+				// no ] found, do nothing
+			} else if ($posClose < $position) {
+				// there is one but it's before us, do nothing
+			} else {
+				// our position is in between [ and ], not good
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
@@ -146,6 +166,10 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 		}
 		
 		return false;
+	}
+	
+	protected static function _Tinhte_XenTag_sortTagsForAutoTagging($a, $b) {
+		return strlen($a) < strlen($b);
 	}
 	
 }

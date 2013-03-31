@@ -26,7 +26,8 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 			$action = XenForo_Link::getPageNumberAsAction($action, $extraParams);
 			
 			if (self::_isSafeText($data['tag_text'])) {
-				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $data, 'tag_text');
+				$encodedData = array('tag_text' => urlencode($data['tag_text']));
+				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $encodedData, 'tag_text');
 			} else {
 				$extraParams['tag_text'] = $data['tag_text'];
 				return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);

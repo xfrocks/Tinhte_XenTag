@@ -15,6 +15,7 @@ class Tinhte_XenTag_ViewPublic_Tag_View extends XenForo_ViewPublic_Base {
 			'board_title' => XenForo_Application::get('options')->get('boardTitle'),
 			'tag_text' => $tag['tag_text'] 
 		)));
+		
 		$feed->setLink(XenForo_Link::buildPublicLink('canonical:' . Tinhte_XenTag_Option::get('routePrefix'), $tag));
 		if (!$buggyXmlNamespace) {
 			$feed->setFeedLink(XenForo_Link::buildPublicLink('canonical:' . Tinhte_XenTag_Option::get('routePrefix') . '.rss', $tag), 'rss');
