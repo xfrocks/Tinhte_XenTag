@@ -79,6 +79,7 @@ class Tinhte_XenTag_Listener {
 				$template->preloadTemplate('tinhte_xentag_hook_message_notices');
 				$template->preloadTemplate('tinhte_xentag_hook_post_private_controls');
 				$template->preloadTemplate('tinhte_xentag_hook_post_public_controls');
+				$template->preloadTemplate('tinhte_xentag_bb_code_tag_tag');
 				break;
 		}
 		

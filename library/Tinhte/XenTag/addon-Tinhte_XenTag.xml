@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.5.3b" version_id="74" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.6-dev" version_id="75" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -267,7 +267,7 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
     <phrase title="admin_navigation_Tinhte_XenTag_Tag" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
     <phrase title="admin_permission_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[[XenTag] Manage tags]]></phrase>
     <phrase title="option_group_Tinhte_XenTag" version_id="5" version_string="0.9.4"><![CDATA[[Tinhte] XenTag]]></phrase>
-    <phrase title="option_group_Tinhte_XenTag_description" version_id="5" version_string="0.9.4"><![CDATA[Options for thread tagging feature.]]></phrase>
+    <phrase title="option_group_Tinhte_XenTag_description" version_id="74" version_string="1.5.3b"><![CDATA[Options for contents tagging.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax" version_id="15" version_string="0.9.8.5"><![CDATA[Auto Tag Global Limitation]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax_explain" version_id="15" version_string="0.9.8.5"><![CDATA[Enter the maximum number of tags should be process when the mode is set to use all tags. To remove limitation, enter 0 (zero) in this option.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagMode" version_id="15" version_string="0.9.8.5"><![CDATA[Auto Tag Mode]]></phrase>
@@ -292,6 +292,12 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
     <phrase title="permission_forum_Tinhte_XenTag_tagAll" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by anyone]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_createNew" version_id="5" version_string="0.9.4"><![CDATA[[XenTag] Create new tag]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_edit" version_id="68" version_string="1.3.4.1"><![CDATA[[XenTag] Edit tag]]></phrase>
+    <phrase title="style_property_group_Tinhte_XenTag_master" version_id="74" version_string="1.5.3b"><![CDATA[[Tinhte] XenTag]]></phrase>
+    <phrase title="style_property_group_Tinhte_XenTag_master_desc" version_id="74" version_string="1.5.3b"><![CDATA[Styling properties for contents tagging.]]></phrase>
+    <phrase title="style_property_tinhte_xentag_openTagLinkInNewWindow_description_master" version_id="74" version_string="1.5.3b"><![CDATA[Enable this option to open the tag page in a new window (or browser tab, if available). It's recommended to do this to improve UX.]]></phrase>
+    <phrase title="style_property_tinhte_xentag_openTagLinkInNewWindow_master" version_id="74" version_string="1.5.3b"><![CDATA[Open Tag Link in New Window]]></phrase>
+    <phrase title="style_property_tinhte_xentag_showIconInTagLink_description_master" version_id="74" version_string="1.5.3b"><![CDATA[Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png.]]></phrase>
+    <phrase title="style_property_tinhte_xentag_showIconInTagLink_master" version_id="74" version_string="1.5.3b"><![CDATA[Show Icon in Tag Link]]></phrase>
     <phrase title="tinhte_xentag_all_contents_tagged_x" version_id="33" version_string="1.0.6"><![CDATA[These are all contents from {board_title} tagged {tag_text}.]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_all_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag all tags (with limitation)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_disabled" version_id="15" version_string="0.9.8.5"><![CDATA[Disabled]]></phrase>
@@ -356,9 +362,16 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
       <prefix original_prefix="tags" class="Tinhte_XenTag_Route_Prefix_Tags" build_link="data_only"/>
     </route_type>
   </route_prefixes>
-  <style_properties/>
+  <style_properties>
+    <property property_name="tinhte_xentag_openTagLinkInNewWindow" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Open Tag Link in New Window" description="Enable this option to open the tag page in a new window (or browser tab, if available). It's recommended to do this to improve UX." css_components="" scalar_type="boolean" scalar_parameters="" display_order="100" sub_group="bbcode"><![CDATA[1]]></property>
+    <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[1]]></property>
+    <group group_name="Tinhte_XenTag" display_order="9999">
+      <title>[Tinhte] XenTag</title>
+      <description>Styling properties for contents tagging.</description>
+    </group>
+  </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="27" version_string="1.0.1"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="74" version_string="1.5.3b"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -446,8 +459,18 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
 
 .Tinhte_XenTag_Copyright {
 	float: right;
-}]]></template>
-    <template title="tinhte_xentag_bb_code_tag_tag" version_id="73" version_string="1.5.3"><![CDATA[<a href="{xen:link {xen:helper Tinhte_XenTag_getOption, routePrefix}, $tag}">{$displayText}</a>]]></template>
+}
+
+<xen:if is="{xen:property tinhte_xentag_showIconInTagLink}">
+a.Tinhte_XenTag_TagLink:link,
+a.Tinhte_XenTag_TagLink:visited,
+a.Tinhte_XenTag_TagLink:hover,
+a.Tinhte_XenTag_TagLink:focus {
+	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') 4px 0px no-repeat;
+	padding-left: 24px !important;
+}
+</xen:if>]]></template>
+    <template title="tinhte_xentag_bb_code_tag_tag" version_id="74" version_string="1.5.3b"><![CDATA[<xen:require css="tinhte_xentag.css" /><a href="{xen:link {xen:helper Tinhte_XenTag_getOption, routePrefix}, $tag}" class="Tinhte_XenTag_TagLink"{xen:if '{xen:property tinhte_xentag_openTagLinkInNewWindow}', ' target="_blank"'}>{$displayText}</a>]]></template>
     <template title="tinhte_xentag_copyright" version_id="0" version_string=""><![CDATA[<xen:comment>Please do not remove this copyright notice. Thank you.</xen:comment>
 
 <xen:require css="tinhte_xentag.css" />

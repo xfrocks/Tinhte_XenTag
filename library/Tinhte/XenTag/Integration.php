@@ -195,9 +195,11 @@ class Tinhte_XenTag_Integration {
 						// and it's not between HTML tags,
 						// with good surrounding characters 
 						// start replacing
-						$replacement = '<a href="'
-							. XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), $tag)
-							. '">' . utf8_substr($html, $pos, $tagLength) . '</a>';
+
+						$template = new XenForo_Template_Public('tinhte_xentag_bb_code_tag_tag');
+						$template->setParam('tag', $tag);
+						$template->setParam('displayText', utf8_substr($html, $pos, $tagLength));
+						$replacement = $template->render();
 						
 						$html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
 						
