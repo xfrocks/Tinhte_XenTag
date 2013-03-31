@@ -18,7 +18,11 @@ class Tinhte_XenTag_XenForo_Model_Page extends XFCP_Tinhte_XenTag_XenForo_Model_
 		$pages = array();
 		
 		foreach ($nodeIds as $nodeId) {
-			$pages[$nodeId] = parent::getPageById($nodeId, $fetchOptions);
+			$page = parent::getPageById($nodeId, $fetchOptions);
+			
+			if (!empty($page)) {
+				$pages[$nodeId] = $page;
+			}
 		}
 		
 		return $pages;
