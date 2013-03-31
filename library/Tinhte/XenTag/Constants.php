@@ -38,5 +38,5 @@ class Tinhte_XenTag_Constants {
 
 	const DATA_REGISTRY_KEY = 'Tinhte_XenTag_tags';
 	
-	const REGEX_SEPARATOR = '[,،]';
+	const REGEX_SEPARATOR = '(,|،)';
 }
