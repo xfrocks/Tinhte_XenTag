@@ -35,7 +35,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		
 		$fields['xf_thread'][Tinhte_XenTag_Constants::FIELD_THREAD_TAGS] = array(
 			'type' => XenForo_DataWriter::TYPE_SERIALIZED,
-			'default' => ''
+			'default' => 'a:0:{}'
 		);
 		
 		return $fields;

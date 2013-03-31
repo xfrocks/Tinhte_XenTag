@@ -16,6 +16,7 @@ class Tinhte_XenTag_Listener {
 		
 			'XenForo_Model_Post',
 			'XenForo_Model_Search',
+			'XenForo_Model_ThreadRedirect',
 		
 			'XenForo_Search_DataHandler_Post',
 			'XenForo_Search_DataHandler_Thread',
