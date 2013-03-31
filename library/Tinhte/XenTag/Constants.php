@@ -9,6 +9,7 @@ class Tinhte_XenTag_Constants {
 	const FORM_TAGS_ARRAY = 'tinhte_xentag_tags';
 	const FORM_TAGS_TEXT = 'tinhte_xentag_tags_text';
 	const FORM_INCLUDED = 'tinhte_xentag_included';
+	const FORM_TAGS_TEXT_NO_INCLUDED = 'tinhte_xentag_tags_text_no_include'; // used in search bar form
 	
 	const FIELD_THREAD_TAGS = 'tinhte_xentag_tags';
 	

@@ -17,14 +17,17 @@ class Tinhte_XenTag_Option {
 		);
 		
 		switch ($key) {
-			case 'routePrefix': return Tinhte_XenTag_Listener::getRoutePrefix();
-			case 'majorSection': return 'Tinhte_XenTag';
+			case 'cloudMax': return 100;
+			case 'cloudLevelCount': return 5;
 			case 'displayPosition':
 				$position = $options->get('tinhte_xentag_' . $key);
 				if (!in_array($position, $availablePositions)) {
 					$position = $availablePositions[0];
 				}
 				return $position;
+			case 'majorSection': return 'forums';
+			case 'routePrefix': return Tinhte_XenTag_Listener::getRoutePrefix();
+			case 'searchForceUseCache': return true;
 		}
 		
 		return $options->get('tinhte_xentag_' . $key);

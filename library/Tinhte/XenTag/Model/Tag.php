@@ -8,6 +8,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			Tinhte_XenTag_Constants::FORM_TAGS_ARRAY => XenForo_Input::ARRAY_SIMPLE,
 			Tinhte_XenTag_Constants::FORM_TAGS_TEXT => XenForo_Input::STRING,
 			Tinhte_XenTag_Constants::FORM_INCLUDED => XenForo_Input::UINT,
+			Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED => XenForo_Input::STRING,
 		));
 		
 		if (!empty($data[Tinhte_XenTag_Constants::FORM_INCLUDED])) {
@@ -20,6 +21,11 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			}
 			
 			return array_merge($tags, $tags2);
+		} elseif (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED])) {
+			// used as a checkbox in search bar
+			// so no *_included field is coming with it
+			// we just use it as it's is
+			return explode(',', $data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
 		} else {
 			return false;
 		}
@@ -162,7 +168,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 	
 	public function prepareTagOrderOptionsCustomized(array &$choices, array &$fetchOptions) {
-		// customized code goes here
+		$choices['content_count'] = 'tag.content_count';
 	}
 
 	/* Start auto-generated lines of code. Change made will be overwriten... */

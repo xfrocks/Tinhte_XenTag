@@ -23,15 +23,23 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 				$data = array('tag_text' => $data);
 			}
 			
-			if ((empty($action) OR strtolower($action) == 'view') AND isset($extraParams['page'])) {
-				// supports generating /tags/text/page-n links
-				$action = 'page-' . $extraParams['page'];
-				unset($extraParams['page']);
-			}
+			$action = XenForo_Link::getPageNumberAsAction($action, $extraParams);
 			
-			return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $data, 'tag_text');
+			if (self::_isSafeText($data['tag_text'])) {
+				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $data, 'tag_text');
+			} else {
+				$extraParams['tag_text'] = $data['tag_text'];
+				return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
+			}
 		} else {
 			return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
 		}
+	}
+	
+	protected function _isSafeText($text) {
+		if (strpos($text, '/') !== false) return false;
+		if (strpos($text, '"') !== false) return false;
+		
+		return true;
 	}
 }

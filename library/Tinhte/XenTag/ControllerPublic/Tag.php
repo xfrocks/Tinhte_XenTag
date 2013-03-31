@@ -7,18 +7,32 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->responseReroute(__CLASS__, 'view');
 		}
 		
-		return $this->responseNoPermission();
+		$tagModel = $this->_getTagModel();
+		
+		$conditions = array();
+		$fetchOptions = array(
+			'order' => 'content_count',
+			'direction' => 'desc',
+			'limit' => Tinhte_XenTag_Option::get('cloudMax'),
+		);
+		
+		$tags = $tagModel->getAllTag($conditions, $fetchOptions);
+		
+		$viewParams = array(
+			'tags' => $tags,
+		);
+		
+		return $this->responseView(
+			'Tinhte_XenTag_ViewPublic_Tag_List',
+			'tinhte_xentag_tag_list',
+			$viewParams
+		);
 	}
 	
 	public function actionView() {
 		$tagText = $this->_input->filterSingle('tag_text', XenForo_Input::STRING);
 		if (empty($tagText)) {
 			return $this->responseNoPermission();
-		}
-		
-		$searchId = $this->_input->filterSingle(Tinhte_XenTag_Constants::SEARCH_SEARCH_ID, XenForo_Input::UINT);
-		if (empty($searchId)) {
-			return $this->_doSearch($tagText);
 		}
 		
 		$tagModel = $this->_getTagModel();
@@ -34,17 +48,38 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->_getNoResultsResponse($tagText);
 		}
 		
-		$search = $searchModel->getSearchById($searchId);
-		if (empty($search)
-			|| $search['user_id'] != XenForo_Visitor::getUserId()
-			|| $search['search_type'] != Tinhte_XenTag_Constants::SEARCH_TYPE_TAG
-		)
-		{
-			return $this->_doSearch($tagText);
+		$searchId = $this->_input->filterSingle(Tinhte_XenTag_Constants::SEARCH_SEARCH_ID, XenForo_Input::UINT);
+		if (empty($searchId)) {
+			$search = $this->_doSearch($tagText);
+		} else {
+			$search = $searchModel->getSearchById($searchId);
+		
+			if (empty($search)
+				|| $search['user_id'] != XenForo_Visitor::getUserId()
+				|| $search['search_type'] != Tinhte_XenTag_Constants::SEARCH_TYPE_TAG
+			)
+			{
+				$search = $this->_doSearch($tagText);
+			}
+		}
+		
+		if ($search instanceof XenForo_ControllerResponse_Message) {
+			return $search;
+		} elseif (!is_array($search)) {
+			return $this->_getNoResultsResponse($tagText);
 		}
 		
 		$page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
 		$perPage = XenForo_Application::get('options')->discussionsPerPage;
+		
+		if (Tinhte_XenTag_Option::get('searchForceUseCache') == true) {
+			// force use cache, we can force redirect to correct link 
+			$this->canonicalizePageNumber($page, $perPage, $search['result_count'], Tinhte_XenTag_Option::get('routePrefix'), $tag);
+
+			$this->canonicalizeRequestUrl(
+				XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), $tag, array('page' => $page))
+			);
+		}
 		
 		$pageResultIds = $searchModel->sliceSearchResultsToPage($search, $page, $perPage);
 		$results = $searchModel->getSearchResultsForDisplay($pageResultIds);
@@ -72,6 +107,12 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			$threads[$result[XenForo_Model_Search::CONTENT_ID]] = $thread;
 		}
 		
+		$linkParams = array();
+		if (Tinhte_XenTag_Option::get('searchForceUseCache') == false) {
+			// no force use cache, we need the search id in page links
+			$linkParams[Tinhte_XenTag_Constants::SEARCH_SEARCH_ID] = $search['search_id'];
+		}
+		
 		$viewParams = array(
 			'tag' => $tag,
 			'search' => $search,
@@ -87,9 +128,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			'perPage' => $perPage,
 			'totalThreads' => $search['result_count'],
 			'nextPage' => ($threadEndOffset < $search['result_count'] ? ($page + 1) : 0),
-			'linkParams' => array(
-				Tinhte_XenTag_Constants::SEARCH_SEARCH_ID => $search['search_id'],
-			),
+			'linkParams' => $linkParams,
 		);
 
 		return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_View', 'tinhte_xentag_tag_view', $viewParams);
@@ -116,7 +155,8 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		$constraints['content'] = 'thread'; // limit to threads only
 		
 		$search = $searchModel->getExistingSearch(
-			$input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], $visitorUserId
+			$input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], $visitorUserId,
+			Tinhte_XenTag_Option::get('searchForceUseCache') /* force to use cache to have a nice and clean url */
 		);
 		
 		if (empty($search)) {
@@ -135,14 +175,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			);
 		}
 		
-		return $this->responseRedirect(
-			XenForo_ControllerResponse_Redirect::SUCCESS,
-			XenForo_Link::buildPublicLink(
-				Tinhte_XenTag_Option::get('routePrefix'),
-				$tagText,
-				array(Tinhte_XenTag_Constants::SEARCH_SEARCH_ID => $search['search_id'])
-			)
-		);
+		return $search;
 	}
 	
 	public function actionFind() {
