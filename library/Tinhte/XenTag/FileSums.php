@@ -5,12 +5,12 @@ class Tinhte_XenTag_FileSums
 	public static function getHashes()
 	{
 		return array (
-  'library/Tinhte/XenTag/Constants.php' => '15cc26f40835509cc3df2c2c8c81be01',
+  'library/Tinhte/XenTag/Constants.php' => '786a9efcf9cda3acd277d601bd361860',
   'library/Tinhte/XenTag/ControllerAdmin/Tag.php' => 'e1602334f39f8993df342a9250cdc167',
   'library/Tinhte/XenTag/ControllerPublic/Tag.php' => '1beada4e30211e522bc42883ff8d15a7',
   'library/Tinhte/XenTag/DataWriter/Tag.php' => 'a5981c709647d116509be641d89f9d96',
   'library/Tinhte/XenTag/DataWriter/TaggedContent.php' => '9f90008aff736063d5589fd4da20b9ec',
-  'library/Tinhte/XenTag/Helper.php' => 'f546d6d338c057a92248955741ce279f',
+  'library/Tinhte/XenTag/Helper.php' => '4a9c2fbace2eec87929fdbba2e0221e6',
   'library/Tinhte/XenTag/Installer.php' => '6207f3ef57fbe6958c46c21d22dbfdbb',
   'library/Tinhte/XenTag/Integration.php' => '7ad9bd98588d120928c10a570158158a',
   'library/Tinhte/XenTag/Listener.php' => 'fca12545f19338e17768aeaf8c77b0d1',
