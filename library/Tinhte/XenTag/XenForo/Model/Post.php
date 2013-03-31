@@ -31,7 +31,7 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 		$mode = Tinhte_XenTag_Option::get('autoTagMode');
 		$onceOnly = Tinhte_XenTag_Option::get('autoTagOnceOnly');
 		$tags = false;
-				
+		
 		if ($mode == Tinhte_XenTag_Option::AUTO_TAG_MODE_DISALBED) {
 			// auto tagging is disabled, no thing to do here
 			$tags = false;
@@ -53,7 +53,6 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 			// but this is not the first one, so reset the $tags array
 			$tags = false;
 		}
-		
 		
 		if (!empty($tags)) {
 			// some tags found, start working
@@ -81,6 +80,8 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 								// break the loop now
 								break; // while (true)
 							}
+						} else {
+							$offset = $pos + strlen($tag);
 						}
 					} else {
 						// no match has been found, stop working with this tag
@@ -96,26 +97,35 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 	protected function _Tinhte_XenTag_isBetweenUrlTags($message, $position) {
 		// this method is copied from [bd] Tag Me's source code
 		// found the nearest [URL before the position
-		$posOpen = strripos($message, '[URL', $position - strlen($message));
-		
-		if ($posOpen !== false) {
-			// there is an open tag before us, checks for close tag
-			$posClose = stripos($message, '[/URL]', $posOpen);
+		static $urlTags = array(
+			'URL', 'IMG',
+			'MEDIA',
+			'CODE', 'PHP',
+			'VIDEO', /* legacy support */
+		);
+
+		foreach ($urlTags as $urlTag) {
+			$posOpen = strripos($message, '[' . $urlTag, $position - strlen($message));
 			
-			if ($posClose === false) {
-				// no close tag (?!)
-			} else if ($posClose < $position) {
-				// there is one but it's also before us
-				// that means we are not in between them
+			if ($posOpen !== false) {
+				// there is an open tag before us, checks for close tag
+				$posClose = stripos($message, '[/' . $urlTag . ']', $posOpen);
+				
+				if ($posClose === false) {
+					// no close tag (?!)
+				} else if ($posClose < $position) {
+					// there is one but it's also before us
+					// that means we are not in between them
+				} else {
+					// this position is in between 2 URL tags!!!
+					return true;
+				}
 			} else {
-				// this position is in between 2 URL tags!!!
-				return true;
+				// no URL tag so far
 			}
-		} else {
-			// no URL tag so far
 		}
 		
-		return false;
+		return $found;
 	}
 	
 }
