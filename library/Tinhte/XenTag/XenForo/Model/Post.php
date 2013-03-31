@@ -66,8 +66,10 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 					
 					if ($pos !== false) {
 						// the tag has been found
-						if (!$this->_Tinhte_XenTag_isBetweenUrlTags($message, $pos)) {
+						if (!$this->_Tinhte_XenTag_isBetweenUrlTags($message, $pos)
+							AND !$this->_Tinhte_XenTag_hasValidCharacterAfterward($message, $pos, $tag)) {
 							// and it's not between [URL] tags, start replacing
+							// *added check for valid character after the tag (since 07-04-2012)
 							// we have to use [TAG] with option (base64 encoded) because
 							// we don't want to alter user's text
 							$replacement = '[TAG=' . base64_encode($tag) . ']' . substr($message, $pos, strlen($tag)) . '[/TAG]';
@@ -123,6 +125,23 @@ class Tinhte_XenTag_XenForo_Model_Post extends XFCP_Tinhte_XenTag_XenForo_Model_
 				}
 			} else {
 				// no URL tag so far
+			}
+		}
+		
+		return false;
+	}
+	
+	protected function _Tinhte_XenTag_hasValidCharacterAfterward($message, $position, $tag) {
+		$pos = $position + strlen($tag);
+		
+		if ($pos >= strlen($message)) {
+			// the founded position is at the end of the message
+			// no character afterward so... it's valid
+			return true;
+		} else {
+			$c = substr($message, $pos, 1);
+			if (!preg_match('/[\s\(\)\.,!\?:;@\\\\]/', $c)) {
+				return true;
 			}
 		}
 		
