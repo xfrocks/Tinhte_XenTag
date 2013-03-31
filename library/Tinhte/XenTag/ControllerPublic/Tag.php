@@ -7,6 +7,10 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->responseReroute(__CLASS__, 'view');
 		}
 		
+		$this->canonicalizeRequestUrl(
+			XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'))
+		);
+		
 		$tagModel = $this->_getTagModel();
 		
 		$conditions = array();
