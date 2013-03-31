@@ -47,7 +47,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 				XenForo_Link::buildPublicLink(
 					Tinhte_XenTag_Option::get('routePrefix'),
 					array(
-						Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT => $tags[0]
+						'tag_text' => $tags[0]
 					)
 				)
 			);

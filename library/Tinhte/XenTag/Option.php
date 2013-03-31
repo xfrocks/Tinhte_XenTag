@@ -7,6 +7,8 @@ class Tinhte_XenTag_Option {
 	const AUTO_TAG_MODE_ALL_TAGS = 'all_tags';
 	const AUTO_TAG_MODE_DISALBED = 'disabled';
 	
+	const LINK_FORMAT_BEAUTIFUL = 'beautiful';
+	
 	public static function get($key) {
 		$options = XenForo_Application::get('options');
 		

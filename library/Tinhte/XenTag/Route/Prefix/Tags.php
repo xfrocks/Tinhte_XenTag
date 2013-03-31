@@ -23,20 +23,24 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 				$data = array('tag_text' => $data);
 			}
 			
-			$action = XenForo_Link::getPageNumberAsAction($action, $extraParams);
-			
-			// sondh@2012-10-08
-			// use URI param when the tag text is not URI friendly
-			$encoded = urlencode($data['tag_text']);
-			if ($encoded === $data['tag_text']) {
-				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $data, 'tag_text');
-			} else {
+			if (!empty($data['tag_text'])) {
+				if (Tinhte_XenTag_Option::get('linkFormat') == Tinhte_XenTag_Option::LINK_FORMAT_BEAUTIFUL) {
+					// try to use the beautiful format
+
+					if (self::_isSafeText($data['tag_text'])) {
+						$encodedData = array('tag_text' => urlencode($data['tag_text']));
+						$action = XenForo_Link::getPageNumberAsAction($action, $extraParams);
+						return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $encodedData, 'tag_text');
+					}
+				}
+				
+				// use the ugly format
 				$extraParams[Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT] = $data['tag_text'];
 				return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
 			}
-		} else {
-			return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
 		}
+		
+		return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
 	}
 	
 	protected function _isSafeText(&$text) {
