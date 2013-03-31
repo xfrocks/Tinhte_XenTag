@@ -285,6 +285,7 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
     <phrase title="tinhte_xentag_no_tags" version_id="5" version_string="0.9.4"><![CDATA[No tags]]></phrase>
     <phrase title="tinhte_xentag_page" version_id="60" version_string="1.2.21"><![CDATA[Page (Tags)]]></phrase>
     <phrase title="tinhte_xentag_page_naked" version_id="60" version_string="1.2.21"><![CDATA[Page]]></phrase>
+    <phrase title="tinhte_xentag_page_x" version_id="69" version_string="1.4"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_please_confirm_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Please confirm that you want to delete ALL empty tags (without any contents tagged).]]></phrase>
     <phrase title="tinhte_xentag_search_by_tag" version_id="1" version_string="0.9"><![CDATA[Search by tag]]></phrase>
     <phrase title="tinhte_xentag_search_threads_tagged_with_x_only" version_id="1" version_string="0.9"><![CDATA[Search threads tagged with {tag_text} only]]></phrase>
@@ -655,12 +656,12 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
 </form>
 
 <xen:include template="tinhte_xentag_copyright" />]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="68" version_string="1.3.4.1"><![CDATA[<xen:title>{$tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
+    <template title="tinhte_xentag_tag_view" version_id="69" version_string="1.4"><![CDATA[<xen:title>{$tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{$tag.tag_text}</xen:h1>
 <xen:description>
 	{$tag.tag_description}
 	{xen:phrase tinhte_xentag_all_contents_tagged_x, 'board_title={$xenOptions.boardTitle}', 'tag_text={$tag.tag_text}'}
-	{xen:helper pagenumber, $page}
+	{xen:if '{$page} > 1', '{xen:phrase tinhte_xentag_page_x, 'page={$page}'}'}
 </xen:description>
 
 <xen:navigation>
