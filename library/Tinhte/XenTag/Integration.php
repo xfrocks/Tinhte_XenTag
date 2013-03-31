@@ -92,6 +92,10 @@ class Tinhte_XenTag_Integration {
 			}
 		}
 		
+		if (count($newTags) + count($removedTags) > 0) {
+			$tagModel->rebuildCache();
+		}
+		
 		return count($existingTags) + count($newTags) - count($removedTags);
 	}
 	
@@ -157,13 +161,14 @@ class Tinhte_XenTag_Integration {
 	 * @param array $tags
 	 * @param array $options
 	 */
-	public static function autoTag($html, array $tags, array $options = array()) {
+	public static function autoTag($html, array $tags, array &$options = array()) {
 		$html = strval($html);
 		
 		if (empty($tags)) return $html;
 		
 		// prepare the options
 			$onceOnly = empty($options['onceOnly']) ? false : true;
+			$options['autoTagged'] = array(); // reset this
 		
 		// sort tags with the longest one first
 		// since 1.0.3
@@ -188,6 +193,10 @@ class Tinhte_XenTag_Integration {
 							. '">' . utf8_substr($html, $pos, $tagLength) . '</a>';
 						
 						$html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
+						
+						// sondh@2012-09-20
+						// keep track of the auto tagged tags
+						$options['autoTagged'][$tag][$pos] = $replacement;
 						
 						$offset = $pos + utf8_strlen($replacement);
 						

@@ -51,7 +51,7 @@ class Tinhte_XenTag_PostMessageWrapper {
 			// get all the tags
 			// the thread tags are merged because sometimes the global tags are not the full list
 			$threadTags = Tinhte_XenTag_Helper::unserialize($this->_thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-			$globalTags = $this->_getTagModel()->getTagTextsForAutoTag();
+			$globalTags = $this->_getTagModel()->getTagTextsFromCache();
 			$tags = array_unique(array_merge($threadTags, $globalTags));
 		}
 		
@@ -63,12 +63,14 @@ class Tinhte_XenTag_PostMessageWrapper {
 		}
 		
 		if (!empty($tags)) {
+			$autoTagOptions = array(
+				'onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'),
+			);
+			
 			return Tinhte_XenTag_Integration::autoTag(
 				$this->_html,
 				$tags,
-				array(
-					'onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'),
-				)
+				$autoTagOptions
 			);
 		} else {
 			return strval($this->_html);

@@ -9,7 +9,14 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 	
 	public function rebuildCache() {
-		$tags = $this->_getDb()->fetchCol("SELECT tag_text FROM xf_tinhte_xentag_tag ORDER BY content_count DESC");
+		$max = intval(Tinhte_XenTag_Option::get('autoTagGlobalMax'));
+		
+		$tags = $this->_getDb()->fetchCol("
+			SELECT tag_text
+			FROM xf_tinhte_xentag_tag
+			ORDER BY content_count DESC
+			" . ($max > 0 ? "LIMIT " . $max : "") . "
+		");
 		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $tags);
 		
 		return $tags;
@@ -62,18 +69,6 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		}
 		
 		return $tags;
-	}
-	
-	public function getTagTextsForAutoTag() {
-		$tagTexts = $this->getTagTextsFromCache();
-		$max = Tinhte_XenTag_Option::get('autoTagGlobalMax');
-		
-		if ($max > 0 AND count($tagTexts) > $max) {
-			// too many tags in db, only get the top $max ones
-			$tagTexts = array_slice($tagTexts, 0, $max);
-		}
-		
-		return $tagTexts;
 	}
 	
 	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null) {
