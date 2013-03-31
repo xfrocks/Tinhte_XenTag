@@ -93,8 +93,8 @@ class Tinhte_XenTag_Helper {
 	}
 	
 	public static function getNormalizedTagText($tagText) {
-		$tagText = trim($tagText);
-		$tagText = strtolower($tagText);
+		$tagText = utf8_trim($tagText);
+		$tagText = utf8_strtolower($tagText);
 		
 		return $tagText;
 	}

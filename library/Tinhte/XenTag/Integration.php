@@ -255,7 +255,7 @@ class Tinhte_XenTag_Integration {
 	}
 	
 	protected static function _autoTag_hasValidCharacterAround($html, $position, $tag) {
-		static $regEx = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&]/u';
+		static $regEx = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&<>]/u';
 		
 		$pos = $position + utf8_strlen($tag);
 		$htmlLength = utf8_strlen($html);
