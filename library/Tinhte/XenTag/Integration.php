@@ -46,17 +46,17 @@ class Tinhte_XenTag_Integration {
 		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
 		
 		if (!empty($newTags)) {
+			// sondh@2012-09-21
+			// remove duplicate
+			foreach (array_keys($newTags) as $key) {
+				$newTags[$key] = utf8_strtolower($newTags[$key]);
+			}
+			$newTags = array_unique($newTags);
+			
 			$newButExistingTags = $tagModel->getTagsByText($newTags);
 			
 			foreach ($newTags as $newTag) {
 				$newTagData = $tagModel->getTagFromArrayByText($newButExistingTags, $newTag);
-				
-				// sondh@2012-09-21
-				// remove duplicate
-				foreach (array_keys($newTagData) as $key) {
-					$newTagData[$key] = utf8_strtolower($newTagData[$key]);
-				}
-				$newTagData = array_unique($newTagData);
 				
 				if (empty($newTagData)) {
 					if (!$canCreateNew) {
