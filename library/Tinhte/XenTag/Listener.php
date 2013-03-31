@@ -23,6 +23,16 @@ class Tinhte_XenTag_Listener {
 		}
 	}
 	
+	public static function load_class_importer($class, array &$extend) {
+		static $extended = false;
+		
+		// extend all vbulletin importer
+		if ($extended === false AND strpos(strtolower($class), 'vbulletin') !== false) {
+			$extend[] = 'Tinhte_XenTag_XenForo_Importer_vBulletin';
+			$extended = true;
+		}
+	}
+	
 	public static function init_dependencies(XenForo_Dependencies_Abstract $dependencies, array $data) {
 		if ($dependencies instanceof XenForo_Dependencies_Public) {
 			foreach ($data['routesPublic'] as $prefix => $route) {

@@ -20,6 +20,11 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $tags);
 	}
 	
+	public function Tinhte_XenTag_updateTagsInDatabase() {
+		$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
+		$this->_Tinhte_XenTag_updateTagsInDatabase($tags);
+	}
+	
 	protected function _getFields() {
 		$fields = parent::_getFields();
 		
