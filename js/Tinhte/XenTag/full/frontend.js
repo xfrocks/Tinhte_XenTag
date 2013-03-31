@@ -169,9 +169,7 @@
 			
 			XenForo.ajax(
 				this.$trigger.attr('href'),
-				{
-					_Tinhte_XenTag_TagsInlineEditor: 1
-				},
+				{},
 				$.context(this, 'ajaxSuccessForTrigger')
 			);
 		},

@@ -62,22 +62,22 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 	}
 	
 	public function actionEditTags() {
+		$threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
+
+		$ftpHelper = $this->getHelper('ForumThreadPost');
+		list($thread, $forum) = $ftpHelper->assertThreadValidAndViewable($threadId);
+		
+		/* @var $threadModel XenForo_Model_Thread */
+		$threadModel = $this->_getThreadModel();
+		
+		/* @var $tagModel Tinhte_XenTag_Model_Tag */
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+
+		if (!$tagModel->canTagThread($thread, $forum)) {
+			return $this->responseNoPermission();
+		}
+		
 		if ($this->isConfirmedPost()) {
-			$threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
-
-			$ftpHelper = $this->getHelper('ForumThreadPost');
-			list($thread, $forum) = $ftpHelper->assertThreadValidAndViewable($threadId);
-			
-			/* @var $threadModel XenForo_Model_Thread */
-			$threadModel = $this->_getThreadModel();
-			
-			/* @var $tagModel Tinhte_XenTag_Model_Tag */
-			$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
-	
-			if (!$tagModel->canTagThread($thread, $forum)) {
-				return $this->responseNoPermission();
-			}
-
 			$tags = $tagModel->processInput($this->_input);
 		
 			if ($tags !== false) {
@@ -103,14 +103,14 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 				return $this->responseNoPermission();
 			}
 		} else {
-			$response = parent::actionEdit(); // it's more safe this way
+			$viewParams = array(
+				'thread' => $thread,
+				'forum' => $forum,
 			
-			if ($response instanceof XenForo_ControllerResponse_View) {
-				$response->viewName = 'Tinhte_XenTag_ViewPublic_Thread_EditTags';
-				$response->templateName = 'tinhte_xentag_thread_edit_tags';
-			}
-			
-			return $response;
+				'nodeBreadCrumbs' => $ftpHelper->getNodeBreadCrumbs($forum),
+			);
+	
+			return $this->responseView('Tinhte_XenTag_ViewPublic_Thread_EditTags', 'tinhte_xentag_thread_edit_tags', $viewParams);
 		}
 	}
 }
