@@ -256,4 +256,29 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 	protected function _getTagModel() {
 		return $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 	}
+	
+	public static function getSessionActivityDetailsForList(array $activities) {
+		$output = array();
+		foreach ($activities AS $key => $activity) {
+			switch ($activity['controller_action']) {
+				case 'View':
+					if (!empty($activity['params']['tag_text'])) {
+						$output[$key] = array(
+							new XenForo_Phrase('tinhte_xentag_viewing_tag'),
+							$activity['params']['tag_text'],
+							XenForo_Link::buildPublicLink('canonical:' . Tinhte_XenTag_Option::get('routePrefix'), array('tag_text' => $activity['params']['tag_text'])),
+							''
+						);
+					} else {
+						$output[$key] = new XenForo_Phrase('tinhte_xentag_viewing_tags');
+					}
+					break;
+				default:
+					$output[$key] = new XenForo_Phrase('tinhte_xentag_viewing_tags');
+					break;
+			}
+		}
+
+		return $output;
+	}
 }

@@ -7,7 +7,7 @@ class Tinhte_XenTag_FileSums
 		return array (
   'library/Tinhte/XenTag/Constants.php' => '23c23da5edb07f44fb1c86c7c2b20642',
   'library/Tinhte/XenTag/ControllerAdmin/Tag.php' => 'e1602334f39f8993df342a9250cdc167',
-  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => '1beada4e30211e522bc42883ff8d15a7',
+  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => '37f6de2406c255bae7bbf54c65eae71b',
   'library/Tinhte/XenTag/DataWriter/Tag.php' => 'a267b362f8b9a0f4cb180865459832d3',
   'library/Tinhte/XenTag/DataWriter/TaggedContent.php' => '9f90008aff736063d5589fd4da20b9ec',
   'library/Tinhte/XenTag/Helper.php' => '2224df2c528cfac2b9f1770cf5039ac1',
