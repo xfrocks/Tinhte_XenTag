@@ -20,6 +20,10 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		$this->_tagsNeedUpdated = true;
 	}
 	
+	public function Tinhte_XenTag_getForumData() {
+		return $this->_getForumData();
+	}
+	
 	public function Tinhte_XenTag_updateTagsInDatabase() {
 		// this function needs to be made public because the importer
 		// will have to call it directly (_postSave() is not being called
@@ -30,7 +34,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 			
 			$this->_tagsNeedUpdated = false;
 			
-			$forum = $this->_getForumData();
+			$forum = $this->Tinhte_XenTag_getForumData();
 			$options = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
 			$requiresTag = Tinhte_XenTag_Option::get('requiresTag');
 			$maximumTags = Tinhte_XenTag_Option::get('maximumTags');

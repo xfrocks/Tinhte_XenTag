@@ -174,11 +174,26 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		if ($errors) {
 			return $this->responseError($errors);
 		}
+
+		$forceRefresh = $this->_input->filterSingle('force_refresh', XenForo_Input::UINT) > 0;
+		if ($forceRefresh) {
+			if (XenForo_Visitor::getInstance()->get('isTrusted')) {
+				// good, this is a trusted user (admin or mod)
+			} else {
+				// do not accept force refresh request from not-trusted users
+				$forceRefresh = false;
+			}
+		}
 		
-		$search = $searchModel->getExistingSearch(
-			$input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], $visitorUserId,
-			Tinhte_XenTag_Option::get('searchForceUseCache') /* force to use cache to have a nice and clean url */
-		);
+		if ($forceRefresh == false) {
+			$search = $searchModel->getExistingSearch(
+				$input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], $visitorUserId,
+				Tinhte_XenTag_Option::get('searchForceUseCache') /* force to use cache to have a nice and clean url */
+			);
+		} else {
+			// skip getting existing results, this will cause a real search to be made
+			$search = false;
+		}
 		
 		if (empty($search)) {
 			$searcher = new XenForo_Search_Searcher($searchModel);

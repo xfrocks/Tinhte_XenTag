@@ -67,13 +67,18 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 
 			$ftpHelper = $this->getHelper('ForumThreadPost');
 			list($thread, $forum) = $ftpHelper->assertThreadValidAndViewable($threadId);
-	
-			$this->_assertCanEditThread($thread, $forum);
-	
+			
 			/* @var $threadModel XenForo_Model_Thread */
 			$threadModel = $this->_getThreadModel();
 			
-			$tags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->processInput($this->_input);
+			/* @var $tagModel Tinhte_XenTag_Model_Tag */
+			$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+	
+			if (!$tagModel->canTagThread($thread, $forum)) {
+				return $this->responseNoPermission();
+			}
+
+			$tags = $tagModel->processInput($this->_input);
 		
 			if ($tags !== false) {
 				/* @var $dw XenForo_DataWriter_Discussion_Thread */

@@ -27,10 +27,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Forum extends XFCP_Tinhte_XenTag_Xe
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 		
-		$forum = $dw->getExtraData(XenForo_DataWriter_Discussion_Thread::DATA_FORUM);
+		$forum = $dw->Tinhte_XenTag_getForumData();
 		if ($tagModel->canTagThread(false, $forum)) {
 			// only save tags if this user has the permission
-			$tags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->processInput($this->_input);
+			$tags = $tagModel->processInput($this->_input);
 			
 			if ($tags !== false) {
 				$dw->Tinhte_XenTag_setTags($tags);
