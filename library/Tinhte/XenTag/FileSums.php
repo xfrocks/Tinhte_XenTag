@@ -5,9 +5,9 @@ class Tinhte_XenTag_FileSums
 	public static function getHashes()
 	{
 		return array (
-  'library/Tinhte/XenTag/Constants.php' => 'f8df21d20e65068d196520e0c03935a8',
+  'library/Tinhte/XenTag/Constants.php' => 'bcf0cdbfbd0667cf6d3f938c83a41aa2',
   'library/Tinhte/XenTag/ControllerAdmin/Tag.php' => 'e1602334f39f8993df342a9250cdc167',
-  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => '66e00327736aef3e1ef22b72a1755de1',
+  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => 'b2a935b605062841324ca18b95e34813',
   'library/Tinhte/XenTag/DataWriter/Tag.php' => '01299b9c3790073784ae937bdf9383c7',
   'library/Tinhte/XenTag/DataWriter/TaggedContent.php' => '9f90008aff736063d5589fd4da20b9ec',
   'library/Tinhte/XenTag/Helper.php' => '1d4e3e702ffe0ccf71786186d2785e91',
@@ -18,7 +18,7 @@ class Tinhte_XenTag_FileSums
   'library/Tinhte/XenTag/Model/TaggedContent.php' => '454c56ec4b5018be267e6c0789ac5176',
   'library/Tinhte/XenTag/Option.php' => '192b2d4aa9728bb3512ea2b8a27df504',
   'library/Tinhte/XenTag/PostMessageWrapper.php' => 'bc98a1409b30c813b068139c59ee9434',
-  'library/Tinhte/XenTag/Route/Prefix/Tags.php' => '8713f2e86ee5dd545efde70e87fad082',
+  'library/Tinhte/XenTag/Route/Prefix/Tags.php' => '5e52ce26d56e9998facf1e5c64ace8e3',
   'library/Tinhte/XenTag/Route/PrefixAdmin/Tag.php' => '10bfb0cb0977cb1342e556ddb4bcfbdf',
   'library/Tinhte/XenTag/Search/DataHandler/Page.php' => '3e0338a7611b13d40867d1199ba598af',
   'library/Tinhte/XenTag/ViewAdmin/Tag/List.php' => '0b8595e60c396748db40709cc6c300b6',

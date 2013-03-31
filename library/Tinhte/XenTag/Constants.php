@@ -9,6 +9,8 @@ class Tinhte_XenTag_Constants {
 	const GLOBALS_CONTROLLERPUBLIC_THREAD_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionSave';
 	const GLOBALS_SEARCH_SOURCEHANDLER_LOADED = 'Tinhte_XenTag_XenForo_Search_SourceHandler::loaded';
 	
+	const URI_PARAM_TAG_TEXT = 't';
+	
 	const FORM_TAGS_ARRAY = 'tinhte_xentag_tags';
 	const FORM_TAGS_TEXT = 'tinhte_xentag_tags_text';
 	const FORM_INCLUDED = 'tinhte_xentag_included';

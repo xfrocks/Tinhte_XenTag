@@ -4,7 +4,7 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 		if (in_array($routePath, array('', 'index'))) {
 			$action = $routePath;			
 		} else {
-			$action = $router->resolveActionWithStringParam($routePath, $request, 'tag_text');
+			$action = $router->resolveActionWithStringParam($routePath, $request, Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT);
 			
 			if (preg_match('/^page-(\d+)$/', $action, $matches)) {
 				// supports matching /tags/text/page-n links
@@ -25,11 +25,13 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 			
 			$action = XenForo_Link::getPageNumberAsAction($action, $extraParams);
 			
-			if (self::_isSafeText($data['tag_text'])) {
-				$encodedData = array('tag_text' => urlencode($data['tag_text']));
-				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $encodedData, 'tag_text');
+			// sondh@2012-10-08
+			// use URI param when the tag text is not URI friendly
+			$encoded = urlencode($data['tag_text']);
+			if ($encoded === $data['tag_text']) {
+				return XenForo_Link::buildBasicLinkWithStringParam($outputPrefix, $action, $extension, $data, 'tag_text');
 			} else {
-				$extraParams['tag_text'] = $data['tag_text'];
+				$extraParams[Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT] = $data['tag_text'];
 				return XenForo_Link::buildBasicLink($outputPrefix, $action, $extension);
 			}
 		} else {

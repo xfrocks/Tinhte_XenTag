@@ -2,7 +2,7 @@
 
 class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstract {
 	public function actionIndex() {
-		$tagText = $this->_input->filterSingle('tag_text', XenForo_Input::STRING);
+		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
 		if (!empty($tagText)) {
 			return $this->responseReroute(__CLASS__, 'view');
 		}
@@ -44,7 +44,12 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			// search for one tag only, redirect to view action
 			return $this->responseRedirect(
 				XenForo_ControllerResponse_Redirect::SUCCESS,
-				XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), array('tag_text' => $tags[0]))
+				XenForo_Link::buildPublicLink(
+					Tinhte_XenTag_Option::get('routePrefix'),
+					array(
+						Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT => $tags[0]
+					)
+				)
 			);
 		} else {
 			$search = $this->_doSearch($tags);
@@ -64,7 +69,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 	}
 	
 	public function actionView() {
-		$tagText = $this->_input->filterSingle('tag_text', XenForo_Input::STRING);
+		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
 		if (empty($tagText)) {
 			return $this->responseNoPermission();
 		}
@@ -271,11 +276,14 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		foreach ($activities AS $key => $activity) {
 			switch ($activity['controller_action']) {
 				case 'View':
-					if (!empty($activity['params']['tag_text'])) {
+					if (!empty($activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT])) {
 						$output[$key] = array(
 							new XenForo_Phrase('tinhte_xentag_viewing_tag'),
-							$activity['params']['tag_text'],
-							XenForo_Link::buildPublicLink('canonical:' . Tinhte_XenTag_Option::get('routePrefix'), array('tag_text' => $activity['params']['tag_text'])),
+							$activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT],
+							XenForo_Link::buildPublicLink(
+								'canonical:' . Tinhte_XenTag_Option::get('routePrefix'),
+								array(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT => $activity['params'][Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT])
+							),
 							''
 						);
 					} else {
