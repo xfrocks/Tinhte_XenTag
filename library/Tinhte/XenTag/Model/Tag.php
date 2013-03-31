@@ -143,10 +143,6 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		}
 	}
 	
-	public function validateTag($text) {
-		return Tinhte_XenTag_Helper::getNormalizedTagText($text);
-	}
-	
 	public function lookForNewAndRemovedTags(array $tagsData, array $newTagsText, array &$foundNewTagsText, array &$foundRemovedTagsText) {
 		foreach (array_keys($newTagsText) as $key) {
 			$tmp = $this->getTagFromArrayByText($tagsData, $newTagsText[$key]);
@@ -189,7 +185,9 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		return false;
 	}
 	
-	public function isTagIdenticalWithText(array $tagData, $textLower) {
+	public function isTagIdenticalWithText(array $tagData, $tagText) {
+		$textLower = utf8_strtolower($tagText);
+		
 		if (isset($tagData['tagTextLower'])) {
 			if ($tagData['tagTextLower'] == $textLower) {
 				return true;

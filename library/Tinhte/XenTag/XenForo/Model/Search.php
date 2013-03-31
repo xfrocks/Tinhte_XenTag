@@ -19,7 +19,7 @@ class Tinhte_XenTag_XenForo_Model_Search extends XFCP_Tinhte_XenTag_XenForo_Mode
 			
 			// runs through basic validation first
 			foreach ($tags as &$tag) {
-				$tag = $tagModel->validateTag($tag);
+				$tag = Tinhte_XenTag_Helper::getNormalizedTagText($tag);
 			}
 			
 			$constraints[Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS] = $tags;
