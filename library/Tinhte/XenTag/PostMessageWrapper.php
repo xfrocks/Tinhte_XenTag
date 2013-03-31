@@ -57,7 +57,7 @@ class Tinhte_XenTag_PostMessageWrapper {
 		}
 		
 		if ($mode == Tinhte_XenTag_Option::AUTO_TAG_MODE_THREAD_TAGS_FIRST_POST_ONLY
-			AND $post['position'] != 0) {
+			AND $this->_post['position'] != 0) {
 			// the mode targets first post only
 			// but this is not the first one, so reset the $tags array
 			$tags = false;
