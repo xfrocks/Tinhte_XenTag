@@ -9,7 +9,7 @@ class Tinhte_XenTag_XenForo_Search_SourceHandler extends XFCP_Tinhte_XenTag_XenF
 		foreach ($constraints AS $constraint => $constraintInfo) {
 			if ($constraint == Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS) {
 				$processed[$constraint] = array(
-					'metadata' => array(Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS, $constraintInfo),
+					'metadata' => array(Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS, Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($constraintInfo)),
 				);
 			}
 		}

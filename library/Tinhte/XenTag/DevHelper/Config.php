@@ -16,7 +16,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 			'title_field' => 'tag_text',
 			'primaryKey' => array('tag_id'),
 			'indeces' => array(
-				'tag_text' => array('name' => 'tag_text', 'fields' => array('tag_text'), 'type' => 'UNIQUE')
+				'tag_text' => array('name' => 'tag_text', 'fields' => array('tag_text'), 'type' => 'NORMAL')
 			),
 			'files' => array(
 				'data_writer' => array('className' => 'Tinhte_XenTag_DataWriter_Tag', 'hash' => '11f8794a072b6835cc9ff97fb7bed26c'),

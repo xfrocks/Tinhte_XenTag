@@ -69,6 +69,26 @@
 				this.$input.val('');
 				
 				break;
+			default:
+				// process all other character
+				// to make sure comma is processed correctly
+				var text = this.$input.val();
+				if (text.indexOf(',') != -1) {
+					// a comma is found!
+					e.preventDefault();
+
+					var parts = text.split(',');
+					for (var i = 0; i < parts.length; i++) {
+						// below code is similar to above code
+						parts[i] = this.validateInput(parts[i]);
+						
+						// creates tag
+						this.createTag(parts[i]);
+					}
+					
+					// clears the input
+					this.$input.val('');
+				}
 			}
 		},
 		

@@ -114,7 +114,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 	
 	public function getTagFromArrayByText(array $tagsData, $text) {
-		$textLower = strtolower($text);
+		$textLower = trim(strtolower($text));
 		
 		foreach ($tagsData as $tagData) {
 			if ($this->isTagIdenticalWithText($tagData, $textLower)) {

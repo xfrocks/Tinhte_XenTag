@@ -4,6 +4,8 @@ class Tinhte_XenTag_Listener {
 	
 	public static function load_class($class, array &$extend) {
 		static $classes = array(
+			'XenForo_BbCode_Formatter_Base',
+
 			'XenForo_ControllerPublic_Forum',
 			'XenForo_ControllerPublic_Post',
 			'XenForo_ControllerPublic_Search',
@@ -216,6 +218,10 @@ class Tinhte_XenTag_Listener {
 	public static function file_health_check(XenForo_ControllerAdmin_Abstract $controller, array &$hashes) {
 		$ourHashes = Tinhte_XenTag_FileSums::getHashes();
 		$hashes = array_merge($hashes, $ourHashes);
+	}
+	
+	public static function widget_framework_ready(array &$renderers) {
+		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_Cloud';
 	}
 	
 	protected static $_routePrefix = 'tags';

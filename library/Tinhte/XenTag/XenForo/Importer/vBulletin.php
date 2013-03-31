@@ -17,7 +17,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 	
 	public function stepTinhteXenTagTags($start, array $options) {
 		$options = array_merge(array(
-			'limit' => 100,
+			'limit' => 500,
 			'max' => false
 		), $options);
 
@@ -46,15 +46,21 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 					AND tagcontent.contentid < ' . $sDb->quote($start + $options['limit']) . '
 			'
 		);
-		if (!$tags) {
-			return true;
-		}
-
+		
 		$next = 0;
 		$total = 0;
+		
+		if (!$tags) {
+			// added second condition to make sure all threads are processed
+			if ($start + $options['limit'] > $options['max']) {
+				return true;
+			} else {
+				$next = $start + $options['limit'];
+			}
+		}
 
 		$threadIdMap = $model->getThreadIdsMapFromArray($tags, 'contentid');
-		
+
 		$threadTags = array();
 		foreach (array_keys($tags) as $key) {
 			$threadId = $tags[$key]['contentid'];
@@ -65,7 +71,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 			
 			unset($tags[$key]); // free memory asap
 		}
-
+		
 		XenForo_Db::beginTransaction();
 		
 		foreach ($threadTags as $threadId => $tags) {

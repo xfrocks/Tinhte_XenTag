@@ -34,4 +34,13 @@ class Tinhte_XenTag_Option {
 		return $options->get('Tinhte_XenTag_' . $key);
 	}
 	
+	public static function verifyTagMaxLength(&$value, XenForo_DataWriter $dw, $fieldName) {
+		if ($value > 100) {
+			$value = 100;
+			// TODO: throw error?
+		}
+		
+		return true;
+	}
+	
 }

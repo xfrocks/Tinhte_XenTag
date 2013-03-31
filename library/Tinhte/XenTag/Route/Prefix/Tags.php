@@ -36,9 +36,11 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface {
 		}
 	}
 	
-	protected function _isSafeText($text) {
+	protected function _isSafeText(&$text) {
 		if (strpos($text, '/') !== false) return false;
 		if (strpos($text, '"') !== false) return false;
+		
+		$text = trim(strtolower($text));
 		
 		return true;
 	}

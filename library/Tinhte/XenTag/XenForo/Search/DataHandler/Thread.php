@@ -5,8 +5,11 @@ class Tinhte_XenTag_XenForo_Search_DataHandler_Thread extends XFCP_Tinhte_XenTag
 		$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 		
 		if (!empty($tags)) {
+			// call this to make sure Tinhte_XenTag_XenForo_Search_SourceHandler is available
+			XenForo_Search_SourceHandler_Abstract::getDefaultSourceHandler();
+			
 			Tinhte_XenTag_XenForo_Search_SourceHandler::setExtraMetaData(array(
-				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS => $tags, 
+				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS => Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags), 
 			));
 		}
 		

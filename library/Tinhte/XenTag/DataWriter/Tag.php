@@ -40,6 +40,11 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 			return false;
 		}
 		
+		if (strlen($text) > Tinhte_XenTag_Option::get('tagMaxLength')) {
+			$this->error(new XenForo_Phrase('tinhte_xentag_tag_can_not_longer_than_x', array('maxLength' => Tinhte_XenTag_Option::get('tagMaxLength'))), 'tag_text');
+			return false;
+		}
+		
 		return true;
 	}
 

@@ -38,4 +38,23 @@ class Tinhte_XenTag_Helper {
 	public static function getOption($key) {
 		return Tinhte_XenTag_Option::get($key);
 	}
+	
+	public static function getSafeTagsTextArrayForSearch(array $tagsText) {
+		$safe = array();
+		
+		foreach ($tagsText as $tagText) {
+			$safe[] = str_replace(array(
+				// list of all non-sense characters...
+				// typing this base on my keyboard, going from upper left to bottom right
+				// normal character before shift'd character
+				'`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', /* '_' silly!, */ '=', '+',
+				'[', '{', ']', '}', '\\', '|',
+				';', ':', '\'', '"',
+				',', '<', '.', '>', '/', '?',
+				' '
+			), '_', $tagText);
+		}
+		
+		return $safe;
+	}
 }

@@ -11,7 +11,7 @@ class Tinhte_XenTag_Installer {
 				,`created_user_id` INT(10) UNSIGNED NOT NULL
 				,`content_count` INT(10) UNSIGNED DEFAULT \'0\'
 				, PRIMARY KEY (`tag_id`)
-				,UNIQUE INDEX `tag_text` (`tag_text`)
+				, INDEX `tag_text` (`tag_text`)
 			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
 			'dropQuery' => false
 		),
