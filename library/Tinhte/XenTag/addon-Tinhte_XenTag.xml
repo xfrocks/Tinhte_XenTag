@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="0.9" version_id="1" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="Tinhte_XenTag" parent_navigation_id="applications" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
+    <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="Tinhte_XenTag" display_order="10" link="xentag-tags" admin_permission_id="" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions>
+    <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
+  </admin_permissions>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="tinhte_xentag_tag_delete"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_confirm_deletion}: {$tag.tag_text}</xen:title>
+<xen:h1>{xen:phrase tinhte_xentag_tag_confirm_deletion}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:adminlink 'xentag-tags/edit', $tag}">{$tag.tag_text}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:require css="delete_confirmation.css" />
+
+<xen:form action="{xen:adminlink 'xentag-tags/delete', $tag}" class="deleteConfirmForm formOverlay">
+
+	<p>{xen:phrase tinhte_xentag_tag_please_confirm}:</p>
+	<strong><a href="{xen:adminlink 'xentag-tags/edit', $tag}">{$tag.tag_text}</a></strong>
+
+	<xen:submitunit save="{xen:phrase tinhte_xentag_tag_delete}" />
+	
+	<input type="hidden" name="_xfConfirm" value="1" />
+</xen:form>]]></template>
+    <template title="tinhte_xentag_tag_edit"><![CDATA[<xen:title>{xen:if '{$tag.tag_id}', '{xen:phrase tinhte_xentag_tag_edit}', '{xen:phrase tinhte_xentag_tag_add}'}</xen:title>
+
+<xen:form action="{xen:adminlink 'xentag-tags/save'}" class="AutoValidator" data-redirect="yes">
+
+	
+	<xen:textboxunit label="{xen:phrase tinhte_xentag_tag_text}:" name="tag_text" value="{$tag.tag_text}" data-liveTitleTemplate="{xen:if {$tag.tag_id},
+		'{xen:phrase tinhte_xentag_tag_edit}: <em>%s</em>',
+		'{xen:phrase tinhte_xentag_tag_add}: <em>%s</em>'}" />
+	<xen:textboxunit label="{xen:phrase tinhte_xentag_created_date}:" name="created_date" value="{$tag.created_date}" />
+	<xen:textboxunit label="{xen:phrase tinhte_xentag_created_user_id}:" name="created_user_id" value="{$tag.created_user_id}" />
+
+	<xen:submitunit save="{xen:phrase tinhte_xentag_tag_save}">
+		<input type="button" name="delete" value="{xen:phrase tinhte_xentag_tag_delete}"
+			accesskey="d" class="button OverlayTrigger"
+			data-href="{xen:adminlink 'xentag-tags/delete', $tag}"
+			{xen:if '!{$tag.tag_id}', 'style="display: none"'}
+		/>
+	</xen:submitunit>
+	
+	<input type="hidden" name="tag_id" value="{$tag.tag_id}" />
+</xen:form>]]></template>
+    <template title="tinhte_xentag_tag_list"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag}</xen:title>
+
+<xen:topctrl>
+	<a href="{xen:adminlink 'xentag-tags/add'}" class="button" accesskey="a">+ {xen:phrase tinhte_xentag_tag_add}</a>
+</xen:topctrl>
+
+<xen:require css="filter_list.css" />
+<xen:require js="js/xenforo/filter_list.js" />
+
+<xen:form action="{xen:adminlink 'xentag-tags'}" class="section">
+	<xen:if is="{$allTag}">
+		<h2 class="subHeading">
+			<link rel="xenforo_template" type="text/html" href="filter_list_controls.html" />
+			{xen:phrase tinhte_xentag_tag}
+		</h2>
+	
+		<ol class="FilterList Scrollable">
+			<xen:foreach loop="$allTag" value="$tag">
+				<xen:listitem
+					id="{$tag.tag_id}"
+					href="{xen:adminlink 'xentag-tags/edit', $tag}"
+					label="{$tag.tag_text}"
+					delete="{xen:adminlink 'xentag-tags/delete', $tag}" />
+			</xen:foreach>
+		</ol>
+	
+		<p class="sectionFooter">{xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:count $allTag}</span>', 'total={xen:count $allTag}'}</p>
+	<xen:else />
+		<div class="noResults">{xen:phrase tinhte_xentag_tag_no_results}</div>
+	</xen:if>
+</xen:form>]]></template>
+  </admin_templates>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="template_create" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_create" active="1" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_post_render" active="1" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[XenTag]]></phrase>
+    <phrase title="admin_navigation_Tinhte_XenTag_Tag" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
+    <phrase title="admin_permission_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[[XenTag] Manage tags]]></phrase>
+    <phrase title="tinhte_xentag_created_date" version_id="1" version_string="0.9"><![CDATA[Created Date]]></phrase>
+    <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
+    <phrase title="tinhte_xentag_tag" version_id="1" version_string="0.9"><![CDATA[Tag]]></phrase>
+    <phrase title="tinhte_xentag_tags" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
+    <phrase title="tinhte_xentag_tag_add" version_id="1" version_string="0.9"><![CDATA[Add New Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_confirm_deletion" version_id="1" version_string="0.9"><![CDATA[Confirm Deletion of Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_delete" version_id="1" version_string="0.9"><![CDATA[Delete Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_edit" version_id="1" version_string="0.9"><![CDATA[Edit Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_not_found" version_id="1" version_string="0.9"><![CDATA[The requested Tag could not be found]]></phrase>
+    <phrase title="tinhte_xentag_tag_no_results" version_id="1" version_string="0.9"><![CDATA[No clues of Tag at this moment...]]></phrase>
+    <phrase title="tinhte_xentag_tag_please_confirm" version_id="1" version_string="0.9"><![CDATA[Please confirm that you want to delete the following Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_save" version_id="1" version_string="0.9"><![CDATA[Save Tag]]></phrase>
+    <phrase title="tinhte_xentag_tag_text" version_id="1" version_string="0.9"><![CDATA[Tag Text]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="xentag-tags" class="Tinhte_XenTag_Route_PrefixAdmin_Tag" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates>
+    <template title="tinhte_xentag.css" version_id="1" version_string="0.9"><![CDATA[.Tinhte_XenTag_TagsEditor {
+	overflow: auto;
+}
+	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li {
+		float: left;
+		display: block;
+		border-radius: 5px;
+		margin: 2px 5px 2px 0;
+	}
+	
+	.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag {
+		{xen:property secondaryContent.background}
+		
+		padding: 3px;
+		border: 1px solid {xen:property primaryLight};
+	}
+		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag:hover {
+			background-color: {xen:property primaryLighterStill};
+		}
+		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag a.delete {
+			color: #777777;
+			cursor: pointer;
+			font-size: 12px;
+			font-weight: bold;
+			outline: medium none;
+			text-decoration: none;
+			padding: 2px 0 2px 3px;
+		}
+		
+	.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew {
+		padding: 2px 4px 1px 0;
+	}
+		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew .textCtrl.Tinhte_XenTag_TagNewInput {
+			margin: 0 !important;
+			padding: 3px !important;
+			border: none !important;
+			width: inherit !important;
+			background: transparent !important;
+		}
+		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew .textCtrl.Tinhte_XenTag_TagNewInput:focus {
+			border: none !important;
+			background: transparent !important;
+		}]]></template>
+    <template title="tinhte_xentag_post_edit" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{$post.post_id} == {$thread.first_post_id}">
+	<xen:include template="tinhte_xentag_thread_edit_fields" />
+
+	<!-- [Tinhte] XenTag / Mark --><dl class="ctrlUnit submitUnit"><!-- [Tinhte] XenTag / Mark -->
+</xen:if>]]></template>
+    <template title="tinhte_xentag_thread_create" version_id="1" version_string="0.9"><![CDATA[<!-- [Tinhte] XenTag / Mark --><!-- slot: after_editor --><!-- [Tinhte] XenTag / Mark -->
+
+<xen:include template="tinhte_xentag_thread_edit_fields" />]]></template>
+    <template title="tinhte_xentag_thread_edit_fields" version_id="1" version_string="0.9"><![CDATA[<xen:require js="js/Tinhte/XenTag/frontend.js" />
+<xen:require css="tinhte_xentag.css" />
+
+<fieldset>
+	<dl class="ctrlUnit">
+		<dt>{xen:phrase tinhte_xentag_tags}:</dt>
+		<dd>
+			<ul class="Tinhte_XenTag_TagsEditor" data-varname="tinhte_xentag_tags[]">
+				<li><input type="text" name="tinhte_xentag_tags_text" class="textCtrl AutoComplete Tinhte_XenTag_TagNewInput" value="hanoi, vietnam" /></li>
+			</ul>
+		</dd>
+	</dl>
+</fieldset>]]></template>
+  </templates>
+  <bb_code_media_sites/>
+</addon>
