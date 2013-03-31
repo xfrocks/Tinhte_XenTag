@@ -12,7 +12,20 @@ class Tinhte_XenTag_Helper {
 	}
 	
 	public static function explodeTags($tagsStr) {
-		return preg_split(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $tagsStr, -1, PREG_SPLIT_NO_EMPTY);
+		// sondh@2012-08-12
+		// try to use mb_split if possible to avoid splitting the wrong separator in UTF8 strings
+		if (function_exists('mb_split')) {
+			return mb_split(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $tagsStr);
+		} else {
+			return preg_split(Tinhte_XenTag_Constants::REGEX_SEPARATOR, $tagsStr, -1, PREG_SPLIT_NO_EMPTY);
+		}
+	}
+	
+	public static function isTagContainingSeparator($tagText) {
+		// sondh@2012-08-12
+		// we have to add the u modifier to have the regular expression interpreted as unicode
+		// it's 2012 and PHP still doesn't handle unicode transparently... *sigh*
+		return preg_match(Tinhte_XenTag_Constants::REGEX_SEPARATOR . 'u', $tagText) == 1;
 	}
 	
 	public static function getImplodedTagsFromThread($thread, $getLinks = false) {
@@ -47,19 +60,18 @@ class Tinhte_XenTag_Helper {
 		$safe = array();
 		
 		foreach ($tagsText as $tagText) {
-			$safe[] = str_replace(array(
-				// list of all non-sense characters...
-				// typing this base on my keyboard, going from upper left to bottom right
-				// normal character before shift'd character
-				'`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', /* '_' silly!, */ '=', '+',
-				'[', '{', ']', '}', '\\', '|',
-				';', ':', '\'', '"',
-				',', '<', '.', '>', '/', '?',
-				' ',
-				'،', // Udu comma
-			), '_', $tagText);
+			// sondh@2012-08-23
+			// changed to use md5 because search index sucks at utf8 (bug time)
+			$safe[] = md5(self::getNormalizedTagText($tagText));
 		}
 		
 		return $safe;
+	}
+	
+	public static function getNormalizedTagText($tagText) {
+		$tagText = trim($tagText);
+		$tagText = strtolower($tagText);
+		
+		return $tagText;
 	}
 }
