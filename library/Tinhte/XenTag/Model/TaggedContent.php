@@ -1,11 +1,88 @@
 <?php
 class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 	
-	public function deleteTaggedContentsByTagId($tagId) {
+	public function deleteTaggedContentsByTagId(array $tag, array $taggeds) {
 		$this->_getDb()->query("
 			DELETE FROM `xf_tinhte_xentag_tagged_content`
 			WHERE tag_id = ?
-		", array($tagId));
+		", array($tag['tag_id']));
+		
+		$this->_deleteTaggedContentsThreads($tag, $taggeds);
+		$this->_deleteTaggedContentsPages($tag, $taggeds);
+	}
+	
+	protected function _deleteTaggedContentsThreads(array $tag, array $taggeds) {
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+		$threadModel = $this->getModelFromCache('XenForo_Model_Thread');
+		
+		$threadIds = array();
+		foreach ($taggeds as $tagged) {
+			if ($tagged['content_type'] == 'thread') {
+				$threadIds[] = $tagged['content_id'];
+			}
+		}
+		
+		$threads = $threadModel->getThreadsByIds($threadIds);
+		
+		foreach ($threads as $thread) {
+			$tagTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+			$filteredTagTexts = array();
+			
+			foreach ($tagTexts as $tagText) {
+				if ($tagModel->isTagIdenticalWithText($tag, $tagText)) {
+					// drop this tag
+				} else {
+					$filteredTagTexts[] = $tagText;
+				}
+			}
+			
+			if (count($tagTexts) != count($filteredTagTexts)) {
+				/* @var $dw XenForo_DataWriter_Discussion_Thread*/
+				$dw = XenForo_DataWriter::create('XenForo_DataWriter_Discussion_Thread');
+				
+				$dw->setExistingData($thread, true); // save queries
+				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
+				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
+				$dw->save();
+			}
+		}
+	}
+	
+	protected function _deleteTaggedContentsPages(array $tag, array $taggeds) {
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+		$pageModel = $this->getModelFromCache('XenForo_Model_Page');
+		
+		$nodeIds = array();
+		foreach ($taggeds as $tagged) {
+			if ($tagged['content_type'] == 'tinhte_xentag_page') {
+				$nodeIds[] = $tagged['content_id'];
+			}
+		}
+		
+		$pages = $pageModel->Tinhte_XenTag_getPagesByIds($nodeIds);
+		
+		foreach ($pages as $page) {
+			$tagTexts = Tinhte_XenTag_Helper::unserialize($page[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+			$filteredTagTexts = array();
+			
+			foreach ($tagTexts as $tagText) {
+				if ($tagModel->isTagIdenticalWithText($tag, $tagText)) {
+					// drop this tag
+				} else {
+					$filteredTagTexts[] = $tagText;
+				}
+			}
+			
+			if (count($tagTexts) != count($filteredTagTexts)) {
+				/* @var $dw XenForo_DataWriter_Discussion_Thread*/
+				$dw = XenForo_DataWriter::create('XenForo_DataWriter_Page');
+				
+				$dw->setExistingData($page, true); // save queries
+				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
+				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Page::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
+				$dw->save();
+			}
+		}
 	}
 
 	private function getAllTaggedContentCustomized(array &$data, array $fetchOptions) {

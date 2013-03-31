@@ -53,13 +53,27 @@ class Tinhte_XenTag_Helper {
 	}
 	
 	public static function getImplodedTagsFromThread($thread, $getLinks = false) {
-		$result = array();
-		
 		if (is_array($thread) AND isset($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS])) {
 			$tags = self::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 		} else {
 			$tags = array();
 		}
+		
+		return self::_getImplodedTags($tags, $getLinks);
+	}
+	
+	public static function getImplodedTagsFromPage($page, $getLinks = false) {
+		if (is_array($page) AND isset($page[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS])) {
+			$tags = self::unserialize($page[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+		} else {
+			$tags = array();
+		}
+		
+		return self::_getImplodedTags($tags, $getLinks);
+	}
+	
+	protected static function _getImplodedTags(array $tags, $getLinks = false) {
+		$result = array();
 		
 		if ($getLinks) {
 			foreach ($tags as $tag) {

@@ -2,6 +2,7 @@
 
 class Tinhte_XenTag_Constants {
 	const GLOBALS_CONTROLLERADMIN_FORUM_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Forum::actionSave';
+	const GLOBALS_CONTROLLERADMIN_PAGE_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Page::actionSave';
 	const GLOBALS_CONTROLLERPUBLIC_FORUM_ADD_THREAD = 'Tinhte_XenTag_XenForo_ControllerPublic_Forum::actionAddThread';
 	const GLOBALS_CONTROLLERPUBLIC_POST_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Post::actionSave';
 	const GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH = 'Tinhte_XenTag_XenForo_ControllerPublic_Search::actionSearch';
@@ -15,6 +16,7 @@ class Tinhte_XenTag_Constants {
 	
 	const FIELD_THREAD_TAGS = 'tinhte_xentag_tags';
 	const FIELD_FORUM_OPTIONS = 'tinhte_xentag_options';
+	const FIELD_PAGE_TAGS = 'tinhte_xentag_tags';
 	
 	const SEARCH_TYPE_TAG = 'tinhte_xentag_tag';
 	const SEARCH_SEARCH_ID = 'x'; // something cool?

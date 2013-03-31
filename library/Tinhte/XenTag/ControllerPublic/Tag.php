@@ -210,16 +210,21 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			// sondh@2012-08-11
 			// we have to filter out posts because of a design mistake
 			// in version 1.0.6 (and earlier)
+			// sondh@2012-10-06
+			// commented this block of code, hopefully everyone is running an
+			// updated version...
+			/*
 			$resultsFiltered = array();
 			foreach ($results as $result) {
 				if ($result[0] == 'post') continue;
 				$resultsFiltered[] = $result;
 			}
+			*/
 			
 			$warnings = $searcher->getErrors() + $searcher->getWarnings();
 			
 			$search = $searchModel->insertSearch(
-				$resultsFiltered, $input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], array(),
+				$results, $input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], array(),
 				$warnings, $visitorUserId
 			);
 		}

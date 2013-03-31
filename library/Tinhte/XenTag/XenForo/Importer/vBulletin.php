@@ -27,8 +27,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 		/* @var $model XenForo_Model_Import */
 		$model = $this->_importModel;
 
-		if ($options['max'] === false)
-		{
+		if ($options['max'] === false) {
 			$options['max'] = $sDb->fetchOne('
 				SELECT MAX(threadid)
 				FROM ' . $prefix . 'thread
@@ -42,8 +41,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 		if (!$tableTagExists) return true;
 		if (!$tableTagContentExists AND !$tableTagThreadExists) return true;
 
-		if ($tableTagContentExists)
-		{
+		if ($tableTagContentExists) {
 			$tags = $sDb->fetchAll(
 				'
 					SELECT tag.*, tagcontent.*
@@ -55,9 +53,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 						AND tagcontent.contentid < ' . $sDb->quote($start + $options['limit']) . '
 				'
 			);
-		}
-		else 
-		{
+		} else {
 			$tags = $sDb->fetchAll(
 				'
 					SELECT tag.*, tagthread.threadid AS contentid

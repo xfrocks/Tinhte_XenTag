@@ -11,48 +11,11 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	}
 	
 	protected function _postDelete() {
-		$tagModel = $this->_getTagModel();
 		$taggedContentModel = $this->_getTaggedContentModel();
-		
-		/* @var $threadModel XenForo_Model_Thread */
-		$threadModel = $this->getModelFromCache('XenForo_Model_Thread');
 		
 		$taggeds = $taggedContentModel->getAllTaggedContent(array('tag_id' => $this->get('tag_id')));
 		
-		$threadIds = array();
-		foreach ($taggeds as $tagged) {
-			if ($tagged['content_type'] == 'thread') {
-				$threadIds[] = $tagged['content_id'];
-			}
-		}
-		
-		$threads = $threadModel->getThreadsByIds($threadIds);
-		$thisTag = $this->getMergedData();
-		
-		foreach ($threads as $thread) {
-			$tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-			$filteredTags = array();
-			
-			foreach ($tags as $tag) {
-				if ($tagModel->isTagIdenticalWithText($thisTag, $tag)) {
-					// drop this tag
-				} else {
-					$filteredTags[] = $tag;
-				}
-			}
-			
-			if (count($tags) != count($filteredTags)) {
-				/* @var $dw XenForo_DataWriter_Discussion_Thread*/
-				$dw = XenForo_DataWriter::create('XenForo_DataWriter_Discussion_Thread');
-				
-				$dw->setExistingData($thread, true); // save queries
-				$dw->Tinhte_XenTag_setTags($filteredTags);
-				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
-				$dw->save();
-			}
-		}
-		
-		$taggedContentModel->deleteTaggedContentsByTagId($this->get('tag_id'));
+		$taggedContentModel->deleteTaggedContentsByTagId($this->getMergedData(), $taggeds);
 		
 		$this->_rebuildCache();
 		

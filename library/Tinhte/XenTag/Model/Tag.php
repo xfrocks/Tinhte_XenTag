@@ -116,7 +116,14 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			// used as a checkbox in search bar
 			// so no *_included field is coming with it
 			// we just use it as it's is
-			return $tags2 = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
+			$tags = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
+			
+			foreach (array_keys($tags) as $key) {
+				$tags[$key] = trim($tags[$key]);
+				if (empty($tags[$key])) unset($tags[$key]);
+			}
+			
+			return $tags;
 		} else {
 			return false;
 		}

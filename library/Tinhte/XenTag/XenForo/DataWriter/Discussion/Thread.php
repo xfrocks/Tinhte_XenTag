@@ -2,8 +2,10 @@
 
 class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread {
 	
+	const DATA_FORCE_UPDATE_TAGS_IN_DATABASE = 'Tinhte_XenTag_forceUpdateTagsInDatabase';
 	const DATA_SKIP_UPDATE_TAGS_IN_DATABASE = 'Tinhte_XenTag_skipUpdateTagsInDatabase';
 	
+	// TODO: drop this property as it's not necessary
 	protected $_tagsNeedUpdated = false;
 	
 	public function Tinhte_XenTag_setTags(array $tags) {
@@ -30,9 +32,10 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		// this function needs to be made public because the importer
 		// will have to call it directly (_postSave() is not being called
 		// in import mode)
+		$force = $this->getExtraData(self::DATA_FORCE_UPDATE_TAGS_IN_DATABASE);
 		$skip = $this->getExtraData(self::DATA_SKIP_UPDATE_TAGS_IN_DATABASE);
 		
-		if ($this->_tagsNeedUpdated AND empty($skip)) {
+		if ($force OR ($this->_tagsNeedUpdated AND empty($skip))) {
 			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
 			$tagsCount = Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tags, $this);
 			
@@ -78,11 +81,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 	}
 	
 	protected function _discussionPostSave(array $messages) {
-		if ($this->isInsert()) {
-			$this->Tinhte_XenTag_updateTagsInDatabase();
-		} elseif ($this->isUpdate() && $this->isChanged(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS)) {
-			$this->Tinhte_XenTag_updateTagsInDatabase();
-		}
+		$this->Tinhte_XenTag_updateTagsInDatabase();
 		
 		return parent::_discussionPostSave($messages);
 	}

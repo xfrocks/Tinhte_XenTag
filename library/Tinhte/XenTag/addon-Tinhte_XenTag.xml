@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.2.21" version_id="60" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.3" version_id="61" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -39,6 +39,15 @@
 	</xen:radiounit>
 </li>]]></template>
     <template title="tinhte_xentag_hook_admin_forum_edit_tabs"><![CDATA[<li><a>{xen:phrase tinhte_xentag_tags}</a></li>]]></template>
+    <template title="tinhte_xentag_hook_admin_page_edit_basic_informati"><![CDATA[<!-- [Tinhte] XenTag / Mark --><!-- slot: after_description --><!-- [Tinhte] XenTag / Mark -->
+<xen:textboxunit
+	name="tinhte_xentag_tags_text_no_include"
+	value="{xen:helper Tinhte_Xentag_getImplodedTagsFromPage, $page}"
+	label="{xen:phrase tinhte_xentag_tags}:"
+	explain="{xen:phrase tinhte_xentag_tags_instruction}"
+	inputclass="Elastic AutoComplete"
+	data-acUrl="{xen:link '{xen:helper Tinhte_XenTag_getOption, routePrefix}/find'}">
+</xen:textboxunit>]]></template>
     <template title="tinhte_xentag_tag_delete"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_confirm_deletion}: {$tag.tag_text}</xen:title>
 <xen:h1>{xen:phrase tinhte_xentag_tag_confirm_deletion}</xen:h1>
 
@@ -235,6 +244,8 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
     <phrase title="tinhte_xentag_forum_requires_tag_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Select Yes to requires at least one tag in a new thread.]]></phrase>
     <phrase title="tinhte_xentag_no_contents_has_been_found" version_id="50" version_string="1.2.11"><![CDATA[No content has been found.]]></phrase>
     <phrase title="tinhte_xentag_no_tags" version_id="5" version_string="0.9.4"><![CDATA[No tags]]></phrase>
+    <phrase title="tinhte_xentag_page" version_id="60" version_string="1.2.21"><![CDATA[Page (Tags)]]></phrase>
+    <phrase title="tinhte_xentag_page_naked" version_id="60" version_string="1.2.21"><![CDATA[Page]]></phrase>
     <phrase title="tinhte_xentag_please_confirm_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Please confirm that you want to delete ALL empty tags (without any contents tagged).]]></phrase>
     <phrase title="tinhte_xentag_search_by_tag" version_id="1" version_string="0.9"><![CDATA[Search by tag]]></phrase>
     <phrase title="tinhte_xentag_search_threads_tagged_with_x_only" version_id="1" version_string="0.9"><![CDATA[Search threads tagged with {tag_text} only]]></phrase>
@@ -382,6 +393,12 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
 		<xen:map from="$message" to="$post" />
 	</xen:include>
 </xen:if>]]></template>
+    <template title="tinhte_xentag_hook_pagenode_container_article" version_id="60" version_string="1.2.21"><![CDATA[<xen:if hascontent="true">
+	<div class="sectionMain">
+		{xen:phrase tinhte_xentag_tags}:
+		<xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromPage, $page, 1}</xen:contentcheck>
+	</div>
+</xen:if>]]></template>
     <template title="tinhte_xentag_hook_post_private_controls" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'post_date_after'">
 	<xen:if hascontent="true">
 		<span class="item">
@@ -449,6 +466,21 @@ thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</e
 </dl>
 <!-- [Tinhte] XenTag / Mark --><dl class="ctrlUnit submitUnit"><!-- [Tinhte] XenTag / Mark -->]]></template>
     <template title="tinhte_xentag_search_form_post" version_id="1" version_string="0.9"><![CDATA[<xen:include template="tinhte_xentag_search_form" />]]></template>
+    <template title="tinhte_xentag_search_result_page" version_id="60" version_string="1.2.21"><![CDATA[<li id="tinhte_xentag_page-{$page.node_id}" class="searchResult tinhte_xentag_page primaryContent">
+
+	<div class="listBlock main">
+		<div class="titleText">
+			<span class="contentType">{xen:phrase tinhte_xentag_page_naked}</span>
+			<h3 class="title"><a href="{xen:link pages, $page}">{xen:helper highlight, $page.title, $search.search_query, 'highlight'}</a></h3>
+		</div>
+
+		<blockquote class="snippet">
+			<a href="{xen:link pages, $page}">{xen:helper snippet, $page.description, 150, {xen:array 'term={$search.search_query}', 'emClass=highlight'}}</a>
+		</blockquote>
+
+	</div>
+
+</li>]]></template>
     <template title="tinhte_xentag_sidebar_cloud" version_id="40" version_string="1.2"><![CDATA[<xen:if hascontent="true">
 	<xen:require css="tinhte_xentag.css" />
 

@@ -7,6 +7,7 @@ class Tinhte_XenTag_Listener {
 			'XenForo_BbCode_Formatter_Base',
 
 			'XenForo_ControllerAdmin_Forum',
+			'XenForo_ControllerAdmin_Page',
 		
 			'XenForo_ControllerPublic_Forum',
 			'XenForo_ControllerPublic_Post',
@@ -16,8 +17,10 @@ class Tinhte_XenTag_Listener {
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
 			'XenForo_DataWriter_Forum',
+			'XenForo_DataWriter_Page',
 		
 			'XenForo_Model_Post',
+			'XenForo_Model_Page',
 			'XenForo_Model_Search',
 			'XenForo_Model_ThreadRedirect',
 		
@@ -51,6 +54,7 @@ class Tinhte_XenTag_Listener {
 		}
 
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromthread'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromThread');
+		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfrompage'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromPage');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getoption'] = array('Tinhte_XenTag_Helper', 'getOption');
 	}
 
@@ -85,6 +89,19 @@ class Tinhte_XenTag_Listener {
 		if ($templateName == 'post') {
 			Tinhte_XenTag_PostMessageWrapper::wrap($params);
 		}
+		
+		if ($templateName == 'forum_edit' /* admin template */) {
+			$template->preloadTemplate('tinhte_xentag_hook_admin_forum_edit_tabs');
+			$template->preloadTemplate('tinhte_xentag_hook_admin_forum_edit_panes');
+		}
+		
+		if ($templateName == 'page_edit' /* admin template */) {
+			$template->preloadTemplate('tinhte_xentag_hook_admin_page_edit_basic_informati');
+		}
+		
+		if ($templateName == 'pagenode_container') {
+			$template->preloadTemplate('tinhte_xentag_hook_pagenode_container_article');
+		}
 	}
 	
 	public static function template_post_render($templateName, &$content, array &$containerData, XenForo_Template_Abstract $template) {
@@ -109,16 +126,20 @@ class Tinhte_XenTag_Listener {
 			case 'admin_forum_edit_tabs':
 			case 'admin_forum_edit_panes':
 			
+			case 'admin_page_edit_basic_information':
+			
 			case 'message_content':
 			case 'message_notices':
 			case 'post_private_controls':
 			case 'post_public_controls':
-				
+			
 			case 'thread_view_pagenav_before':
 			case 'thread_view_form_before':
 			case 'thread_view_qr_before':
-			case 'thread_view_qr_after':	
-				$ourTemplate = $template->create('tinhte_xentag_hook_' . $hookName, $template->getParams());
+			case 'thread_view_qr_after':
+			
+			case 'pagenode_container_article':
+				$ourTemplate = $template->create(substr('tinhte_xentag_hook_' . $hookName, 0, 50), $template->getParams());
 				$ourTemplate->setParams($hookParams);
 				$rendered = $ourTemplate->render();
 				
