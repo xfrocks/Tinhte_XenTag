@@ -10,6 +10,44 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		return $tags;
 	}
 	
+	public function updateTag($tagId, $contentCountDelta = 0) {
+		/* @var $taggedContentModel Tinhte_XenTag_Model_TaggedContent */
+		$taggedContentModel = $this->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
+		
+		// get latest tagged contents
+		$taggedContentsLimit = Tinhte_XenTag_Option::get('latestTaggedContentsLimit');
+		if ($taggedContentsLimit > 0) {
+			$taggedContents = $taggedContentModel->getAllTaggedContent(
+				array('tag_id' => $tagId),
+				array(
+					'order' => 'tagged_date',
+					'direction' => 'desc',
+					'limit' => $taggedContentsLimit,
+				)
+			);
+		} else {
+			// this feature has been disabled (?)
+			$taggedContents = array();
+		}
+		
+		$this->_getDb()->query("
+			UPDATE `xf_tinhte_xentag_tag`
+			SET content_count = " . (
+				($contentCountDelta >= 0) ?
+				('content_count + ?') :
+				('IF(content_count > 0, content_count + ?, 0)')
+			) . "
+				, latest_tagged_contents = ?
+			WHERE tag_id = ?
+		", array(
+			$contentCountDelta,
+			serialize($taggedContents),
+			$tagId,
+		));
+		
+		return $taggedContents;
+	}
+	
 	public function getTagTextsFromCache() {
 		$tags = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
 

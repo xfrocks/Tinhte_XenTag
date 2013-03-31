@@ -223,6 +223,7 @@ class Tinhte_XenTag_Listener {
 	
 	public static function widget_framework_ready(array &$renderers) {
 		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_Cloud';
+		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_RelatedThreads';
 	}
 	
 	protected static $_routePrefix = 'tags';

@@ -74,7 +74,10 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 				),
 				'created_date' => array('type' => 'uint', 'required' => true, 'default' => XenForo_Application::$time),
 				'created_user_id' => array('type' => 'uint', 'required' => true),
-				'content_count' => array('type' => 'uint', 'default' => 0)
+				'content_count' => array('type' => 'uint', 'default' => 0),
+				
+				// since 0.10
+				'latest_tagged_contents' => array('type' => 'serialzied'),
 			)
 		);
 	}

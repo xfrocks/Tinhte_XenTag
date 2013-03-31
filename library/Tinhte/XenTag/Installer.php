@@ -13,7 +13,7 @@ class Tinhte_XenTag_Installer {
 				, PRIMARY KEY (`tag_id`)
 				, INDEX `tag_text` (`tag_text`)
 			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
-			'dropQuery' => false
+			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tag`'
 		),
 		'tagged_content' => array(
 			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tagged_content` (
@@ -25,7 +25,7 @@ class Tinhte_XenTag_Installer {
 				, PRIMARY KEY (`tag_id`,`content_type`,`content_id`)
 				
 			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
-			'dropQuery' => false
+			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tagged_content`'
 		)
 	);
 	protected static $_patches = array(
@@ -34,7 +34,14 @@ class Tinhte_XenTag_Installer {
 			'field' => 'tinhte_xentag_tags',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_thread` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_thread` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => false
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_tags`'
+		),
+		array(
+			'table' => 'xf_tinhte_xentag_tag',
+			'field' => 'latest_tagged_contents',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'latest_tagged_contents\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `latest_tagged_contents` MEDIUMBLOB',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `latest_tagged_contents`'
 		)
 	);
 
@@ -56,7 +63,18 @@ class Tinhte_XenTag_Installer {
 	}
 	
 	public static function uninstall() {
-		// TODO
+		$db = XenForo_Application::get('db');
+		
+		foreach (self::$_tables as $table) {
+			$db->query($table['dropQuery']);
+		}
+		
+		foreach (self::$_patches as $patch) {
+			$existed = $db->fetchOne($patch['showColumnsQuery']);
+			if (!empty($existed)) {
+				$db->query($patch['alterTableDropColumnQuery']);
+			}
+		}
 		
 		self::uninstallCustomized();
 	}

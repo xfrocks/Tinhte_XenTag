@@ -51,6 +51,9 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 	protected $_dataPatches = array(
 		'xf_thread' => array(
 			'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized')
+		),
+		'xf_tinhte_xentag_tag' => array(
+			'latest_tagged_contents' => array('name' => 'latest_tagged_contents', 'type' => 'serialized')
 		)
 	);
 	protected $_exportPath = '/Users/sondh/Dropbox/XenForo/Tinhte/XenTag';

@@ -3,27 +3,19 @@
 class Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 	
 	protected function _postSave() {
-		if ($this->isInsert()) {
-			$this->_db->query('
-				UPDATE `xf_tinhte_xentag_tag`
-				SET content_count = content_count + 1
-				WHERE tag_id = ?',
-				$this->get('tag_id')
-			);
-		}
+		$this->_updateTag($this->isInsert() ? 1 : 0);
 		
 		return parent::_postSave();
 	}
 	
 	protected function _postDelete() {
-		$this->_db->query('
-			UPDATE `xf_tinhte_xentag_tag`
-			SET content_count = IF(content_count > 0, content_count - 1, 0)
-			WHERE tag_id = ?',
-			$this->get('tag_id')
-		);
+		$this->_updateTag(-1);
 		
 		return parent::_postDelete();
+	}
+	
+	protected function _updateTag($contentCountDelta) {
+		$this->getModelFromCache('Tinhte_XenTag_Model_Tag')->updateTag($this->get('tag_id'), $contentCountDelta);
 	}
 	
 	protected function _getFields() {

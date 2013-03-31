@@ -14,7 +14,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 	}
 	
 	public function prepareTaggedContentOrderOptionsCustomized(array &$choices, array &$fetchOptions) {
-		// customized code goes here
+		$choices['tagged_date'] = 'tagged_content.tagged_date';
 	}
 
 	public function getList(array $conditions = array(), array $fetchOptions = array()) {

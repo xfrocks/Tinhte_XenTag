@@ -53,6 +53,8 @@ class Tinhte_XenTag_Option {
 				return $mode;
 			// case 'autoTagOnceOnly': return true;
 			// case 'autoTagGlobalMax': return 1000;
+			
+			case 'latestTaggedContentsLimit': return 10;
 		}
 		
 		return $options->get($keyPrefix . $key);
