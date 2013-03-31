@@ -175,6 +175,9 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		/* @var $searchModel XenForo_Model_Search */
 		$searchModel = $this->getModelFromCache('XenForo_Model_Search');
 		
+		/* @var $tagSearchModel Tinhte_XenTag_Model_Search */
+		$tagSearchModel = $this->getModelFromCache('Tinhte_XenTag_Model_Search');
+		
 		$input = array(
 			'type' => Tinhte_XenTag_Constants::SEARCH_TYPE_TAG,
 			'keywords' => '',
@@ -213,6 +216,8 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			
 			if (empty($results)) {
 				return $this->_getNoResultsResponse($tagText);
+			} else {
+				$tagSearchModel->prioritizeResults($results, $searcher, $input['keywords'], $constraints, $input['order']);
 			}
 			
 			// sondh@2012-08-11
