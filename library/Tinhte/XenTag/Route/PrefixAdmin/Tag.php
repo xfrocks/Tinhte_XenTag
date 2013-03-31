@@ -1,12 +1,13 @@
 <?php
 class Tinhte_XenTag_Route_PrefixAdmin_Tag implements XenForo_Route_Interface {
 	public function match($routePath, Zend_Controller_Request_Http $request, XenForo_Router $router) {
-		if (in_array($routePath, array('add', 'save'))) {
-			$action = $routePath;			
-		} else {
-			$action = $router->resolveActionWithIntegerParam($routePath, $request, 'tag_id');
+		$action = $router->resolveActionWithIntegerParam($routePath, $request, 'tag_id');
+		$majorSection = 'Tinhte_XenTag_Tag';
+		if (empty($action) OR strtolower($action) == 'index') {
+			$majorSection = 'threadsPosts';
 		}
-		return $router->getRouteMatch('Tinhte_XenTag_ControllerAdmin_Tag', $action, 'threadsPosts');
+		
+		return $router->getRouteMatch('Tinhte_XenTag_ControllerAdmin_Tag', $action, $majorSection);
 	}
 
 	public function buildLink($originalPrefix, $outputPrefix, $action, $extension, $data, array &$extraParams) {

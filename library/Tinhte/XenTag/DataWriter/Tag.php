@@ -56,6 +56,9 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 				
 				// since 0.10
 				'latest_tagged_contents' => array('type' => 'serialzied'),
+				
+				// since 1.4
+				'tag_description' => array('type' => 'string'),
 			)
 		);
 	}

@@ -53,7 +53,8 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 			'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized')
 		),
 		'xf_tinhte_xentag_tag' => array(
-			'latest_tagged_contents' => array('name' => 'latest_tagged_contents', 'type' => 'serialized')
+			'latest_tagged_contents' => array('name' => 'latest_tagged_contents', 'type' => 'serialized'),
+			'tag_description' => array('name' => 'tag_description', 'type' => 'string')
 		),
 		'xf_forum' => array(
 			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized')
@@ -63,6 +64,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 		)
 	);
 	protected $_exportPath = '/Users/sondh/Dropbox/XenForo/Tinhte/XenTag';
+	protected $_exportIncludes = array();
 	
 	/**
 	 * Return false to trigger the upgrade!
@@ -84,6 +86,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base {
 					// 'required' => true,
 					// 'allowedValues' => array('value_1', 'value_2'), 
 					// 'default' => 0,
+					// 'autoIncrement' => true,
 				),
 				// other fields go here
 			),

@@ -86,6 +86,34 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 		}
 	}
 	
+	public function actionEdit() {
+		$id = $this->_input->filterSingle('tag_id', XenForo_Input::UINT);
+		$tag = $this->_getTagOrError($id);
+		
+		if ($this->isConfirmedPost()) {
+			$dwInput = $this->_input->filter(array(
+				'tag_text' => XenForo_Input::STRING,
+				'tag_description' => XenForo_Input::STRING,
+			)); 
+			
+			$dw = $this->_getTagDataWriter();
+			$dw->setExistingData($id);
+			$dw->bulkSet($dwInput);
+			$dw->save();
+			
+			return $this->responseRedirect(
+				XenForo_ControllerResponse_Redirect::SUCCESS,
+				XenForo_Link::buildAdminLink('xentag-tags') . '#' . XenForo_Template_Helper_Core::callHelper('listitemid', array($tag['tag_id']))
+			);
+		} else {
+			$viewParams = array(
+				'tag' => $tag,
+			);
+			
+			return $this->responseView('Tinhte_XenTag_ViewAdmin_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
+		}
+	}
+	
 	protected function _getTagOrError($id, array $fetchOptions = array()) {
 		$info = $this->_getTagModel()->getTagById($id, $fetchOptions);
 		

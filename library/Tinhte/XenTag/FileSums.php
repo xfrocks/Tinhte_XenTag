@@ -5,13 +5,13 @@ class Tinhte_XenTag_FileSums
 	public static function getHashes()
 	{
 		return array (
-  'library/Tinhte/XenTag/Constants.php' => 'bcf0cdbfbd0667cf6d3f938c83a41aa2',
-  'library/Tinhte/XenTag/ControllerAdmin/Tag.php' => 'e1602334f39f8993df342a9250cdc167',
-  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => 'e8c31163c68745656eee6147f30a03de',
-  'library/Tinhte/XenTag/DataWriter/Tag.php' => '01299b9c3790073784ae937bdf9383c7',
+  'library/Tinhte/XenTag/Constants.php' => 'dcf711bcc6e983fbfd7ba721bc2eea31',
+  'library/Tinhte/XenTag/ControllerAdmin/Tag.php' => '02460393f72f7c1c0dc190a39263795c',
+  'library/Tinhte/XenTag/ControllerPublic/Tag.php' => '4aa2ba746c6ac51c6c696c4755d30298',
+  'library/Tinhte/XenTag/DataWriter/Tag.php' => '99d5fabbce3cc80842deb81ac27be83c',
   'library/Tinhte/XenTag/DataWriter/TaggedContent.php' => '9f90008aff736063d5589fd4da20b9ec',
   'library/Tinhte/XenTag/Helper.php' => '1d4e3e702ffe0ccf71786186d2785e91',
-  'library/Tinhte/XenTag/Installer.php' => '3edb3fb60dbeda702ecf6c0a24c96e54',
+  'library/Tinhte/XenTag/Installer.php' => '234ea42ca332c9ba3362746593a0ab95',
   'library/Tinhte/XenTag/Integration.php' => 'd167689b74685c51d0b30cf913503af9',
   'library/Tinhte/XenTag/Listener.php' => 'e39281235af4c59190add72a967e4ddf',
   'library/Tinhte/XenTag/Model/Tag.php' => '0d930bd7458285ca638c87f32c886010',
@@ -19,7 +19,7 @@ class Tinhte_XenTag_FileSums
   'library/Tinhte/XenTag/Option.php' => 'e862bbb7591aea88756aba438009964f',
   'library/Tinhte/XenTag/PostMessageWrapper.php' => 'bc98a1409b30c813b068139c59ee9434',
   'library/Tinhte/XenTag/Route/Prefix/Tags.php' => '1785db02ce6cec87a4ba51e7eb799925',
-  'library/Tinhte/XenTag/Route/PrefixAdmin/Tag.php' => '10bfb0cb0977cb1342e556ddb4bcfbdf',
+  'library/Tinhte/XenTag/Route/PrefixAdmin/Tag.php' => '75516ed0955617101ea102935f286a8d',
   'library/Tinhte/XenTag/Search/DataHandler/Page.php' => 'ff73c923ae14b30886f22070f2dd4e52',
   'library/Tinhte/XenTag/ViewAdmin/Tag/List.php' => '0b8595e60c396748db40709cc6c300b6',
   'library/Tinhte/XenTag/ViewPublic/Tag/Find.php' => '63d200782f38c500325018459fdebb60',
