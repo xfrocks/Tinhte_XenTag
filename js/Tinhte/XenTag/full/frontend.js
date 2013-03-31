@@ -1,6 +1,5 @@
 /** @param {jQuery} $ jQuery Object */
 !function($, window, document, _undefined) {
-	
 	// idea from https://github.com/levycarneiro/tag-it
 	XenForo.Tinhte_XenTag_TagsEditor = function($ul) { this.__construct($ul); };
 	XenForo.Tinhte_XenTag_TagsEditor.prototype = {
@@ -23,7 +22,12 @@
 			$ul.addClass('textCtrl');
 			
 			$ul.click($.context(this, 'ulClick'));
-			this.$input.keypress($.context(this, 'inputKeypress'));
+			
+			// changed to listen to keyup instead of keypress
+			// because some of our required keystroke is not sent to keypress (on some browser, namely Chrome)
+			// since 1.0.6
+			// this.$input.keypress($.context(this, 'inputKeystroke'));
+			this.$input.keyup($.context(this, 'inputKeystroke'));
 			
 			// process old tags automatically
 			var tags = this.$input.val().split(',');
@@ -44,8 +48,8 @@
 			}
 		},
 		
-		inputKeypress: function(e) {
-			var code = event.which;
+		inputKeystroke: function(e) {
+			var code = e.which;
 			
 			switch (code) {
 			case 8: // backspace
@@ -94,7 +98,11 @@
 		
 		validateInput: function(value) {
 			value = value.replace(this.regex, '');
-			value = value.trim();
+			
+			// switched to use jQuery trim() method
+			// to support IE8
+			// since 1.0.6
+			value = $.trim(value);
 			
 			return value;
 		},

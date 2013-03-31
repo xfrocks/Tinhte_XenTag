@@ -11,7 +11,7 @@ class Tinhte_XenTag_FileSums
   'library/Tinhte/XenTag/DataWriter/Tag.php' => '3a8449f510b348844b99c2e09effca5d',
   'library/Tinhte/XenTag/DataWriter/TaggedContent.php' => '9f90008aff736063d5589fd4da20b9ec',
   'library/Tinhte/XenTag/Helper.php' => '7534f6c19a5fb3790504863eab279d14',
-  'library/Tinhte/XenTag/Installer.php' => '467c105f130fc06447a35b773688cf6c',
+  'library/Tinhte/XenTag/Installer.php' => 'fb7657a6b8968b1b068e4863fda44fd6',
   'library/Tinhte/XenTag/Listener.php' => '21cd5a7ac7342f46640eeae194b44474',
   'library/Tinhte/XenTag/Model/Tag.php' => 'd910b1110ae464608d7bdcc47b3356f3',
   'library/Tinhte/XenTag/Model/TaggedContent.php' => '54ce0487f7ece7eb8029eba90bbc2848',
@@ -38,8 +38,8 @@ class Tinhte_XenTag_FileSums
   'library/Tinhte/XenTag/XenForo/Search/DataHandler/Post.php' => '234908da2a6ed03c898b7dcd2578830a',
   'library/Tinhte/XenTag/XenForo/Search/DataHandler/Thread.php' => '45963f3e334c124d866cadf35c8de226',
   'library/Tinhte/XenTag/XenForo/Search/SourceHandler.php' => '77c6897c12b1bd82ba12d15edf78799e',
-  'js/Tinhte/XenTag/frontend.js' => '0d04b0d2ac4f09ebc61aed7ed62bd040',
-  'js/Tinhte/XenTag/full/frontend.js' => '972b6944b2adde5a41f037f3f5771b82',
+  'js/Tinhte/XenTag/frontend.js' => '0e9636629a86859eb3bdff39f81f28fe',
+  'js/Tinhte/XenTag/full/frontend.js' => 'd5a6ca66f3823edd162de45a0d38c080',
   'js/Tinhte/XenTag/jquery.tinysort.js' => 'ad3ffa50bd42d62f50fdd41f95b27047',
 );
 	}
