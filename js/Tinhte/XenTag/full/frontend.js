@@ -235,16 +235,19 @@
 		__construct: function($element) {
 			this.$element = $element;
 			
-			var $sortToggler = $('<a href="#"/>')
-				.text($element.data('toggler'))
-				.toggle(function(e) {
-					$element.find('li').tsort({order: 'desc', attr: 'data-level'});
-					e.preventDefault();
-				}, function(e) {
-					$element.find('li').tsort({order: 'asc', attr: 'data-text'});
-					e.preventDefault();
-				});
-			$sortToggler.xfInsert('insertAfter', $element);
+			var sortToggler = $element.data('toggler');
+			if (sortToggler) {
+				var $sortToggler = $('<a href="#"/>')
+					.text($element.data('toggler'))
+					.toggle(function(e) {
+						$element.find('li').tsort({order: 'desc', attr: 'data-level'});
+						e.preventDefault();
+					}, function(e) {
+						$element.find('li').tsort({order: 'asc', attr: 'data-text'});
+						e.preventDefault();
+					});
+				$sortToggler.xfInsert('insertAfter', $element);
+			}
 		}
 	};
 	
