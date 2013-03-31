@@ -21,7 +21,7 @@ class Tinhte_XenTag_Option {
 			case 'cloudMax': return 100;
 			case 'cloudLevelCount': return 5;
 			case 'displayPosition':
-				$position = $options->get('tinhte_xentag_' . $key);
+				$position = $options->get('Tinhte_XenTag_' . $key);
 				if (!in_array($position, $availablePositions)) {
 					$position = $availablePositions[0];
 				}
@@ -31,7 +31,7 @@ class Tinhte_XenTag_Option {
 			case 'searchForceUseCache': return true;
 		}
 		
-		return $options->get('tinhte_xentag_' . $key);
+		return $options->get('Tinhte_XenTag_' . $key);
 	}
 	
 }

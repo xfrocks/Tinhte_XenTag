@@ -78,6 +78,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 				
 				$viewParams = array(
 					'thread' => $thread,
+					'Tinhte_XenTag_callerTemplate' => $this->_input->filterSingle('_Tinhte_XenTag_callerTemplate', XenForo_Input::STRING),
 				);
 				
 				return $this->responseView(

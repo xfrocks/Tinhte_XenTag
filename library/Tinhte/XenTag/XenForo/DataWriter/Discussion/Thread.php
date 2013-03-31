@@ -113,6 +113,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 		$newTags = array();
 		$removedTags = array();
 		$tagModel->lookForNewAndRemovedTags($existingTags, $tags, $newTags, $removedTags);
+		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
 		
 		if (!empty($newTags)) {
 			$newButExistingTags = $tagModel->getTagsByText($newTags);
@@ -121,6 +122,9 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 				$newTagData = $tagModel->getTagFromArrayByText($newButExistingTags, $newTag);
 				
 				if (empty($newTagData)) {
+					if (!$canCreateNew) {
+						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
+					}
 					/* @var $dwTag Tinhte_XenTag_DataWriter_Tag */
 					$dwTag = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
 					$dwTag->set('tag_text', $newTag);

@@ -156,6 +156,10 @@
 			
 			new XenForo.ExtLoader(ajaxData, function() {
 				$templateHtml.addClass('Tinhte_XenTag_TagsInlineEditorForm');
+				
+				// add the caller template
+				$templateHtml.append('<input type="hidden" name="_Tinhte_XenTag_callerTemplate" value="' + $element.data('template') + '" />');
+				
 				$templateHtml.xfInsert('insertAfter', $element, 'show');
 				
 				$templateHtml.find('.button.primary').click($saveClick);
@@ -193,7 +197,7 @@
 			
 			var $element = this.$element;
 			var $form = this.$form;
-			var $templateHtml = $(ajaxData.templateHtml);
+			var $templateHtml = $('<div />').append($(ajaxData.templateHtml).find('.Tinhte_XenTag_TagsInlineEditor'));
 
 			new XenForo.ExtLoader(ajaxData, function() {
 				$templateHtml.xfInsert('insertAfter', $element, 'show');
@@ -221,7 +225,6 @@
 					e.preventDefault();
 				});
 			$sortToggler.xfInsert('insertAfter', $element);
-			console.log($element);
 		}
 	};
 	
