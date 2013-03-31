@@ -118,23 +118,17 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->_getNoResultsResponse($tagText);
 		}
 		
-		$threadStartOffset = ($page - 1) * $perPage + 1;
-		$threadEndOffset = ($page - 1) * $perPage + count($results['results']);
+		$resultStartOffset = ($page - 1) * $perPage + 1;
+		$resultEndOffset = ($page - 1) * $perPage + count($results['results']);
 		
-		$threads = array();
-		$inlineModOptions = array();
-		foreach ($results['results'] AS $result) {
-			$thread = $result['content'];
-
-			$thread['forum'] = array(
-				'node_id' => $thread['node_id'],
-				'title' => $thread['node_title']
-			);
-
-			$threadModOptions = $threadModel->addInlineModOptionToThread($thread, $thread, $thread['permissions']);
-			$inlineModOptions += $threadModOptions;
-
-			$threads[$result[XenForo_Model_Search::CONTENT_ID]] = $thread;
+		$ignoredNames = array();
+		foreach ($results['results'] AS $result)
+		{
+			$content = $result['content'];
+			if (!empty($content['isIgnored']) && !empty($content['user_id']) && !empty($content['username']))
+			{
+				$ignoredNames[$content['user_id']] = $content['username'];
+			}
 		}
 		
 		$linkParams = array();
@@ -146,18 +140,17 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		$viewParams = array(
 			'tag' => $tag,
 			'search' => $search,
-			'threads' => $threads,
-			'inlineModOptions' => $inlineModOptions,
+			'results' => $results,
+			
+			'resultStartOffset' => $resultStartOffset,
+			'resultEndOffset' => $resultEndOffset,
 
-			'threadStartOffset' => $threadStartOffset,
-			'threadEndOffset' => $threadEndOffset,
-
-			'ignoredNames' => $this->_getIgnoredContentUserNames($threads),
+			'ignoredNames' => $ignoredNames,
 
 			'page' => $page,
 			'perPage' => $perPage,
-			'totalThreads' => $search['result_count'],
-			'nextPage' => ($threadEndOffset < $search['result_count'] ? ($page + 1) : 0),
+			'totalResults' => $search['result_count'],
+			'nextPage' => ($resultEndOffset < $search['result_count'] ? ($page + 1) : 0),
 			'linkParams' => $linkParams,
 		);
 
@@ -182,8 +175,6 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->responseError($errors);
 		}
 		
-		$constraints['content'] = 'thread'; // limit to threads only
-		
 		$search = $searchModel->getExistingSearch(
 			$input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], $visitorUserId,
 			Tinhte_XenTag_Option::get('searchForceUseCache') /* force to use cache to have a nice and clean url */
@@ -197,10 +188,19 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 				return $this->_getNoResultsResponse($tagText);
 			}
 			
+			// sondh@2012-08-11
+			// we have to filter out posts because of a design mistake
+			// in version 1.0.6 (and earlier)
+			$resultsFiltered = array();
+			foreach ($results as $result) {
+				if ($result[0] == 'post') continue;
+				$resultsFiltered[] = $result;
+			}
+			
 			$warnings = $searcher->getErrors() + $searcher->getWarnings();
 			
 			$search = $searchModel->insertSearch(
-				$results, $input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], array(),
+				$resultsFiltered, $input['type'], $input['keywords'], $constraints, $input['order'], $input['group_discussion'], array(),
 				$warnings, $visitorUserId
 			);
 		}

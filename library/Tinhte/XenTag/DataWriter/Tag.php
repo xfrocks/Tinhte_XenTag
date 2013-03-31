@@ -61,6 +61,8 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 			return false;
 		}
 		
+		$text = $this->_getTagModel()->validateTag($text);
+		
 		return true;
 	}
 

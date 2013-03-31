@@ -36,7 +36,7 @@ class Tinhte_XenTag_Option {
 			case 'cloudLevelCount': return 5;
 			case 'majorSection': return 'forums';
 			case 'routePrefix': return Tinhte_XenTag_Listener::getRoutePrefix();
-			case 'searchForceUseCache': return true;
+			case 'searchForceUseCache': return !XenForo_Application::debugMode();
 			
 			case 'displayPosition':
 				$position = $options->get($keyPrefix . $key);

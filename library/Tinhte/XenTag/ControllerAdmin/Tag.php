@@ -73,6 +73,18 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 		}
 	}
 	
+	public function actionDeleteEmptyTags() {
+		if ($this->isConfirmedPost()) {
+			$this->_getTagModel()->deleteEmptyTags();
+			
+			return $this->responseRedirect(
+				XenForo_ControllerResponse_Redirect::SUCCESS,
+				XenForo_Link::buildAdminLink('xentag-tags')
+			);
+		} else {
+			return $this->responseView('Tinhte_XenTag_ViewAdmin_Tag_DeleteEmptyTags', 'tinhte_xentag_delete_empty_tags');
+		}
+	}
 	
 	protected function _getTagOrError($id, array $fetchOptions = array()) {
 		$info = $this->_getTagModel()->getTagById($id, $fetchOptions);

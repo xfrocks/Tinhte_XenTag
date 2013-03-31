@@ -41,6 +41,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Post extends XFCP_Tinhte_XenTag_Xen
 				$threadDw->save();
 			}
 		}
+		
+		// sondh@2012-08-11
+		// just to be safe...
+		unset($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_POST_SAVE]);
 	}
 	
 }

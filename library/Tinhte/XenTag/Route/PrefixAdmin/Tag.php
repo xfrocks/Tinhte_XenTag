@@ -6,7 +6,7 @@ class Tinhte_XenTag_Route_PrefixAdmin_Tag implements XenForo_Route_Interface {
 		} else {
 			$action = $router->resolveActionWithIntegerParam($routePath, $request, 'tag_id');
 		}
-		return $router->getRouteMatch('Tinhte_XenTag_ControllerAdmin_Tag', $action, 'applications');
+		return $router->getRouteMatch('Tinhte_XenTag_ControllerAdmin_Tag', $action, 'threadsPosts');
 	}
 
 	public function buildLink($originalPrefix, $outputPrefix, $action, $extension, $data, array &$extraParams) {

@@ -6,7 +6,6 @@ class Tinhte_XenTag_XenForo_Model_Search extends XFCP_Tinhte_XenTag_XenForo_Mode
 			$GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH]->Tinhte_XenTag_actionSearch($this, $input);
 		}
 		
-		
 		$constraints = parent::getGeneralConstraintsFromInput($input, $errors);
 		
 		if (!empty($input[Tinhte_XenTag_Constants::SEARCH_INPUT_TAGS])) {

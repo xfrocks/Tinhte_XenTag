@@ -1,5 +1,9 @@
 <?php
 class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
+	
+	public function getSupportedContentTypes() {
+		return array('thread');
+	}
 
 	private function getAllTaggedContentCustomized(array &$data, array $fetchOptions) {
 		// customized processing for getAllTaggedContent() should go here

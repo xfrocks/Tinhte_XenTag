@@ -18,7 +18,6 @@ class Tinhte_XenTag_Listener {
 			'XenForo_Model_Search',
 			'XenForo_Model_ThreadRedirect',
 		
-			'XenForo_Search_DataHandler_Post',
 			'XenForo_Search_DataHandler_Thread',
 		);
 		
@@ -202,7 +201,7 @@ class Tinhte_XenTag_Listener {
 		}
 	}
 	
-	public static function search_source_create($class) {
+	public static function search_source_create(&$class) {
 		static $isProxyClassCreated = false;
 		$ourClassName = 'Tinhte_XenTag_XenForo_Search_SourceHandler';
 		

@@ -3,15 +3,7 @@
 class Tinhte_XenTag_XenForo_Search_DataHandler_Thread extends XFCP_Tinhte_XenTag_XenForo_Search_DataHandler_Thread {
 	protected function _insertIntoIndex(XenForo_Search_Indexer $indexer, array $data, array $parentData = null) {
 		$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-		
-		if (!empty($tags)) {
-			// call this to make sure Tinhte_XenTag_XenForo_Search_SourceHandler is available
-			XenForo_Search_SourceHandler_Abstract::getDefaultSourceHandler();
-			
-			Tinhte_XenTag_XenForo_Search_SourceHandler::setExtraMetaData(array(
-				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS => Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags), 
-			));
-		}
+		Tinhte_XenTag_Integration::insertIntoIndex($tags, $this);
 		
 		$result = parent::_insertIntoIndex($indexer, $data, $parentData);
 	}

@@ -32,5 +32,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Search extends XFCP_Tinhte_XenTag_X
 		if ($tags !== false AND !empty($tags)) {
 			$input[Tinhte_XenTag_Constants::SEARCH_INPUT_TAGS] = $tags;
 		}
+		
+		// sondh@2012-08-11
+		// unset the global variable to keep it from running multiple time
+		// just to be safe, you know
+		unset($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH]);
 	}
 }

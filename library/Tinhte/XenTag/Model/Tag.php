@@ -3,6 +3,11 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	
 	const FETCH_TAGGED = 1;
 	
+	public function deleteEmptyTags() {
+		$this->_getDb()->query("DELETE FROM xf_tinhte_xentag_tag WHERE content_count = 0");
+		$this->rebuildCache();
+	}
+	
 	public function rebuildCache() {
 		$tags = $this->_getDb()->fetchCol("SELECT tag_text FROM xf_tinhte_xentag_tag ORDER BY content_count DESC");
 		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $tags);

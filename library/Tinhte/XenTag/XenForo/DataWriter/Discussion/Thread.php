@@ -2,32 +2,34 @@
 
 class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread {
 	
-	public function Tinhte_XenTag_setTags(array $tagsRaw) {
-		$tags = array();
-		
-		/* @var $tagModel Tinhte_XenTag_Model_Tag */
-		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		
-		foreach ($tagsRaw as $tag) {
-			$tag = $tagModel->validateTag($tag);
-			if (!empty($tag) AND !in_array($tag, $tags)) {
-				if (strlen($tag) > Tinhte_XenTag_Option::get('tagMaxLength')) {
-					$this->error(new XenForo_Phrase('tinhte_xentag_tag_can_not_longer_than_x', array('maxLength' => Tinhte_XenTag_Option::get('tagMaxLength'))), Tinhte_XenTag_Constants::FIELD_THREAD_TAGS);
-					return false;
-				}
-				
-				$tags[] = $tag;
-			}
-		}
-		
-		asort($tags); // index association is maintained 
-		
+	protected $_tagsNeedUpdated = false;
+	
+	public function Tinhte_XenTag_setTags(array $tags) {
+		// sondh@2012-08-11
+		// this method has been greatly simplified to make it easier + 
+		// more consistent when you need to integrate more content type
+		// with the system. Originally, the tag is verified here first
+		// to make sure it's not too long, all characters are in correct cases, etc.
+		// Doing so will make the saved tags in content table look just like
+		// they are saved internally (because the tags are saved in content table
+		// before they are saved in tag table).
+		// In special case when user give some invalid tag text, an exception will
+		// be thrown. It's done post save but because it's still in the same db 
+		// transaction, the incorrect date will not be saved. 
 		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $tags);
+		$this->_tagsNeedUpdated = true;
 	}
 	
 	public function Tinhte_XenTag_updateTagsInDatabase() {
-		$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
-		$this->_Tinhte_XenTag_updateTagsInDatabase($tags);
+		// this function needs to be made public because the importer
+		// will have to call it directly (_postSave() is not being called
+		// in import mode)
+		if ($this->_tagsNeedUpdated) {
+			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
+			Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tags, $this);
+			
+			$this->_tagsNeedUpdated = false;
+		}
 	}
 	
 	protected function _getFields() {
@@ -54,48 +56,16 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 	
 	protected function _discussionPostSave(array $messages) {
 		if ($this->isInsert()) {
-			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
-			$this->_Tinhte_XenTag_updateTagsInDatabase($tags);
-		}
-		
-		if ($this->isUpdate() && $this->isChanged(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS)) {
-			$tags = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
-			$this->_Tinhte_XenTag_updateTagsInDatabase($tags);
-			
-			// below lines of code are copied from XenForo_DataWriter_Discussion_Thread::_discussionPostSave
-			$indexer = new XenForo_Search_Indexer();
-
-			$messageHandler = $this->_messageDefinition->getSearchDataHandler();
-			if ($messageHandler) {
-				$thread = $this->getMergedData();
-				$fullMessages = $this->_getMessagesInDiscussionSimple(true); // re-get with message contents
-				foreach ($fullMessages AS $key => $message) {
-					$messageHandler->insertIntoIndex($indexer, $message, $thread);
-					unset($fullMessages[$key]);
-				}
-			}
+			$this->Tinhte_XenTag_updateTagsInDatabase();
+		} elseif ($this->isUpdate() && $this->isChanged(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS)) {
+			$this->Tinhte_XenTag_updateTagsInDatabase();
 		}
 		
 		return parent::_discussionPostSave($messages);
 	}
 	
 	protected function _discussionPostDelete(array $messages) {
-		/* @var $tagModel Tinhte_XenTag_Model_Tag */
-		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		
-		$existingTags = $tagModel->getTagsOfContent('thread', $this->get('thread_id'));
-		
-		foreach ($existingTags as $tag) {
-			/* @var $dwTag Tinhte_XenTag_DataWriter_Tagged */
-			$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
-			$data = array(
-				'tag_id' => $tag['tag_id'],
-				'content_type' => 'thread',
-				'content_id' => $this->get('thread_id'),
-			);
-			$dwTagged->setExistingData($data, true);
-			$dwTagged->delete();
-		}
+		Tinhte_XenTag_Integration::deleteTags('thread', $this->get('thread_id'), $this);
 		
 		return parent::_discussionPostDelete($messages);
 	}
@@ -103,72 +73,4 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread extends XFCP_Tinhte_Xen
 	protected function _needsSearchIndexUpdate() {
 		return (parent::_needsSearchIndexUpdate() || $this->isChanged(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
 	}
-	
-	protected function _Tinhte_XenTag_updateTagsInDatabase(array $tags) {
-		/* @var $tagModel Tinhte_XenTag_Model_Tag */
-		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		
-		/* @var $taggedModel Tinhte_XenTag_Model_TaggedContent */
-		$taggedModel = $this->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
-		
-		if ($this->isInsert()) {
-			// saves 1 query
-			$existingTags = array();
-		} else {
-			$existingTags = $tagModel->getTagsOfContent('thread', $this->get('thread_id'));
-		}
-		
-		$newTags = array();
-		$removedTags = array();
-		$tagModel->lookForNewAndRemovedTags($existingTags, $tags, $newTags, $removedTags);
-		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
-		
-		if (!empty($newTags)) {
-			$newButExistingTags = $tagModel->getTagsByText($newTags);
-			
-			foreach ($newTags as $newTag) {
-				$newTagData = $tagModel->getTagFromArrayByText($newButExistingTags, $newTag);
-				
-				if (empty($newTagData)) {
-					if (!$canCreateNew) {
-						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
-					}
-					/* @var $dwTag Tinhte_XenTag_DataWriter_Tag */
-					$dwTag = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
-					$dwTag->set('tag_text', $newTag);
-					$dwTag->set('created_user_id', $this->get('user_id'));
-					$dwTag->save();
-					
-					$newTagData = $dwTag->getMergedData();
-				}
-				
-				/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
-				$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
-				$dwTagged->set('tag_id', $newTagData['tag_id']);
-				$dwTagged->set('content_type', 'thread');
-				$dwTagged->set('content_id', $this->get('thread_id'));
-				$dwTagged->set('tagged_user_id', $this->get('user_id'));
-				$dwTagged->save();
-			}
-		}
-		
-		if (!empty($removedTags)) {
-			foreach ($removedTags as $removedTag) {
-				$removedTagData = $tagModel->getTagFromArrayByText($existingTags, $removedTag);
-				
-				if (!empty($removedTagData)) {
-					/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
-					$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
-					$data = array(
-						'tag_id' => $removedTagData['tag_id'],
-						'content_type' => 'thread',
-						'content_id' => $this->get('thread_id'),
-					);
-					$dwTagged->setExistingData($data, true);
-					$dwTagged->delete();
-				}
-			}
-		}
-	}
-	
 }

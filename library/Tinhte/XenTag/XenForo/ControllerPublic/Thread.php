@@ -55,6 +55,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 				$dw->Tinhte_XenTag_setTags($tags);
 			}
 		}
+		
+		// sondh@2012-08-11
+		// just to be safe...
+		unset($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_THREAD_SAVE]);
 	}
 	
 	public function actionEditTags() {
