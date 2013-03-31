@@ -7,6 +7,7 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			'options' => array(
 				'limit' => XenForo_Input::UINT,
 				'as_guest' => XenForo_Input::UINT,
+				'use_live_cache' => XenForo_Input::UINT,
 			),
 			'useCache' => true,
 			'useUserCache' => true,
@@ -112,6 +113,14 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 		}
 		
 		return parent::useUserCache($widget);
+	}
+	
+	public function useLiveCache(array $widget) {
+		if (!empty($widget['options']['use_live_cache'])) {
+			return true;
+		}
+
+		return parent::useLiveCache($widget);
 	}
 	
 	protected function _getCacheId(array $widget, $positionCode, array $params, array $suffix = array()) {
