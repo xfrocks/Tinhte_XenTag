@@ -1,8 +1,11 @@
 <?php
 class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 	
-	public function getSupportedContentTypes() {
-		return array('thread');
+	public function deleteTaggedContentsByTagId($tagId) {
+		$this->_getDb()->query("
+			DELETE FROM `xf_tinhte_xentag_tagged_content`
+			WHERE tag_id = ?
+		", array($tagId));
 	}
 
 	private function getAllTaggedContentCustomized(array &$data, array $fetchOptions) {

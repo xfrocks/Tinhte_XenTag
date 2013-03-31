@@ -52,6 +52,8 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 			}
 		}
 		
+		$taggedContentModel->deleteTaggedContentsByTagId($this->get('tag_id'));
+		
 		$this->_rebuildCache();
 		
 		return parent::_postDelete();
