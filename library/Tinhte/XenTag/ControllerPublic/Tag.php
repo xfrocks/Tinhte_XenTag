@@ -17,6 +17,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		);
 		
 		$tags = $tagModel->getAllTag($conditions, $fetchOptions);
+		$tagModel->calculateCloudLevel($tags);
 		
 		$viewParams = array(
 			'tags' => $tags,
@@ -26,6 +27,35 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			'Tinhte_XenTag_ViewPublic_Tag_List',
 			'tinhte_xentag_tag_list',
 			$viewParams
+		);
+	}
+	
+	public function actionSearch() {
+		$tags = $this->_getTagModel()->processInput($this->_input);
+		
+		if (empty($tags)) {
+			// no tag?!
+			return $this->_getNoResultsResponse($tags);
+		} else if (count($tags) == 1) {
+			// search for one tag only, redirect to view action
+			return $this->responseRedirect(
+				XenForo_ControllerResponse_Redirect::SUCCESS,
+				XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), array('tag_text' => $tags[0]))
+			);
+		} else {
+			$search = $this->_doSearch($tags);
+		}
+		
+		if ($search instanceof XenForo_ControllerResponse_Message) {
+			return $search;
+		} elseif (!is_array($search)) {
+			return $this->_getNoResultsResponse($tagText);
+		}
+		
+		return $this->responseRedirect(
+			XenForo_ControllerResponse_Redirect::SUCCESS,
+			XenForo_Link::buildPublicLink('search', $search),
+			''
 		);
 	}
 	

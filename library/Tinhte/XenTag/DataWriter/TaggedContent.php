@@ -1,14 +1,6 @@
 <?php
 
-class Tinhte_XenTag_DataWriter_TaggedContent extends _Tinhte_XenTag_DataWriter_TaggedContent {
-	
-	protected function _getFields() {
-		$fields = parent::_getFields();
-		
-		$fields['xf_tinhte_xentag_tagged_content']['tagged_date']['default'] = XenForo_Application::$time;
-		
-		return $fields;
-	}
+class Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 	
 	protected function _postSave() {
 		if ($this->isInsert()) {
@@ -30,12 +22,6 @@ class Tinhte_XenTag_DataWriter_TaggedContent extends _Tinhte_XenTag_DataWriter_T
 		);
 	}
 	
-}
-
-class _Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
-
-	/* Start auto-generated lines of code. Change made will be overwriten... */
-	
 	protected function _getFields() {
 		return array(
 			'xf_tinhte_xentag_tagged_content' => array(
@@ -43,7 +29,7 @@ class _Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 				'content_type' => array('type' => 'string', 'required' => true, 'maxLength' => 25),
 				'content_id' => array('type' => 'uint', 'required' => true),
 				'tagged_user_id' => array('type' => 'uint', 'required' => true),
-				'tagged_date' => array('type' => 'uint', 'required' => true)
+				'tagged_date' => array('type' => 'uint', 'required' => true, 'default' => XenForo_Application::$time)
 			)
 		);
 	}
@@ -72,8 +58,5 @@ class _Tinhte_XenTag_DataWriter_TaggedContent extends XenForo_DataWriter {
 	protected function _getTaggedContentModel() {
 		return $this->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
 	}
-	
 
-	
-	/* End auto-generated lines of code. Feel free to make changes below */
 }

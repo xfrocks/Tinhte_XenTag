@@ -1,14 +1,37 @@
 <?php
 
-class Tinhte_XenTag_DataWriter_Tag extends _Tinhte_XenTag_DataWriter_Tag {
+class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	
-	protected function _getFields() {
-		$fields = parent::_getFields();
+	protected function _postDelete() {
+		$taggedContentModel = $this->_getTaggedContentModel();
 		
-		$fields['xf_tinhte_xentag_tag']['tag_text']['verification'] = array('$this', '_verifyText');
-		$fields['xf_tinhte_xentag_tag']['created_date']['default'] = XenForo_Application::$time;
+		/* @var $threadModel XenForo_Model_Thread */
+		$threadModel = $this->getModelFromCache('XenForo_Model_Thread');
 		
-		return $fields;
+		$taggeds = $taggedContentModel->getAllTaggedContent(array('tag_id' => $this->get('tag_id')));
+		
+		$threadIds = array();
+		foreach ($taggeds as $tagged) {
+			if ($tagged['content_type'] == 'thread') {
+				$threadIds[] = $tagged['content_id'];
+			}
+		}
+		
+		$threads = $threadModel->getThreadsByIds($threadIds);
+		foreach ($threads as $thread) {
+			$tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+			
+			$tagKey = array_search($this->get('tag_text'), $tags);
+			if (empty($tagKey)) continue; // the tag is not found in the thread
+			unset($tags[$tagKey]);
+			
+			/* @var $dw XenForo_DataWriter_Discussion_Thread*/
+			$dw = XenForo_DataWriter::create('XenForo_DataWriter_Discussion_Thread');
+			
+			$dw->setExistingData($thread, true); // save queries
+			$dw->Tinhte_XenTag_setTags($tags);
+			$dw->save();
+		}
 	}
 	
 	protected function _verifyText(&$text) {
@@ -19,19 +42,16 @@ class Tinhte_XenTag_DataWriter_Tag extends _Tinhte_XenTag_DataWriter_Tag {
 		
 		return true;
 	}
-	
-}
 
-class _Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
-
-	/* Start auto-generated lines of code. Change made will be overwriten... */
-	
 	protected function _getFields() {
 		return array(
 			'xf_tinhte_xentag_tag' => array(
 				'tag_id' => array('type' => 'uint', 'autoIncrement' => true),
-				'tag_text' => array('type' => 'string', 'required' => true, 'maxLength' => 100),
-				'created_date' => array('type' => 'uint', 'required' => true),
+				'tag_text' => array(
+					'type' => 'string', 'required' => true, 'maxLength' => 100,
+					'verification' => array('$this', '_verifyText'),
+				),
+				'created_date' => array('type' => 'uint', 'required' => true, 'default' => XenForo_Application::$time),
 				'created_user_id' => array('type' => 'uint', 'required' => true),
 				'content_count' => array('type' => 'uint', 'default' => 0)
 			)
@@ -62,8 +82,12 @@ class _Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	protected function _getTagModel() {
 		return $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 	}
-	
 
+	/**
+	 * @return Tinhte_XenTag_Model_TaggedContent
+	 */
+	protected function _getTaggedContentModel() {
+		return $this->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
+	}
 	
-	/* End auto-generated lines of code. Feel free to make changes below */
 }

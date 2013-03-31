@@ -12,6 +12,7 @@ class Tinhte_XenTag_Listener {
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
 		
+			'XenForo_Model_Post',
 			'XenForo_Model_Search',
 		
 			'XenForo_Search_DataHandler_Post',
@@ -52,6 +53,7 @@ class Tinhte_XenTag_Listener {
 			case 'search_form':
 			case 'search_form_post':
 			case 'thread_create':
+			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 				$template->preloadTemplate('tinhte_xentag_' . $templateName);
@@ -80,6 +82,7 @@ class Tinhte_XenTag_Listener {
 			case 'search_form':
 			case 'search_form_post':	
 			case 'thread_create':
+			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 				$ourTemplate = $template->create('tinhte_xentag_' . $templateName, $template->getParams());
@@ -108,6 +111,40 @@ class Tinhte_XenTag_Listener {
 				self::injectRendered($contents, $rendered);
 				break;
 		}
+		
+		if ($hookName == 'tinhte_xentag_tag_cloud_item') {
+			// our special hook to populate data to the sidebar
+			// doing this will make it super-easy to use the sidebar template
+			// just put the include statement in the target page and you are done!
+			// <xen:include template="tinhte_xentag_sidebar_cloud" />
+			// supported parameters:
+			// - max: maximum number of links
+			$tagModel = XenForo_Model::create('Tinhte_XenTag_Model_Tag');
+			
+			$conditions = array();
+			$fetchOptions = array(
+				'order' => 'content_count',
+				'direction' => 'desc',
+				'limit' => isset($hookParams['max']) ? $hookParams['max'] : Tinhte_XenTag_Option::get('cloudMax'),
+			);
+			
+			$tags = $tagModel->getAllTag($conditions, $fetchOptions);
+			$tagModel->calculateCloudLevel($tags);
+			$results = '';
+			
+			foreach ($tags as $tag) {
+				$search = array('{TAG_TEXT}', '{TAG_LINK}', '{TAG_CONTENT_COUNT}', '{TAG_LEVEL}');
+				$replace = array(
+					htmlspecialchars($tag['tag_text']),
+					XenForo_Link::buildPublicLink(Tinhte_XenTag_Option::get('routePrefix'), $tag),
+					XenForo_Template_Helper_Core::numberFormat($tag['content_count']),
+					$tag['cloudLevel'],
+				);
+				$results .= str_replace($search, $replace, $contents);
+			}
+			
+			$contents = $results; // switch the template contents with our html
+		}
 	}
 	
 	public static function injectRendered(&$target, $html, $offsetInTarget = 0,
@@ -134,7 +171,7 @@ class Tinhte_XenTag_Listener {
 					// revert mode, look for the last occurence
 					$markedPos = strrpos($target, $marked, $offsetInTarget);
 				}
-				
+
 				if ($markedPos !== false) {
 					// the marked text has been found
 					// start injecting our html in place

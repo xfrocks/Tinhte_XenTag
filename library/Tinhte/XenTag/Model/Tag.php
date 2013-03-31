@@ -3,6 +3,22 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	
 	const FETCH_TAGGED = 1;
 	
+	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null) {
+		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);
+		
+		$canTagAll = XenForo_Permission::hasContentPermission($nodePermissions, Tinhte_XenTag_Constants::PERM_USER_TAG_ALL);
+		
+		if ($canTagAll) return true; // can tag all, nothing to check...
+
+		if (empty($thread) OR $thread['user_id'] == $viewingUser['user_id']) {
+			// IMPORTANT: if more data in $thread is used, please make sure to make
+			// the appropriate change to Tinhte_XenTag_Model_Post::preparePost
+			// and Tinhte_XenTag_XenForo_ControllerPublic_Post::Tinhte_XenTag_actionSave
+			// or else this may get really nasty!
+			return XenForo_Permission::hasContentPermission($nodePermissions, Tinhte_XenTag_Constants::PERM_USER_TAG);
+		}
+	}
+	
 	public function processInput(XenForo_Input $input) {
 		$data = $input->filter(array(
 			Tinhte_XenTag_Constants::FORM_TAGS_ARRAY => XenForo_Input::ARRAY_SIMPLE,
@@ -20,7 +36,14 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				$tags2 = array();
 			}
 			
-			return array_merge($tags, $tags2);
+			$merged = array_merge($tags, $tags2);
+			
+			foreach (array_keys($merged) as $key) {
+				$merged[$key] = trim($merged[$key]);
+				if (empty($merged[$key])) unset($merged[$key]);
+			}
+			
+			return $merged;
 		} elseif (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED])) {
 			// used as a checkbox in search bar
 			// so no *_included field is coming with it
@@ -28,6 +51,27 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 			return explode(',', $data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
 		} else {
 			return false;
+		}
+	}
+	
+	public function calculateCloudLevel(array &$tags) {
+		$levelCount = Tinhte_XenTag_Option::get('cloudLevelCount');
+		$maxContentCount = 0;
+		$levelStep = 9999;
+		
+		foreach ($tags as $tag) {
+			if ($tag['content_count'] > $maxContentCount) {
+				$maxContentCount = $tag['content_count'];
+			}
+		}
+		if ($levelCount > 0) {
+			$levelStep = max(1, floor($maxContentCount / $levelCount));
+		}
+		
+		usort($tags, create_function('$tag1, $tag2', 'return strcmp($tag1["tag_text"], $tag2["tag_text"]);')); // array indeces will not be maintained
+		
+		foreach ($tags as &$tag) {
+			$tag['cloudLevel'] = max(1, min($levelCount, ceil($tag['content_count'] / $levelStep)));
 		}
 	}
 	
@@ -171,8 +215,6 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		$choices['content_count'] = 'tag.content_count';
 	}
 
-	/* Start auto-generated lines of code. Change made will be overwriten... */
-
 	public function getList(array $conditions = array(), array $fetchOptions = array()) {
 		$data = $this->getAllTag($conditions, $fetchOptions);
 		$list = array();
@@ -262,16 +304,12 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	
 	public function prepareTagOrderOptions(array &$fetchOptions, $defaultOrderSql = '') {
 		$choices = array(
-			
+			'tag_text' => 'tag.tag_text',
 		);
 		
 		$this->prepareTagOrderOptionsCustomized($choices, $fetchOptions);
 		
 		return $this->getOrderByClause($choices, $fetchOptions, $defaultOrderSql);
 	}
-	
-
-
-	/* End auto-generated lines of code. Feel free to make changes below */
 
 }

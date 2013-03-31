@@ -18,4 +18,8 @@ class Tinhte_XenTag_Constants {
 	const SEARCH_CONSTRAINT_TAGS = 'tags';
 	const SEARCH_METADATA_TAGS = 'tags'; // not sure why we need 2 of these?
 	const SEARCH_INPUT_TAGS = 'tinhte_xentag_tags';
+	
+	const PERM_USER_TAG = 'Tinhte_XenTag_tag';
+	const PERM_USER_TAG_ALL = 'Tinhte_XenTag_tagAll';
+	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
 }

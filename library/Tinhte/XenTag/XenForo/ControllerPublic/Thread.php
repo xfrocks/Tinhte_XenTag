@@ -2,10 +2,24 @@
 
 class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_XenForo_ControllerPublic_Thread {
 	
+	protected function _getDefaultViewParams(array $forum, array $thread, array $posts, $page = 1, array $viewParams = array()) {
+		/* @var $tagModel Tinhte_XenTag_Model_Tag */
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+		
+		$viewParams['Tinhte_XenTag_canEdit'] = $tagModel->canTagThread($thread, $forum);
+		
+		return parent::_getDefaultViewParams($forum, $thread, $posts, $page, $viewParams);
+	}
+	
 	public function actionEdit() {
 		$response = parent::actionEdit();
 		
 		if ($response instanceof XenForo_ControllerResponse_View) {
+			/* @var $tagModel Tinhte_XenTag_Model_Tag */
+			$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+			
+			$response->params['Tinhte_XenTag_canEdit'] = $tagModel->canTagThread($response->params['thread'], $response->params['forum']);
+			
 			if ($this->_input->filterSingle('_Tinhte_XenTag_TagsInlineEditor', XenForo_Input::UINT)) {
 				$response->viewName = 'Tinhte_XenTag_ViewPublic_Thread_EditTags';
 				$response->templateName = 'tinhte_xentag_thread_edit_tags';
@@ -24,10 +38,18 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 	}
 	
 	public function Tinhte_XenTag_actionSave(XenForo_DataWriter_Discussion_Thread $dw) {
-		$tags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->processInput($this->_input);
+		/* @var $tagModel Tinhte_XenTag_Model_Tag */
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 		
-		if ($tags !== false) {
-			$dw->Tinhte_XenTag_setTags($tags);
+		$forum = $dw->getExtraData(XenForo_DataWriter_Discussion_Thread::DATA_FORUM);
+		$thread = $dw->getMergedData();
+		
+		if ($tagModel->canTagThread($thread, $forum)) {
+			$tags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->processInput($this->_input);
+			
+			if ($tags !== false) {
+				$dw->Tinhte_XenTag_setTags($tags);
+			}
 		}
 	}
 	

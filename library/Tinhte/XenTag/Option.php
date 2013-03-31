@@ -17,6 +17,7 @@ class Tinhte_XenTag_Option {
 		);
 		
 		switch ($key) {
+			case 'perPage': return 20;
 			case 'cloudMax': return 100;
 			case 'cloudLevelCount': return 5;
 			case 'displayPosition':

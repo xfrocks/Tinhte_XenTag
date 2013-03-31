@@ -17,8 +17,6 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 		// customized code goes here
 	}
 
-	/* Start auto-generated lines of code. Change made will be overwriten... */
-
 	public function getList(array $conditions = array(), array $fetchOptions = array()) {
 		$data = $this->getAllTaggedContent($conditions, $fetchOptions);
 		$list = array();
@@ -115,9 +113,5 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 		
 		return $this->getOrderByClause($choices, $fetchOptions, $defaultOrderSql);
 	}
-	
-
-
-	/* End auto-generated lines of code. Feel free to make changes below */
 
 }
