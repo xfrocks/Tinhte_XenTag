@@ -45,7 +45,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread extends XFCP_Tinhte_XenTag_X
 		$thread = $dw->getMergedData();
 		
 		if (!empty($forum) AND $tagModel->canTagThread($thread, $forum)) {
-			$tags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->processInput($this->_input);
+			$tags = $tagModel->processInput($this->_input);
 			
 			if ($tags !== false) {
 				$dw->Tinhte_XenTag_setTags($tags);

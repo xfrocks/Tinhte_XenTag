@@ -26,10 +26,15 @@ class Tinhte_XenTag_XenResource_ControllerPublic_Resource extends XFCP_Tinhte_Xe
 	public function Tinhte_XenTag_actionSave(XenResource_DataWriter_Resource $dw) {
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		$tags = $tagModel->processInput($this->_input);
 		
-		if ($tags !== false) {
-			$dw->Tinhte_XenTag_setTags($tags);
+		$resource = $dw->getMergedData();
+
+		if ($tagModel->canTagResource($resource)) {
+			$tags = $tagModel->processInput($this->_input);
+
+			if ($tags !== false) {
+				$dw->Tinhte_XenTag_setTags($tags);
+			}
 		}
 
 		// just to be safe...
