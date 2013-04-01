@@ -142,9 +142,10 @@ class Tinhte_XenTag_Helper {
 		$safe = array();
 		
 		foreach ($tagsText as $tagText) {
-			// sondh@2012-08-23
-			// changed to use md5 because search index sucks at utf8 (bug time)
-			$safe[] = md5(self::getNormalizedTagText($tagText));
+			// sondh@2013-04-01
+			// update to use md5 between dashes to support unicode tag text
+			// the dashes are needed to bypass elasticsearch's analyzers (e.g. snowball)
+			$safe[] = sprintf('_%s_', md5(self::getNormalizedTagText($tagText)));
 		}
 		
 		return $safe;
