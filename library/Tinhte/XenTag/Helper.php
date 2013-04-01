@@ -145,10 +145,27 @@ class Tinhte_XenTag_Helper {
 			// sondh@2013-04-01
 			// update to use md5 between dashes to support unicode tag text
 			// the dashes are needed to bypass elasticsearch's analyzers (e.g. snowball)
-			$safe[] = sprintf('_%s_', md5(self::getNormalizedTagText($tagText)));
+			$safe[] = self::getSafeTagTextForSearch($tagText);
 		}
 		
 		return $safe;
+	}
+	
+	public static function getSafeTagsTextArrayForSearchMapping(array $tagsText) {
+		$safe = array();
+		
+		foreach ($tagsText as $tagText) {
+			// sondh@2013-04-01
+			// update to use md5 between dashes to support unicode tag text
+			// the dashes are needed to bypass elasticsearch's analyzers (e.g. snowball)
+			$safe[self::getSafeTagTextForSearch($tagText)] = $tagText;
+		}
+		
+		return $safe;
+	}
+	
+	public static function getSafeTagTextForSearch($tagText) {
+		return sprintf('_%s_', md5(self::getNormalizedTagText($tagText)));
 	}
 	
 	public static function getNormalizedTagText($tagText) {

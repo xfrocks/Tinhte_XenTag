@@ -24,6 +24,7 @@ class Tinhte_XenTag_Listener {
 			'XenForo_Model_Page',
 			'XenForo_Model_Search',
 			'XenForo_Model_ThreadRedirect',
+			'XenForo_Model_Thread',
 		
 			'XenForo_Search_DataHandler_Thread',
 		
