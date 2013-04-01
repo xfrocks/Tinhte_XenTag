@@ -106,6 +106,16 @@ class Tinhte_XenTag_Helper {
 		return self::_getImplodedTags($tags, $getLinks);
 	}
 	
+	public static function getImplodedTagsFromResource($resource, $getLinks = false) {
+		if (is_array($resource) AND isset($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS])) {
+			$tags = self::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+		} else {
+			$tags = array();
+		}
+		
+		return self::_getImplodedTags($tags, $getLinks);
+	}
+	
 	protected static function _getImplodedTags(array $tags, $getLinks = false) {
 		$result = array();
 		

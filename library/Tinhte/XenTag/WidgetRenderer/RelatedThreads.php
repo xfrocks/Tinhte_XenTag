@@ -46,6 +46,10 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			// fetch forum's tags
 			$tagsText = Tinhte_XenTag_Helper::unserialize($params['forum'][Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
 		}
+		if (empty($tagsText) AND is_array($params['resource']) AND !empty($params['resource']['resource_id'])) {
+			// fetch resource's tags
+			$tagsText = Tinhte_XenTag_Helper::unserialize($params['resource'][Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+		}
 		
 		if (true) {
 			// hacky way to keep repo history

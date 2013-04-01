@@ -1,7 +1,7 @@
 <?php
 class Tinhte_XenTag_Model_Search extends XenForo_Model {
 	public function prioritizeResults(array &$results, XenForo_Search_Searcher $searcher, $searchQuery, array $constraints = array(), $order = 'relevance') {
-		// prioritize forums/pages by doing a second search for prioritized contents
+		// prioritize contents by doing a second search for prioritized contents
 		// this may cause performance issue but shouldn't make a big impact
 		// admin can easily disable the feature in AdminCP
 		// it's required to do another search because the original search has its own
@@ -52,6 +52,11 @@ class Tinhte_XenTag_Model_Search extends XenForo_Model {
 		$pages = intval(Tinhte_XenTag_Option::get('prioritizePages'));
 		if ($pages > 0) {
 			$contents[Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE] = $pages;
+		}
+		
+		$resources = intval(Tinhte_XenTag_Option::get('prioritizeResources'));
+		if ($resources > 0) {
+			$contents[Tinhte_XenTag_Constants::CONTENT_TYPE_RESOURCE] = $resources;
 		}
 		
 		return $contents;

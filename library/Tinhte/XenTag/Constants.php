@@ -7,12 +7,14 @@ class Tinhte_XenTag_Constants {
 	const GLOBALS_CONTROLLERPUBLIC_POST_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Post::actionSave';
 	const GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH = 'Tinhte_XenTag_XenForo_ControllerPublic_Search::actionSearch';
 	const GLOBALS_CONTROLLERPUBLIC_THREAD_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionSave';
+	const GLOBALS_CONTROLLERPUBLIC_RESOURCE_SAVE = 'Tinhte_XenTag_XenResource_ControllerPublic_Resource::actionSave';
 	const GLOBALS_SEARCH_SOURCEHANDLER_LOADED = 'Tinhte_XenTag_XenForo_Search_SourceHandler::loaded';
 	
 	const URI_PARAM_TAG_TEXT = 't';
 	
 	const CONTENT_TYPE_PAGE = 'tinhte_xentag_page';
 	const CONTENT_TYPE_FORUM = 'tinhte_xentag_forum';
+	const CONTENT_TYPE_RESOURCE = 'tinhte_xentag_resource';
 	
 	const FORM_TAGS_ARRAY = 'tinhte_xentag_tags';
 	const FORM_TAGS_TEXT = 'tinhte_xentag_tags_text';
@@ -23,6 +25,7 @@ class Tinhte_XenTag_Constants {
 	const FIELD_FORUM_OPTIONS = 'tinhte_xentag_options';
 	const FIELD_PAGE_TAGS = 'tinhte_xentag_tags';
 	const FIELD_FORUM_TAGS = 'tinhte_xentag_tags';
+	const FIELD_RESOURCE_TAGS = 'tinhte_xentag_tags';
 	
 	const SEARCH_TYPE_TAG = 'tinhte_xentag_tag';
 	const SEARCH_SEARCH_ID = 'x'; // something cool?
@@ -34,6 +37,8 @@ class Tinhte_XenTag_Constants {
 	const PERM_USER_TAG_ALL = 'Tinhte_XenTag_tagAll';
 	const PERM_USER_CREATE_NEW = 'Tinhte_XenTag_createNew';
 	const PERM_USER_EDIT = 'Tinhte_XenTag_edit';
+	const PERM_USER_RESOURCE_TAG = 'Tinhte_XenTag_resourceTag';
+	const PERM_USER_RESOURCE_TAG_ALL = 'Tinhte_XenTag_resourceAll';
 	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
 
 	const DATA_REGISTRY_KEY = 'Tinhte_XenTag_tags';

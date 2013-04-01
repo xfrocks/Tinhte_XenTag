@@ -78,12 +78,24 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		
 		if ($canTagAll) return true; // can tag all, nothing to check...
 
-		if (empty($thread) OR $thread['user_id'] == $viewingUser['user_id']) {
+		if (!isset($thread['user_id']) OR $thread['user_id'] == $viewingUser['user_id']) {
 			// IMPORTANT: if more data in $thread is used, please make sure to make
 			// the appropriate change to Tinhte_XenTag_Model_Post::preparePost
 			// and Tinhte_XenTag_XenForo_ControllerPublic_Post::Tinhte_XenTag_actionSave
 			// or else this may get really nasty!
 			return XenForo_Permission::hasContentPermission($nodePermissions, Tinhte_XenTag_Constants::PERM_USER_TAG);
+		}
+	}
+	
+	public function canTagResource($resource, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null) {
+		$this->standardizeViewingUserReference($viewingUser);
+		
+		$canTagAll = XenForo_Permission::hasPermission($viewingUser['permissions'], 'resource', Tinhte_XenTag_Constants::PERM_USER_RESOURCE_TAG_ALL);
+		
+		if ($canTagAll) return true; // can tag all, nothing to check...
+
+		if (!isset($resource['user_id']) OR $resource['user_id'] == $viewingUser['user_id']) {
+			return XenForo_Permission::hasPermission($viewingUser['permissions'], 'resource', Tinhte_XenTag_Constants::PERM_USER_RESOURCE_TAG);
 		}
 	}
 	

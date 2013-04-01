@@ -70,6 +70,13 @@ class Tinhte_XenTag_Installer {
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_page` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_page` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_page` DROP COLUMN `tinhte_xentag_tags`'
+		),
+		array(
+			'table' => 'xf_resource',
+			'field' => 'tinhte_xentag_tags',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_resource` LIKE \'tinhte_xentag_tags\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_resource` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_resource` DROP COLUMN `tinhte_xentag_tags`'
 		)
 	);
 
@@ -116,6 +123,8 @@ class Tinhte_XenTag_Installer {
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_page\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Page\')');
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_forum\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
+		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_resource\', \'Tinhte_XenTag\')');
+		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_resource\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Resource\')');
 		
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
@@ -126,6 +135,7 @@ class Tinhte_XenTag_Installer {
 		$db->query('DELETE FROM xf_content_type WHERE addon_id = ?', array('Tinhte_XenTag'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
+		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_resource'));
 		
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}

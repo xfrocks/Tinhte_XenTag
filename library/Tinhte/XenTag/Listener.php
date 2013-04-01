@@ -28,6 +28,9 @@ class Tinhte_XenTag_Listener {
 			'XenForo_Search_DataHandler_Thread',
 		
 			'XenForo_ViewPublic_Thread_View',
+		
+			'XenResource_ControllerPublic_Resource',
+			'XenResource_DataWriter_Resource',
 		);
 		
 		if (in_array($class, $classes)) {
@@ -57,6 +60,7 @@ class Tinhte_XenTag_Listener {
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromthread'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromThread');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfrompage'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromPage');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromforum'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromForum');
+		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromresource'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromResource');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getoption'] = array('Tinhte_XenTag_Helper', 'getOption');
 	}
 
@@ -70,6 +74,7 @@ class Tinhte_XenTag_Listener {
 			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
+			case 'resource_add':
 				$template->preloadTemplate('tinhte_xentag_' . $templateName);
 				break;
 			case 'PAGE_CONTAINER':
@@ -106,6 +111,10 @@ class Tinhte_XenTag_Listener {
 		if ($templateName == 'pagenode_container') {
 			$template->preloadTemplate('tinhte_xentag_hook_pagenode_container_article');
 		}
+		
+		if ($template == 'resource_view') {
+			$template->preloadTemplate('tinhte_xentag_hook_resource_view_sidebar_resource_');
+		}
 	}
 	
 	public static function template_post_render($templateName, &$content, array &$containerData, XenForo_Template_Abstract $template) {
@@ -118,6 +127,7 @@ class Tinhte_XenTag_Listener {
 			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
+			case 'resource_add':
 				$ourTemplate = $template->create('tinhte_xentag_' . $templateName, $template->getParams());
 				$rendered = $ourTemplate->render();
 				
@@ -144,6 +154,8 @@ class Tinhte_XenTag_Listener {
 			case 'thread_view_qr_after':
 			
 			case 'pagenode_container_article':
+			
+			case 'resource_view_sidebar_resource_info':
 				$ourTemplate = $template->create(substr('tinhte_xentag_hook_' . $hookName, 0, 50), $template->getParams());
 				$ourTemplate->setParams($hookParams);
 				$rendered = $ourTemplate->render();
