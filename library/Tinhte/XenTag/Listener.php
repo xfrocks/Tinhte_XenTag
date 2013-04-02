@@ -115,7 +115,7 @@ class Tinhte_XenTag_Listener {
 			$template->preloadTemplate('tinhte_xentag_hook_pagenode_container_article');
 		}
 		
-		if ($template == 'resource_view') {
+		if ($templateName == 'resource_view') {
 			$template->preloadTemplate('tinhte_xentag_hook_resource_view_sidebar_resource_');
 		}
 	}
