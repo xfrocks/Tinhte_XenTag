@@ -76,6 +76,7 @@ class Tinhte_XenTag_Listener {
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 			case 'resource_add':
+			case 'resource_description':
 				$template->preloadTemplate('tinhte_xentag_' . $templateName);
 				break;
 			case 'PAGE_CONTAINER':
@@ -129,6 +130,7 @@ class Tinhte_XenTag_Listener {
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 			case 'resource_add':
+			case 'resource_description':
 				$ourTemplate = $template->create('tinhte_xentag_' . $templateName, $template->getParams());
 				$rendered = $ourTemplate->render();
 				

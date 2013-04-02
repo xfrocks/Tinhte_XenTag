@@ -211,8 +211,14 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <edit_format_params>post_message_below = {xen:phrase tinhte_xentag_display_position_post_message_below}
 thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="discussionOptions" display_order="12100"/>
       <relation group_id="Tinhte_XenTag" display_order="100"/>
+    </option>
+    <option option_id="Tinhte_XenTag_displayPositionResource" edit_format="radio" data_type="string" can_backup="1">
+      <default_value>sidebar_info</default_value>
+      <edit_format_params>sidebar_info = {xen:phrase tinhte_xentag_display_position_resource_sidebar_info}
+bottom = {xen:phrase tinhte_xentag_display_position_resource_bottom}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="101"/>
     </option>
     <option option_id="Tinhte_XenTag_linkFormat" edit_format="radio" data_type="string" can_backup="1">
       <default_value>beautiful</default_value>
@@ -296,8 +302,10 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_autoTagMode_explain" version_id="15" version_string="0.9.8.5"><![CDATA[Select the mode for auto tagging feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly" version_id="15" version_string="0.9.8.5"><![CDATA[Auto Tag Once Only]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="15" version_string="0.9.8.5"><![CDATA[Enable this option to auto tag a tag once per post only.]]></phrase>
-    <phrase title="option_Tinhte_XenTag_displayPosition" version_id="5" version_string="0.9.4"><![CDATA[Display Position]]></phrase>
-    <phrase title="option_Tinhte_XenTag_displayPosition_explain" version_id="77" version_string="1.6"><![CDATA[[Tinhte] XenTag's display position in thread view. The tag will be displayed in the specified place only.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayPosition" version_id="77" version_string="1.6"><![CDATA[Thread Display Position]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayPositionResource" version_id="77" version_string="1.6"><![CDATA[Resource Display Position]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayPositionResource_explain" version_id="77" version_string="1.6"><![CDATA[Display position in resource view. The tag will be displayed in the specified place only.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayPosition_explain" version_id="77" version_string="1.6"><![CDATA[Display position in thread view. The tag will be displayed in the specified place only.]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkFormat" version_id="65" version_string="1.3.3"><![CDATA[Tag Link Format]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkFormat_explain" version_id="70" version_string="1.5"><![CDATA[If your tags use special characters and the links don't work properly, switch to the second format.]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkTargetBlank" version_id="77" version_string="1.6"><![CDATA[Open Tag Link in New Window]]></phrase>
@@ -336,6 +344,8 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
     <phrase title="tinhte_xentag_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Delete Empty Tags]]></phrase>
     <phrase title="tinhte_xentag_display_position_post_message_below" version_id="5" version_string="0.9.4"><![CDATA[Below first post]]></phrase>
+    <phrase title="tinhte_xentag_display_position_resource_bottom" version_id="77" version_string="1.6"><![CDATA[Bottom of resource page]]></phrase>
+    <phrase title="tinhte_xentag_display_position_resource_sidebar_info" version_id="77" version_string="1.6"><![CDATA[Sidebar: Information block]]></phrase>
     <phrase title="tinhte_xentag_display_position_thread_qr_below" version_id="5" version_string="0.9.4"><![CDATA[Bottom of thread page]]></phrase>
     <phrase title="tinhte_xentag_edit_tags" version_id="1" version_string="0.9"><![CDATA[Edit Tags]]></phrase>
     <phrase title="tinhte_xentag_forum" version_id="69" version_string="1.4"><![CDATA[Forum (Tags)]]></phrase>
@@ -549,16 +559,18 @@ a.Tinhte_XenTag_TagLink:focus {
 		<!-- [Tinhte] XenTag / Revert Mark -->
 	</xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_hook_resource_view_sidebar_resource_" version_id="75" version_string="1.6-dev"><![CDATA[<xen:if hascontent="true">
-	<dl class="resourceCategory">
-		<dt>{xen:phrase tinhte_xentag_tags}:</dt>
-		<dd>
-			<xen:contentcheck>
-				{xen:helper Tinhte_XenTag_getImplodedTagsFromResource, $resource, 1}
-			</xen:contentcheck>
-		</dd>
-	</dl>
-<!-- [Tinhte] XenTag / Mark --><div class="rating"><!-- [Tinhte] XenTag / Mark -->
+    <template title="tinhte_xentag_hook_resource_view_sidebar_resource_" version_id="77" version_string="1.6"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPositionResource'} == 'sidebar_info'">
+	<xen:if hascontent="true">
+		<dl class="resourceCategory">
+			<dt>{xen:phrase tinhte_xentag_tags}:</dt>
+			<dd>
+				<xen:contentcheck>
+					{xen:helper Tinhte_XenTag_getImplodedTagsFromResource, $resource, 1}
+				</xen:contentcheck>
+			</dd>
+		</dl>
+		<!-- [Tinhte] XenTag / Mark --><div class="rating"><!-- [Tinhte] XenTag / Mark -->
+	</xen:if>
 </xen:if>]]></template>
     <template title="tinhte_xentag_hook_thread_view_form_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_messages_above'">
 	<xen:include template="tinhte_xentag_tags_thread_view" />
@@ -603,6 +615,14 @@ a.Tinhte_XenTag_TagLink:focus {
 			</dd>
 		</dl>
 	</fieldset>
+</xen:if>]]></template>
+    <template title="tinhte_xentag_resource_description" version_id="77" version_string="1.6"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPositionResource'} == 'bottom'">
+	<xen:if hascontent="true">
+		<div class="sectionMain">
+			{xen:phrase tinhte_xentag_tags}:
+			<xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromResource, $resource, 1}</xen:contentcheck>
+		</div>
+	</xen:if>
 </xen:if>]]></template>
     <template title="tinhte_xentag_search_bar_tag_only" version_id="1" version_string="0.9"><![CDATA[<label><input type="checkbox" name="tinhte_xentag_tags_text_no_include" value="{$tag.tag_text}"
 	id="search_bar_tag" class="Disabler AutoChecker" checked="checked"
