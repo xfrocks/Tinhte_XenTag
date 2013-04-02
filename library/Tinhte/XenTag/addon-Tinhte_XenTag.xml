@@ -393,14 +393,14 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     </route_type>
   </route_prefixes>
   <style_properties>
-    <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[1]]></property>
+    <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[0]]></property>
     <group group_name="Tinhte_XenTag" display_order="9999">
       <title>[Tinhte] XenTag</title>
       <description>Styling properties for contents tagging.</description>
     </group>
   </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="74" version_string="1.5.3b"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="77" version_string="1.6"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -495,8 +495,8 @@ a.Tinhte_XenTag_TagLink:link,
 a.Tinhte_XenTag_TagLink:visited,
 a.Tinhte_XenTag_TagLink:hover,
 a.Tinhte_XenTag_TagLink:focus {
-	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') 4px 0px no-repeat;
-	padding-left: 24px !important;
+	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
+	padding-right: 12px !important;
 }
 </xen:if>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="77" version_string="1.6"><![CDATA[<xen:require css="tinhte_xentag.css" /><a href="{xen:link {xen:helper Tinhte_XenTag_getOption, routePrefix}, $tag}" class="Tinhte_XenTag_TagLink"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
