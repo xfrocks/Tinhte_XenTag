@@ -69,6 +69,7 @@ class Tinhte_XenTag_Search_DataHandler_Resource extends XenForo_Search_DataHandl
 			$ids,
 			array(
 				'join' => XenResource_Model_Resource::FETCH_CATEGORY
+					+ XenResource_Model_Resource::FETCH_USER
 			)
 		);
 

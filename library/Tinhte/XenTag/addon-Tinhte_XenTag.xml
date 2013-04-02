@@ -684,7 +684,9 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
-    <template title="tinhte_xentag_search_result_resource" version_id="75" version_string="1.6-dev"><![CDATA[<li id="tinhte_xentag_resource-{$resource.resource_id}" class="searchResult tinhte_xentag_resource primaryContent">
+    <template title="tinhte_xentag_search_result_resource" version_id="77" version_string="1.6"><![CDATA[<li id="tinhte_xentag_resource-{$resource.resource_id}" class="searchResult tinhte_xentag_resource primaryContent">
+	
+	<div class="listBlock posterAvatar"><xen:avatar user="$resource" size="s" img="true" /></div>
 
 	<div class="listBlock main">
 		<div class="titleText">
@@ -696,6 +698,11 @@ a.Tinhte_XenTag_TagLink:focus {
 			<a href="{xen:link resources, $resource}">{xen:helper snippet, $resource.tag_line, 150, {xen:array 'term={$search.search_query}', 'emClass=highlight'}}</a>
 		</blockquote>
 
+		<div class="meta">
+			{xen:phrase post_by}: <xen:username user="$resource" />,
+			<xen:datetime time="{$resource.resource_date}" />
+			{xen:phrase in_category}: <a href="{xen:link resources/categories, $resource}">{$resource.category_title}</a>
+		</div>
 	</div>
 
 </li>]]></template>
