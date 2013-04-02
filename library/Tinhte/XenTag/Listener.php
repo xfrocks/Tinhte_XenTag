@@ -32,6 +32,7 @@ class Tinhte_XenTag_Listener {
 		
 			'XenResource_ControllerPublic_Resource',
 			'XenResource_DataWriter_Resource',
+			'XenResource_ViewPublic_Resource_Description',
 		);
 		
 		if (in_array($class, $classes)) {
@@ -98,7 +99,7 @@ class Tinhte_XenTag_Listener {
 		}
 		
 		if ($templateName == 'post') {
-			Tinhte_XenTag_PostMessageWrapper::wrap($params);
+			Tinhte_XenTag_ContentWrapper_Post::wrap($params);
 		}
 		
 		if ($templateName == 'forum_edit' /* admin template */) {

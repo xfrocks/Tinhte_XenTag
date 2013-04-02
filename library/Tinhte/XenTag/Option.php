@@ -4,6 +4,7 @@ class Tinhte_XenTag_Option {
 	
 	const AUTO_TAG_MODE_THREAD_TAGS = 'thread_tags';
 	const AUTO_TAG_MODE_THREAD_TAGS_FIRST_POST_ONLY = 'thread_tags_first_post_only';
+	const AUTO_TAG_RESOURCE_TAGS = 'resource_tags';
 	const AUTO_TAG_MODE_ALL_TAGS = 'all_tags';
 	const AUTO_TAG_MODE_DISALBED = 'disabled';
 	
