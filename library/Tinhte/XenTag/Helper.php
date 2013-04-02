@@ -165,7 +165,12 @@ class Tinhte_XenTag_Helper {
 	}
 	
 	public static function getSafeTagTextForSearch($tagText) {
-		return sprintf('_%s_', md5(self::getNormalizedTagText($tagText)));
+		switch (Tinhte_XenTag_Option::get('searchIndexType'))
+		{
+			case 'plaintext': return self::getNormalizedTagText($tagText);
+			case 'md5': return md5(self::getNormalizedTagText($tagText));
+			default: return sprintf('_%s_', md5(self::getNormalizedTagText($tagText)));
+		}
 	}
 	
 	public static function getNormalizedTagText($tagText) {
