@@ -32,6 +32,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_thread',
 			'field' => 'tinhte_xentag_tags',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_thread\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_thread` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_thread` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_tags`'
@@ -39,6 +40,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_tinhte_xentag_tag',
 			'field' => 'latest_tagged_contents',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'latest_tagged_contents\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `latest_tagged_contents` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `latest_tagged_contents`'
@@ -46,6 +48,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_tinhte_xentag_tag',
 			'field' => 'tag_description',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_description\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_description` TEXT',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_description`'
@@ -53,6 +56,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_forum',
 			'field' => 'tinhte_xentag_options',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_options\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_options` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_options`'
@@ -60,6 +64,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_forum',
 			'field' => 'tinhte_xentag_tags',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_tags`'
@@ -67,6 +72,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_page',
 			'field' => 'tinhte_xentag_tags',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_page\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_page` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_page` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_page` DROP COLUMN `tinhte_xentag_tags`'
@@ -74,6 +80,7 @@ class Tinhte_XenTag_Installer {
 		array(
 			'table' => 'xf_resource',
 			'field' => 'tinhte_xentag_tags',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_resource\'',
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_resource` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_resource` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_resource` DROP COLUMN `tinhte_xentag_tags`'
@@ -101,6 +108,11 @@ class Tinhte_XenTag_Installer {
 		$db = XenForo_Application::get('db');
 		
 		foreach (self::$_patches as $patch) {
+			$tableExisted = $db->fetchOne($patch['showTablesQuery']);
+			if (empty($tableExisted)) {
+				continue;
+			}
+			
 			$existed = $db->fetchOne($patch['showColumnsQuery']);
 			if (!empty($existed)) {
 				$db->query($patch['alterTableDropColumnQuery']);
