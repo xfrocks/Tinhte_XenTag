@@ -125,6 +125,11 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model {
 	}
 	
 	protected function _deleteTaggedContentsResources(array $tag, array $taggeds) {
+		if (!Tinhte_XenTag_Option::xfrmFound()) {
+			// XFRM is not installed/enabled
+			return false;
+		}
+		
 		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
 		$resourceModel = $this->getModelFromCache('XenResource_Model_Resource');
 		
