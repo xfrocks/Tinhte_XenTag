@@ -72,4 +72,9 @@ class Tinhte_XenTag_Option {
 		return true;
 	}
 	
+	public static function xfrmFound() {
+		$moderatorModel = XenForo_Model::create('XenForo_Model_Moderator');
+		$gmigi = $moderatorModel->getGeneralModeratorInterfaceGroupIds();
+		return in_array('resourceModeratorPermissions', $gmigi);
+	}
 }

@@ -43,6 +43,12 @@ class Tinhte_XenTag_Search_DataHandler_Resource extends XenForo_Search_DataHandl
 	}
 
 	public function rebuildIndex(XenForo_Search_Indexer $indexer, $lastId, $batchSize) {
+		if (!Tinhte_XenTag_Option::xfrmFound()) {
+			// XFRM is not installed/enabled
+			// do not rebuild index
+			return false;
+		}
+		
 		$ids = $this->_getResourceModel()->getResourceIdsInRange($lastId, $batchSize);
 		
 		if (!$ids) {
