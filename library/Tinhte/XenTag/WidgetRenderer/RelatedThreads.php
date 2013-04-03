@@ -42,11 +42,11 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			// fetch page's tags
 			$tagsText = Tinhte_XenTag_Helper::unserialize($params['page'][Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
 		}
-		if (empty($tagsText) AND is_array($params['forum']) AND !empty($params['forum']['node_id'])) {
+		if (empty($tagsText) AND isset($params['forum']) AND !empty($params['forum']['node_id'])) {
 			// fetch forum's tags
 			$tagsText = Tinhte_XenTag_Helper::unserialize($params['forum'][Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
 		}
-		if (empty($tagsText) AND is_array($params['resource']) AND !empty($params['resource']['resource_id'])) {
+		if (empty($tagsText) AND isset($params['resource']) AND !empty($params['resource']['resource_id'])) {
 			// fetch resource's tags
 			$tagsText = Tinhte_XenTag_Helper::unserialize($params['resource'][Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
 		}
@@ -142,8 +142,14 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 	}
 	
 	protected function _getCacheId(array $widget, $positionCode, array $params, array $suffix = array()) {
-		if (isset($params['thread'])) {
+		if (isset($params['thread']) AND !empty($params['thread']['thread_id'])) {
 			$suffix[] = 't' . $params['thread']['thread_id'];
+		} elseif (isset($params['page']) AND !empty($params['page']['node_id'])) {
+			$suffix[] = 'p' . $params['page']['node_id'];
+		} elseif (isset($params['forum']) AND !empty($params['forum']['node_id'])) {
+			$suffix[] = 'f' . $params['forum']['node_id'];
+		} elseif (isset($params['resource']) AND !empty($params['resource']['resource_id'])) {
+			$suffix[] = 'r' . $params['resource']['resource_id'];
 		}
 		
 		return parent::_getCacheId($widget, $positionCode, $params, $suffix);
