@@ -95,6 +95,11 @@ class Tinhte_XenTag_Installer {
 		}
 		
 		foreach (self::$_patches as $patch) {
+			$tableExisted = $db->fetchOne($patch['showTablesQuery']);
+			if (empty($tableExisted)) {
+				continue;
+			}
+			
 			$existed = $db->fetchOne($patch['showColumnsQuery']);
 			if (empty($existed)) {
 				$db->query($patch['alterTableAddColumnQuery']);
