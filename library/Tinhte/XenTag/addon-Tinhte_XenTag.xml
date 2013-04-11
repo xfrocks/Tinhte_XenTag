@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.6.3" version_id="80" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.6.3b" version_id="81" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -570,7 +570,7 @@ a.Tinhte_XenTag_TagLink:focus {
 		<!-- [Tinhte] XenTag / Revert Mark -->
 	</xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_hook_resource_view_sidebar_resource_" version_id="77" version_string="1.6"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPositionResource'} == 'sidebar_info'">
+    <template title="tinhte_xentag_hook_resource_view_sidebar_resource_" version_id="80" version_string="1.6.3"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPositionResource'} == 'sidebar_info'">
 	<xen:if hascontent="true">
 		<dl class="resourceCategory">
 			<dt>{xen:phrase tinhte_xentag_tags}:</dt>
@@ -580,7 +580,7 @@ a.Tinhte_XenTag_TagLink:focus {
 				</xen:contentcheck>
 			</dd>
 		</dl>
-		<!-- [Tinhte] XenTag / Mark --><div class="rating"><!-- [Tinhte] XenTag / Mark -->
+		<!-- [Tinhte] XenTag / Mark --><dl class="resourceCategory"><!-- [Tinhte] XenTag / Mark -->
 	</xen:if>
 </xen:if>]]></template>
     <template title="tinhte_xentag_hook_thread_view_form_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_messages_above'">
