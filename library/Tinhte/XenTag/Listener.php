@@ -131,11 +131,26 @@ class Tinhte_XenTag_Listener {
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 			case 'resource_add':
-			case 'resource_description':
 				$ourTemplate = $template->create('tinhte_xentag_' . $templateName, $template->getParams());
 				$rendered = $ourTemplate->render();
 				
 				self::injectRendered($content, $rendered);
+				break;
+			case 'resource_description':
+				$ourTemplate = $template->create('tinhte_xentag_resource_description', $template->getParams());
+				$rendered = $ourTemplate->render();
+				
+				$search = '<div class="section reviews">';
+				
+				$strPos = strpos($content, $search);
+				if ($strPos === false) {
+					// no reviews
+					$content .= $rendered;
+				} else {
+					// reviews found, we have to put the tags above them
+					$content = substr_replace($content, $rendered, $strPos, 0);
+				}
+				
 				break;
 		}
 	}
