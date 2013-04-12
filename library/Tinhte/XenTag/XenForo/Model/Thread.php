@@ -26,11 +26,11 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
 		}
 	}
 	
-	public function prepareApiDataForThread(array $thread) {
-		$data = parent::prepareApiDataForThread($thread);
+	public function prepareApiDataForThread(array $thread, array $forum) {
+		$data = parent::prepareApiDataForThread($thread, $forum);
 		
 		$tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-		$data[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearchMapping($tags);
+		$data['thread_tags'] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearchMapping($tags);
 		
 		return $data;
 	}
