@@ -84,6 +84,14 @@ class Tinhte_XenTag_Installer {
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_resource` LIKE \'tinhte_xentag_tags\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_resource` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_resource` DROP COLUMN `tinhte_xentag_tags`'
+		),
+		array(
+			'table' => 'xf_search',
+			'field' => 'tinhte_xentag_tags',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_search\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_search` LIKE \'tinhte_xentag_tags\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_search` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_search` DROP COLUMN `tinhte_xentag_tags`'
 		)
 	);
 

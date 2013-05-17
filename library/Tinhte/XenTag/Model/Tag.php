@@ -386,6 +386,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	public function prepareTagOrderOptions(array &$fetchOptions, $defaultOrderSql = '') {
 		$choices = array(
 			'tag_text' => 'tag.tag_text',
+			'content_count' => 'tag.content_count',
 		);
 		
 		$this->prepareTagOrderOptionsCustomized($choices, $fetchOptions);
