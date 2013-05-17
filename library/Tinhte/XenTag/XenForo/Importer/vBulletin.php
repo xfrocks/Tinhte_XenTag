@@ -86,7 +86,7 @@ class Tinhte_XenTag_XenForo_Importer_vBulletin extends XFCP_Tinhte_XenTag_XenFor
 			
 			if (!isset($threadTags[$threadId])) $threadTags[$threadId] = array();
 			
-			$threadTags[$threadId][] = $tags[$key]['tagtext'];
+			$threadTags[$threadId][] = $this->_convertToUtf8($tags[$key]['tagtext'], true);
 			
 			unset($tags[$key]); // free memory asap
 		}
