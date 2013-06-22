@@ -1,3 +1,4 @@
 .DS_Store
 *.devhelper
 library/Tinhte/XenTag/DevHelper/Generated/*
+library/Tinhte/XenTag/FileSums.php
