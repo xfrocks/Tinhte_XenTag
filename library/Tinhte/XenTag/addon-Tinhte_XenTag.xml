@@ -141,6 +141,13 @@
 		</xen:html>
 	</xen:listitem>
 </xen:foreach>]]></template>
+    <template title="tinhte_xentag_tools_rebuild"><![CDATA[<xen:form action="{xen:adminlink 'tools/cache-rebuild'}">
+	<h2 class="subHeading">{xen:phrase tinhte_xentag_rebuild_tag_information}</h2>
+	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
+	
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="Tinhte_XenTag_Tag" />
+</xen:form>]]></template>
     <template title="tinhte_xentag_widget_cloud_options"><![CDATA[<xen:textboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{$options.limit}">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
 </xen:textboxunit>]]></template>
@@ -370,6 +377,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_page" version_id="60" version_string="1.2.21"><![CDATA[Page (Tags)]]></phrase>
     <phrase title="tinhte_xentag_page_x" version_id="69" version_string="1.4"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_please_confirm_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Please confirm that you want to delete ALL empty tags (without any contents tagged).]]></phrase>
+    <phrase title="tinhte_xentag_rebuild_tag_information" version_id="88" version_string="1.7.1"><![CDATA[Rebuild Tag Information]]></phrase>
     <phrase title="tinhte_xentag_resource" version_id="75" version_string="1.6-dev"><![CDATA[Resource (Tags)]]></phrase>
     <phrase title="tinhte_xentag_search_by_tag" version_id="1" version_string="0.9"><![CDATA[Search by tag]]></phrase>
     <phrase title="tinhte_xentag_search_index_md5" version_id="76" version_string="1.6-dev"><![CDATA[Hashed]]></phrase>
@@ -966,7 +974,7 @@ a.Tinhte_XenTag_TagLink:focus {
 		<input type="hidden" name="tinhte_xentag_included" value="1" />
 	</dd>
 </dl>]]></template>
-    <template title="tinhte_xentag_thread_edit_tags" version_id="35" version_string="1.1.1"><![CDATA[<xen:require js="js/Tinhte/XenTag/frontend.js" />
+    <template title="tinhte_xentag_thread_edit_tags" version_id="87" version_string="1.7"><![CDATA[<xen:require js="js/Tinhte/XenTag/frontend.js" />
 <xen:require css="tinhte_xentag.css" />
 
 <xen:title>{xen:phrase tinhte_xentag_edit_tags}: {xen:helper threadPrefix, $thread, escaped}{$thread.title}</xen:title>

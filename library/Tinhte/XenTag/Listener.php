@@ -64,10 +64,13 @@ class Tinhte_XenTag_Listener {
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromforum'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromForum');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromresource'] = array('Tinhte_XenTag_Helper', 'getImplodedTagsFromResource');
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getoption'] = array('Tinhte_XenTag_Helper', 'getOption');
+
+		XenForo_CacheRebuilder_Abstract::$builders['Tinhte_XenTag_Tag'] = 'Tinhte_XenTag_CacheRebuilder_Tag';
 	}
 
 	public static function template_create($templateName, array &$params, XenForo_Template_Abstract $template) {
 		switch ($templateName) {
+			case 'tools_rebuild': // admin template
 			case 'forum_view':
 			case 'post_edit':
 			case 'search_form':
@@ -126,6 +129,7 @@ class Tinhte_XenTag_Listener {
 
 	public static function template_post_render($templateName, &$content, array &$containerData, XenForo_Template_Abstract $template) {
 		switch ($templateName) {
+			case 'tools_rebuild': // admin template
 			case 'forum_view':
 			case 'post_edit':
 			case 'search_form':
@@ -217,6 +221,10 @@ class Tinhte_XenTag_Listener {
 			$results = '';
 
 			foreach ($tags as $tag) {
+				if (empty($tag['content_count'])) {
+					continue;
+				}
+
 				$search = array('{TAG_TEXT}', '{TAG_LINK}', '{TAG_CONTENT_COUNT}', '{TAG_LEVEL}');
 				$replace = array(
 						htmlspecialchars($tag['tag_text']),
