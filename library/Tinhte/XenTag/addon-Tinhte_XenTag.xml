@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.7" version_id="87" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.7.1" version_id="88" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -144,7 +144,7 @@
     <template title="tinhte_xentag_tools_rebuild"><![CDATA[<xen:form action="{xen:adminlink 'tools/cache-rebuild'}">
 	<h2 class="subHeading">{xen:phrase tinhte_xentag_rebuild_tag_information}</h2>
 	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
-	
+
 	<xen:submitunit save="{xen:phrase rebuild_now}" />
 	<input type="hidden" name="cache" value="Tinhte_XenTag_Tag" />
 </xen:form>]]></template>
