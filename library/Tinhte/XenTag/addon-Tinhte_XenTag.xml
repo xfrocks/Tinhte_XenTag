@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.7.1" version_id="88" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.7.2" version_id="89" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -148,12 +148,12 @@
 	<xen:submitunit save="{xen:phrase rebuild_now}" />
 	<input type="hidden" name="cache" value="Tinhte_XenTag_Tag" />
 </xen:form>]]></template>
-    <template title="tinhte_xentag_widget_cloud_options"><![CDATA[<xen:textboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{$options.limit}">
+    <template title="tinhte_xentag_widget_cloud_options"><![CDATA[<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, 50}">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
-</xen:textboxunit>]]></template>
-    <template title="tinhte_xentag_widget_related_threads_options"><![CDATA[<xen:textboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{$options.limit}">
+</xen:spinboxunit>]]></template>
+    <template title="tinhte_xentag_widget_related_threads_options"><![CDATA[<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, 5}">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase wf_threads}"}</xen:explain>
-</xen:textboxunit>
+</xen:spinboxunit>
 
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
@@ -163,33 +163,35 @@
 	<xen:explain>{xen:phrase tinhte_xentag_tagged_threads_tags_explain}</xen:explain>
 </xen:textboxunit>
 
-<xen:textboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{$options.limit}">
+<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, 5}">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase wf_threads}"} {xen:phrase tinhte_xentag_tagged_threads_limit_explain, 'limit={xen:helper Tinhte_XenTag_getOption, latestTaggedContentsLimit}'}</xen:explain>
-</xen:textboxunit>
+</xen:spinboxunit>
 
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
   </admin_templates>
+  <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" description=""/>
-    <listener event_id="init_dependencies" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="init_dependencies" active="1" description=""/>
-    <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="load_class_importer" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_importer" active="1" description=""/>
-    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" description=""/>
-    <listener event_id="search_source_create" execute_order="9999" callback_class="Tinhte_XenTag_Listener" callback_method="search_source_create" active="1" description=""/>
-    <listener event_id="template_create" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_create" active="1" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" description=""/>
-    <listener event_id="template_post_render" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_post_render" active="1" description=""/>
-    <listener event_id="widget_framework_ready" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="widget_framework_ready" active="1" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="init_dependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_importer" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_importer" active="1" hint="" description=""/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="search_source_create" execute_order="9999" callback_class="Tinhte_XenTag_Listener" callback_method="search_source_create" active="1" hint="" description=""/>
+    <listener event_id="template_create" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_create" active="1" hint="" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" hint="" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_post_render" active="1" hint="" description=""/>
+    <listener event_id="widget_framework_ready" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="widget_framework_ready" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
+  <email_template_modifications/>
   <optiongroups>
     <group group_id="Tinhte_XenTag" display_order="9999" debug_only="0"/>
     <option option_id="Tinhte_XenTag_autoTagGlobalMax" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
@@ -784,8 +786,9 @@ a.Tinhte_XenTag_TagLink:focus {
 		{xen:helper Tinhte_XenTag_getImplodedTagsFromThread, $thread, 1}
 	</xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tags_thread_view" version_id="39" version_string="1.1.5"><![CDATA[<xen:if is="{$Tinhte_XenTag_canEdit}">
+    <template title="tinhte_xentag_tags_thread_view" version_id="88" version_string="1.7.1"><![CDATA[<xen:if is="{$Tinhte_XenTag_canEdit}">
     <xen:require js="js/Tinhte/XenTag/frontend.js" />
+	<xen:require css="tinhte_xentag.css" />
 
     <div class="sectionMain">
         <div class="Tinhte_XenTag_TagsInlineEditor" data-template="tags_thread_view">
@@ -1067,16 +1070,28 @@ a.Tinhte_XenTag_TagLink:focus {
         </xen:contentcheck>
     </div>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_widget_related_threads" version_id="26" version_string="0.11.4"><![CDATA[<xen:if hascontent="true">
+    <template title="tinhte_xentag_widget_related_threads" version_id="88" version_string="1.7.1"><![CDATA[<xen:if hascontent="true">
     <div class="avatarList">
         <ul>
             <xen:contentcheck>
                 <xen:foreach loop="$threads" value="$thread">
-                	<li>
-                		<xen:avatar user="$thread" size="s" img="true" />
-                		<xen:include template="wf_widget_threads_thread_title" />
-                		<div class="userTitle">{xen:phrase wf_x_posted, 'user=<a href="{xen:link 'members', {$thread}}">{$thread.username}</a>'} <xen:datetime time="{$thread.post_date}" /></div>
-                	</li>
+					<xen:if hascontent="true">
+						<xen:comment>[bd] Widget Framework 2.3.5+</xen:comment>
+						<xen:contentcheck>
+							<xen:include template="wf_widget_threads_thread_sidebar">
+								<xen:set var="$_secondRow">
+									{xen:phrase wf_x_posted, 'user=<a href="{xen:link 'members', {$thread}}">{$thread.username}</a>'} <xen:datetime time="{$thread.post_date}" />
+								</xen:set>
+							</xen:include>
+						</xen:contentcheck>
+					<xen:else />
+						<xen:comment>Older version of [bd] Widget Framework...</xen:comment>
+						<li>
+							<xen:avatar user="$thread" size="s" img="true" />
+							<xen:include template="wf_widget_threads_thread_title" />
+							<div class="userTitle">{xen:phrase wf_x_posted, 'user=<a href="{xen:link 'members', {$thread}}">{$thread.username}</a>'} <xen:datetime time="{$thread.post_date}" /></div>
+						</li>
+					</xen:if>
             	</xen:foreach>
             </xen:contentcheck>
         </ul>
@@ -1084,5 +1099,6 @@ a.Tinhte_XenTag_TagLink:focus {
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
   </templates>
+  <public_template_modifications/>
   <bb_code_media_sites/>
 </addon>
