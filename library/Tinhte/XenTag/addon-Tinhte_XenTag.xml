@@ -93,6 +93,10 @@
 		rows="5" inputclass="Elastic">
 		<xen:explain>{xen:phrase tinhte_xentag_tag_description_explain}</xen:explain>
 	</xen:textboxunit>
+	
+	<xen:textboxunit label="{xen:phrase link}:" name="link" value="{$tagLink}">
+		<xen:explain>{xen:phrase tinhte_xentag_link_explain}</xen:explain>
+	</xen:textboxunit>
 
 	<input type="hidden" name="tag_id" value="{$tag.tag_id}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
@@ -370,6 +374,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_forum" version_id="69" version_string="1.4"><![CDATA[Forum (Tags)]]></phrase>
     <phrase title="tinhte_xentag_forum_maximum_tags_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Set the maximum tags can be tagged in a thread. Set to 0 (zero) to have no limit.]]></phrase>
     <phrase title="tinhte_xentag_forum_requires_tag_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Select Yes to requires at least one tag in a new thread.]]></phrase>
+    <phrase title="tinhte_xentag_link_explain" version_id="89" version_string="1.7.2"><![CDATA[If entered, user will be redirected to the specified link when he/she views tagged contents listing.]]></phrase>
     <phrase title="tinhte_xentag_link_format_beautiful" version_id="65" version_string="1.3.3"><![CDATA[http://domain.com/xenforo/tags/something/page-10]]></phrase>
     <phrase title="tinhte_xentag_link_format_ugly" version_id="65" version_string="1.3.3"><![CDATA[http://domain.com/xenforo/tags?t=something&page=10]]></phrase>
     <phrase title="tinhte_xentag_matched_tags" version_id="86" version_string="1.6.5"><![CDATA[Matched Tags]]></phrase>

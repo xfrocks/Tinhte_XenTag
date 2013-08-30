@@ -99,6 +99,27 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 			$dw = $this->_getTagDataWriter();
 			$dw->setExistingData($id);
 			$dw->bulkSet($dwInput);
+			
+			// process link content_type 
+			// since 1.8
+			$link = $this->_input->filterSingle('link', XenForo_Input::STRING);
+			if (!empty($link)) {
+				$existingLink = $this->_getTagModel()->getTagLink($tag);
+				if ($link != $existingLink) {
+					$dw->bulkSet(array(
+						'content_type' => 'link',
+						'content_id' => 0,
+						'content_data' => array('link' => $link),
+					));
+				}
+			} else {
+				$dw->bulkSet(array(
+					'content_type' => '',
+					'content_id' => 0,
+					'content_data' => array(),
+				));
+			}
+			
 			$dw->save();
 			
 			return $this->responseRedirect(
@@ -108,6 +129,7 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 		} else {
 			$viewParams = array(
 				'tag' => $tag,
+				'tagLink' => $this->_getTagModel()->getTagLink($tag),
 			);
 			
 			return $this->responseView('Tinhte_XenTag_ViewAdmin_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);

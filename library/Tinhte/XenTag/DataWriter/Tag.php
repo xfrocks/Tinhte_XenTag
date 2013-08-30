@@ -45,20 +45,25 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter {
 	protected function _getFields() {
 		return array(
 			'xf_tinhte_xentag_tag' => array(
-				'tag_id' => array('type' => 'uint', 'autoIncrement' => true),
+				'tag_id' => array('type' => self::TYPE_UINT, 'autoIncrement' => true),
 				'tag_text' => array(
-					'type' => 'string', 'required' => true, 'maxLength' => 100,
+					'type' => self::TYPE_STRING, 'required' => true, 'maxLength' => 100,
 					'verification' => array('$this', '_verifyText'),
 				),
-				'created_date' => array('type' => 'uint', 'required' => true, 'default' => XenForo_Application::$time),
-				'created_user_id' => array('type' => 'uint', 'required' => true),
-				'content_count' => array('type' => 'uint', 'default' => 0),
+				'created_date' => array('type' => self::TYPE_UINT, 'required' => true, 'default' => XenForo_Application::$time),
+				'created_user_id' => array('type' => self::TYPE_UINT, 'required' => true),
+				'content_count' => array('type' => self::TYPE_UINT, 'default' => 0),
 				
 				// since 0.10
-				'latest_tagged_contents' => array('type' => 'serialzied'),
+				'latest_tagged_contents' => array('type' => self::TYPE_SERIALIZED),
 				
 				// since 1.4
-				'tag_description' => array('type' => 'string'),
+				'tag_description' => array('type' => self::TYPE_STRING),
+				
+				// since 1.8
+				'content_type' => array('type' => self::TYPE_STRING, 'maxLength' => 25, 'default' => ''),
+				'content_id' => array('type' => self::TYPE_UINT, 'default' => ''),
+				'content_data' => array('type' => self::TYPE_SERIALIZED, 'default' => 'a:0:{}'),
 			)
 		);
 	}

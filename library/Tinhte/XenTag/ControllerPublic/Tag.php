@@ -87,6 +87,11 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->_getNoResultsResponse($tagText);
 		}
 		
+		$tagLink = $tagModel->getTagLink($tag);
+		if (!empty($tagLink)) {
+			return $this->responseRedirect(XenForo_ControllerResponse_Redirect::RESOURCE_UPDATED, $tagLink);
+		}
+		
 		$searchId = $this->_input->filterSingle(Tinhte_XenTag_Constants::SEARCH_SEARCH_ID, XenForo_Input::UINT);
 		if (empty($searchId)) {
 			$search = $this->_doSearch($tagText);

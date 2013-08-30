@@ -2,6 +2,18 @@
 class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 
 	const FETCH_TAGGED = 1;
+	
+	public function getTagLink($tag) {
+		switch ($tag['content_type']) {
+			case 'link':
+				if (!empty($tag['content_data']['link'])) {
+					return $tag['content_data']['link'];
+				} 
+				break;
+		}
+		
+		return false;
+	}
 
 	public function deleteEmptyTags() {
 		$this->_getDb()->query("DELETE FROM xf_tinhte_xentag_tag WHERE content_count = 0");
@@ -260,7 +272,11 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 	}
 
 	private function getAllTagCustomized(array &$data, array $fetchOptions) {
-		// customized processing for getAllTag() should go here
+		foreach ($data as &$tag) {
+			if (!empty($tag['content_data'])) {
+				$tag['content_data'] = Tinhte_XenTag_Helper::unserialize($tag['content_data']);
+			}
+		}
 	}
 
 	private function prepareTagConditionsCustomized(array &$sqlConditions, array $conditions, array &$fetchOptions) {
@@ -339,8 +355,6 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				$orderClause
 				", $limitOptions['limit'], $limitOptions['offset']
 		), 'tag_id');
-
-
 
 		$this->getAllTagCustomized($all, $fetchOptions);
 
