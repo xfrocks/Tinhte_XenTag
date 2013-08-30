@@ -183,7 +183,6 @@
     <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="search_source_create" execute_order="9999" callback_class="Tinhte_XenTag_Listener" callback_method="search_source_create" active="1" hint="" description=""/>
     <listener event_id="template_create" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_create" active="1" hint="" description=""/>
     <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" hint="" description=""/>
     <listener event_id="template_post_render" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_post_render" active="1" hint="" description=""/>
@@ -654,35 +653,15 @@ a.Tinhte_XenTag_TagLink:focus {
 		</div>
 	</xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_search_bar_tag_only" version_id="1" version_string="0.9"><![CDATA[<label><input type="checkbox" name="tinhte_xentag_tags_text_no_include" value="{$tag.tag_text}"
+    <template title="tinhte_xentag_search_bar_tag_only" version_id="89" version_string="1.7.2"><![CDATA[<label><input type="checkbox" name="tinhte_xentag_tags_text_no_include" value="{$tag.tag_text}"
 	id="search_bar_tag" class="Disabler AutoChecker" checked="checked"
 	/> {xen:phrase tinhte_xentag_search_threads_tagged_with_x_only, 'tag_text={$tag.tag_text}'}</label>
 	<ul id="search_bar_tag_Disabler">
 		<li><label><input type="checkbox" name="type[post][group_discussion]" value="1"
 			id="search_bar_group_discussion" class="AutoChecker"
 			/> {xen:phrase display_results_as_threads}</label></li>
-	</ul>]]></template>
-    <template title="tinhte_xentag_search_form" version_id="1" version_string="0.9"><![CDATA[<xen:require js="js/Tinhte/XenTag/frontend.js" />
-<xen:require css="tinhte_xentag.css" />
-
-<dl class="ctrlUnit">
-	<dt><label for="ctrl_tinhte_xentag_tags">{xen:phrase tinhte_xentag_tags}:</label></dt>
-	<dd>
-		<ul class="Tinhte_XenTag_TagsEditor" data-varname="tinhte_xentag_tags[]">
-			<li>
-				<input type="text"
-					name="tinhte_xentag_tags_text"
-					value="{xen:if {$search.tags}, {xen:helper implode, $search.tags, ', '}}"
-					id="ctrl_tinhte_xentag_tags"
-					class="textCtrl AutoComplete AcSingle Tinhte_XenTag_TagNewInput"
-					data-acUrl="{xen:link '{xen:helper Tinhte_XenTag_getOption, routePrefix}/find'}"
-					/>
-			</li>
-		</ul>
-		<input type="hidden" name="tinhte_xentag_included" value="1" />
-	</dd>
-</dl>
-<!-- [Tinhte] XenTag / Mark --><dl class="ctrlUnit submitUnit"><!-- [Tinhte] XenTag / Mark -->]]></template>
+	</ul>
+<input type="hidden" name="type" value="post" />]]></template>
     <template title="tinhte_xentag_search_form_post" version_id="1" version_string="0.9"><![CDATA[<xen:include template="tinhte_xentag_search_form" />]]></template>
     <template title="tinhte_xentag_search_result_forum" version_id="75" version_string="1.6-dev"><![CDATA[<li id="tinhte_xentag_forum-{$forum.node_id}" class="searchResult tinhte_xentag_forum primaryContent">
 

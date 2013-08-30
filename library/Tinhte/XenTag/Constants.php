@@ -8,7 +8,6 @@ class Tinhte_XenTag_Constants {
 	const GLOBALS_CONTROLLERPUBLIC_SEARCH_SEARCH = 'Tinhte_XenTag_XenForo_ControllerPublic_Search::actionSearch';
 	const GLOBALS_CONTROLLERPUBLIC_THREAD_SAVE = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionSave';
 	const GLOBALS_CONTROLLERPUBLIC_RESOURCE_SAVE = 'Tinhte_XenTag_XenResource_ControllerPublic_Resource::actionSave';
-	const GLOBALS_SEARCH_SOURCEHANDLER_LOADED = 'Tinhte_XenTag_XenForo_Search_SourceHandler::loaded';
 	
 	const URI_PARAM_TAG_TEXT = 't';
 	

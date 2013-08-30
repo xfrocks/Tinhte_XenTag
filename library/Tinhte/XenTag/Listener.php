@@ -26,6 +26,7 @@ class Tinhte_XenTag_Listener {
 				'XenForo_Model_ThreadRedirect',
 				'XenForo_Model_Thread',
 
+				'XenForo_Search_DataHandler_Post',
 				'XenForo_Search_DataHandler_Thread',
 
 				'XenForo_ViewPublic_Thread_View',
@@ -73,7 +74,6 @@ class Tinhte_XenTag_Listener {
 			case 'tools_rebuild': // admin template
 			case 'forum_view':
 			case 'post_edit':
-			case 'search_form':
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
@@ -132,7 +132,6 @@ class Tinhte_XenTag_Listener {
 			case 'tools_rebuild': // admin template
 			case 'forum_view':
 			case 'post_edit':
-			case 'search_form':
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
@@ -289,20 +288,6 @@ class Tinhte_XenTag_Listener {
 				$target = $html . $target;
 			}
 		}
-	}
-
-	public static function search_source_create(&$class) {
-		static $isProxyClassCreated = false;
-		$ourClassName = 'Tinhte_XenTag_XenForo_Search_SourceHandler';
-
-		if ($isProxyClassCreated === false) {
-			$proxyClassName = 'XFCP_' . $ourClassName;
-			eval('class ' . $proxyClassName . ' extends ' . $class . ' {}');
-
-			$isProxyClassCreated = true;
-		}
-
-		$class = $ourClassName;
 	}
 
 	public static function file_health_check(XenForo_ControllerAdmin_Abstract $controller, array &$hashes) {

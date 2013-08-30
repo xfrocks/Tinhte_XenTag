@@ -12,8 +12,9 @@ class Tinhte_XenTag_Model_Search extends XenForo_Model {
 			return;
 		}
 		
-		$constraints['content'] = array_keys($prioritizedContents);
-		$prioritizedResults = $searcher->searchGeneral($searchQuery, $constraints, $order);
+		$typeHandler = XenForo_Search_DataHandler_Abstract::create('Tinhte_XenTag_Search_DataHandler_General');
+		$typeHandler->setSearchContentTypes($prioritizedContents);
+		$prioritizedResults = $searcher->searchType($typeHandler, $searchQuery, $constraints, $order);
 		if (empty($prioritizedResults)) {
 			// no prioritized results could be found, do nothing
 			return;

@@ -212,8 +212,10 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		
 		if (empty($search)) {
 			$searcher = new XenForo_Search_Searcher($searchModel);
-			$results = $searcher->searchGeneral($input['keywords'], $constraints, $input['order']);
 			
+			$typeHandler = XenForo_Search_DataHandler_Abstract::create('Tinhte_XenTag_Search_DataHandler_General');
+			$results = $searcher->searchType($typeHandler, $input['keywords'], $constraints, $input['order']);
+
 			if (empty($results)) {
 				return $this->_getNoResultsResponse($tagText);
 			} else {

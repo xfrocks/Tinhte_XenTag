@@ -134,31 +134,17 @@ class Tinhte_XenTag_Integration {
 		return count($existingTags);
 	}
 	
-	/**
-	 * Inserts tagging metadata into search index. This method should be called
-	 * within the method {@link XenForo_Search_DataHandler_Abstract#_insertIntoIndex}
-	 * of the associated data handler for target content type.
-	 * 
-	 * @param array $tagTexts
-	 * @param XenForo_Search_DataHandler_Abstract $sdh
-	 * 
-	 * @throws XenForo_Exception
-	 */
-	public static function insertIntoIndex(array $tagTexts, XenForo_Search_DataHandler_Abstract $sdh) {
-		// call this to make sure Tinhte_XenTag_XenForo_Search_SourceHandler is available
-		// it will be loaded dynamically via search_source_create event listener
-		XenForo_Search_SourceHandler_Abstract::getDefaultSourceHandler();
-		
-		if (!empty($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_SEARCH_SOURCEHANDLER_LOADED])) {
-			// we have to check for the  of Tinhte_XenTag_XenForo_Search_SourceHandler
-			// because it's a common mistake when webmaster install this add-on
-			// with XenForo Enhanced Search installed without doing the manual edit
-			Tinhte_XenTag_XenForo_Search_SourceHandler::setExtraMetaData(array(
-				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS => Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tagTexts), 
+	public static function processConstraint(XenForo_Search_SourceHandler_Abstract $sourceHandler, $constraint, $constraintInfo, array $constraints)
+	{
+		if ($constraint == Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS)
+		{
+			return array('metadata' => array(
+				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS,
+				implode(' ', Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($constraintInfo)),
 			));
-		} else {
-			throw new XenForo_Exception('Please make sure [Tinhte] XenTag has been installed properly, a problem with search handler occured. You may need to edit XenES file manually...', false);
 		}
+
+		return false;
 	}
 	
 	/**
