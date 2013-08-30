@@ -124,8 +124,8 @@ class Tinhte_XenTag_Integration {
 			$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
 			$data = array(
 				'tag_id' => $tag['tag_id'],
-				'content_type' => 'thread',
-				'content_id' => $dw->get('thread_id'),
+				'content_type' => $contentType,
+				'content_id' => $contentId,
 			);
 			$dwTagged->setExistingData($data, true);
 			$dwTagged->delete();
