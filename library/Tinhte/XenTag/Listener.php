@@ -101,6 +101,7 @@ class Tinhte_XenTag_Listener
 			case 'PAGE_CONTAINER':
 				// these template will be preloaded in all pages
 				// should over-use this...
+				$template->preloadTemplate('tinhte_xentag_hook_message_below');
 				$template->preloadTemplate('tinhte_xentag_hook_message_content');
 				$template->preloadTemplate('tinhte_xentag_hook_message_notices');
 				$template->preloadTemplate('tinhte_xentag_hook_post_private_controls');
@@ -212,6 +213,7 @@ class Tinhte_XenTag_Listener
 
 			case 'admin_page_edit_basic_information':
 
+			case 'message_below':
 			case 'message_content':
 			case 'message_notices':
 			case 'post_private_controls':

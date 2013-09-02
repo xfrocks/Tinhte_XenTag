@@ -18,6 +18,7 @@ class Tinhte_XenTag_Option
 		static $keyPrefix = 'Tinhte_XenTag_';
 
 		static $availablePositions = array(
+			'post_below',
 			'post_message_below',
 			'post_message_above',
 			'post_date_after',

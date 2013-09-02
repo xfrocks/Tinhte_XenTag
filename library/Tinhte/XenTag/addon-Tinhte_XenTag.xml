@@ -233,6 +233,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <option option_id="Tinhte_XenTag_displayPosition" edit_format="radio" data_type="string" can_backup="1">
       <default_value>thread_qr_below</default_value>
       <edit_format_params>post_message_below = {xen:phrase tinhte_xentag_display_position_post_message_below}
+post_below = {xen:phrase tinhte_xentag_display_position_post_below}
 thread_qr_below = {xen:phrase tinhte_xentag_display_position_thread_qr_below}</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="100"/>
@@ -372,7 +373,8 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_created_date" version_id="1" version_string="0.9"><![CDATA[Created Date]]></phrase>
     <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
     <phrase title="tinhte_xentag_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Delete Empty Tags]]></phrase>
-    <phrase title="tinhte_xentag_display_position_post_message_below" version_id="5" version_string="0.9.4"><![CDATA[Below first post]]></phrase>
+    <phrase title="tinhte_xentag_display_position_post_below" version_id="89" version_string="1.7.2"><![CDATA[Below first post]]></phrase>
+    <phrase title="tinhte_xentag_display_position_post_message_below" version_id="89" version_string="1.7.2"><![CDATA[Below first post message]]></phrase>
     <phrase title="tinhte_xentag_display_position_resource_bottom" version_id="77" version_string="1.6"><![CDATA[Bottom of resource page]]></phrase>
     <phrase title="tinhte_xentag_display_position_resource_sidebar_info" version_id="77" version_string="1.6"><![CDATA[Sidebar: Information block]]></phrase>
     <phrase title="tinhte_xentag_display_position_thread_qr_below" version_id="5" version_string="0.9.4"><![CDATA[Bottom of thread page]]></phrase>
@@ -566,6 +568,18 @@ a.Tinhte_XenTag_TagLink:focus {
 		{xen:phrase tinhte_xentag_tags}:
 		<xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromForum, $forum, 1}</xen:contentcheck>
 	</div>
+</xen:if>]]></template>
+    <template title="tinhte_xentag_hook_message_below" version_id="89" version_string="1.7.2"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'post_below'">
+	<xen:if is="{$post.post_id} == {$thread.first_post_id}">
+		<xen:comment>The usage of $post is is a bug of XenForo (`message` template) I think.</xen:comment>
+
+		<xen:if hascontent="true">
+			<div style="clear: both; height: 0px;">&nbsp;</div>
+			<xen:contentcheck>
+				<xen:include template="tinhte_xentag_tags_thread_view" />
+			</xen:contentcheck>
+		</xen:if>
+	</xen:if>
 </xen:if>]]></template>
     <template title="tinhte_xentag_hook_message_content" version_id="3" version_string="0.9.2"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'post_message_below'">
 	<xen:include template="tinhte_xentag_tags_in_post">
