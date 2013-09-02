@@ -89,6 +89,12 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			return $this->responseRedirect(XenForo_ControllerResponse_Redirect::RESOURCE_UPDATED, $tagLink);
 		}
 
+		if (!empty($tag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
+		{
+			// no permission to view this tag
+			return $this->responseNoPermission();
+		}
+
 		$searchId = $this->_input->filterSingle(Tinhte_XenTag_Constants::SEARCH_SEARCH_ID, XenForo_Input::UINT);
 		if (empty($searchId))
 		{

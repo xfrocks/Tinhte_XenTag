@@ -147,6 +147,7 @@ class Tinhte_XenTag_Helper
 			foreach ($tagsOrTexts as $tagOrText)
 			{
 				$altLink = false;
+				$isStaff = false;
 
 				if (is_string($tagOrText))
 				{
@@ -154,6 +155,16 @@ class Tinhte_XenTag_Helper
 				}
 				else
 				{
+					if (!empty($tagOrText['is_staff']))
+					{
+						if (!XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
+						{
+							continue;
+						}
+						
+						$isStaff = true;
+					}
+
 					$tagText = $tagOrText['tag_text'];
 
 					/* @var $tagModel Tinhte_XenTag_Model_Tag */
@@ -165,26 +176,40 @@ class Tinhte_XenTag_Helper
 
 					$altLink = $tagModel->getTagLink($tagOrText);
 				}
+				
+				$escapedText = htmlspecialchars($tagText);
+				if ($isStaff)
+				{
+					$escapedText .= '*';
+				}
 
 				if (!empty($altLink))
 				{
-					$result[] = sprintf(self::$tagAltLinkTemplate, $altLink, htmlspecialchars($tagText));
+					$result[] = sprintf(self::$tagAltLinkTemplate, $altLink, $escapedText);
 				}
 				else
 				{
 					$link = XenForo_Link::buildPublicLink('tags', $tagText);
-					$result[] = sprintf(self::$tagLinkTemplate, $link, htmlspecialchars($tagText));
+					$result[] = sprintf(self::$tagLinkTemplate, $link, $escapedText);
 				}
 
 			}
 		}
 		else
 		{
-			$tagTexts = self::getTextsFromTagsOrTexts($tagsOrTexts);
-
-			foreach ($tagTexts as $tagText)
+			foreach ($tagsOrTexts as $tagOrText)
 			{
-				$result[] = htmlspecialchars($tagText);
+				if (is_array($tagOrText))
+				{
+					if (!empty($tagOrText['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
+					{
+						continue;
+					}
+				}
+				
+				$escapedText = htmlspecialchars(self::getTextFromTagOrText($tagOrText));
+
+				$result[] = htmlspecialchars($escapedText);
 			}
 		}
 
@@ -203,7 +228,7 @@ class Tinhte_XenTag_Helper
 		foreach ($tagsOrTexts as $key => $tagOrText)
 		{
 			$tagText = self::getTextFromTagOrText($tagOrText);
-			
+
 			if (!empty($tagText))
 			{
 				$tagTexts[$key] = $tagText;

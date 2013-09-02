@@ -79,6 +79,14 @@ class Tinhte_XenTag_Installer
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `target_data`',
 		),
 		array(
+			'table' => 'xf_tinhte_xentag_tag',
+			'field' => 'is_staff',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'is_staff\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `is_staff` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `is_staff`',
+		),
+		array(
 			'table' => 'xf_forum',
 			'field' => 'tinhte_xentag_options',
 			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
@@ -241,6 +249,17 @@ class Tinhte_XenTag_Installer
 				SELECT user_group_id, user_id, 'resource', 'Tinhte_XenTag_resourceTag', permission_value, 0
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
+			");
+		}
+		
+		if ($effectiveVersionId < 90)
+		{
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_isStaff', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'general' AND permission_id = 'Tinhte_XenTag_createNew'
 			");
 		}
 

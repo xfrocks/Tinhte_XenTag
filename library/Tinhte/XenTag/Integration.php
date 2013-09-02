@@ -45,6 +45,7 @@ class Tinhte_XenTag_Integration
 			$existingTags = $tagModel->getTagsOfContent($contentType, $contentId);
 		}
 
+		$changed = false;
 		$newTagTexts = array();
 		$removedTagTexts = array();
 		$updatedTags = $existingTags;
@@ -82,6 +83,12 @@ class Tinhte_XenTag_Integration
 					$newTag = $dwTag->getMergedData();
 				}
 
+				if (!empty($newTag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
+				{
+					// no permission to add this tag
+					continue;
+				}
+
 				/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
 				$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
 				$dwTagged->set('tag_id', $newTag['tag_id']);
@@ -91,6 +98,8 @@ class Tinhte_XenTag_Integration
 				$dwTagged->save();
 
 				$updatedTags[] = $newTag;
+
+				$changed = true;
 			}
 		}
 
@@ -102,6 +111,12 @@ class Tinhte_XenTag_Integration
 
 				if (!empty($removedTag))
 				{
+					if (!empty($removedTag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
+					{
+						// no permission to remove this tag
+						continue;
+					}
+
 					/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
 					$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
 					$data = array(
@@ -120,11 +135,13 @@ class Tinhte_XenTag_Integration
 							unset($updatedTags[$key]);
 						}
 					}
+
+					$changed = true;
 				}
 			}
 		}
 
-		if (count($newTagTexts) + count($removedTagTexts) > 0)
+		if ($changed)
 		{
 			$tagModel->rebuildTagsCache();
 		}

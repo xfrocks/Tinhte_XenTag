@@ -59,6 +59,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 			'target_type' => array('name' => 'target_type', 'type' => 'string', 'length' => 25, 'required' => true, 'default' => ''),
 			'target_id' => array('name' => 'target_id', 'type' => 'uint', 'required' => true, 'default' => 0),
 			'target_data' => array('name' => 'target_data', 'type' => 'serialized'),
+			'is_staff' => array('name' => 'is_staff', 'type' => 'uint', 'required' => true, 'default' => 0),
 		),
 		'xf_forum' => array(
 			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized'),

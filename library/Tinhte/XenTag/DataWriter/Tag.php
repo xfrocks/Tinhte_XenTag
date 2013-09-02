@@ -100,6 +100,10 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 					'type' => self::TYPE_SERIALIZED,
 					'default' => 'a:0:{}'
 				),
+				'is_staff' => array(
+					'type' => self::TYPE_UINT,
+					'default' => 0,
+				),
 			));
 	}
 
