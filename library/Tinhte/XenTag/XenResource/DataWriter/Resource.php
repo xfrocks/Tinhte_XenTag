@@ -21,7 +21,13 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS));
 			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 
-			Tinhte_XenTag_Integration::updateTags(Tinhte_XenTag_Constants::CONTENT_TYPE_RESOURCE, $this->get('resource_id'), XenForo_Visitor::getUserId(), $tagTexts, $this);
+			$updated = Tinhte_XenTag_Integration::updateTags(Tinhte_XenTag_Constants::CONTENT_TYPE_RESOURCE, $this->get('resource_id'), XenForo_Visitor::getUserId(), $tagTexts, $this);
+
+			if (is_array($updated))
+			{
+				$this->set(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS, $updated, '', array('setAfterPreSave' => true));
+				$this->_db->update('xf_resource', array(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS => serialize($updated)), array('resource_id = ?' => $this->get('resource_id')));
+			}
 		}
 	}
 

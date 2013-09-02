@@ -2,6 +2,9 @@
 
 class Tinhte_XenTag_Helper
 {
+	public static $tagLinkTemplate = '<a href="%1$s" class="Tinhte_XenTag_TagLink">%2$s</a>';
+	public static $tagAltLinkTemplate = '<a href="%1$s" target="_blank" class="Tinhte_XenTag_TagLink Tinhte_XenTag_TagAltLink">%2$s</a>';
+
 	public static function unserialize($string)
 	{
 		$array = $string;
@@ -138,18 +141,47 @@ class Tinhte_XenTag_Helper
 		{
 			$tagsOrTexts = array();
 		}
-		
-		$tagTexts = self::getTextsFromTagsOrTexts($tagsOrTexts);
-		
+
 		if ($getLinks)
 		{
-			foreach ($tagTexts as $tagText)
+			foreach ($tagsOrTexts as $tagOrText)
 			{
-				$result[] = '<a href="' . XenForo_Link::buildPublicLink('tags', $tagText) . '">' . htmlspecialchars($tagText) . '</a>';
+				$altLink = false;
+
+				if (is_string($tagOrText))
+				{
+					$tagText = $tagOrText;
+				}
+				else
+				{
+					$tagText = $tagOrText['tag_text'];
+
+					/* @var $tagModel Tinhte_XenTag_Model_Tag */
+					static $tagModel = false;
+					if ($tagModel === false)
+					{
+						$tagModel = XenForo_Model::create('Tinhte_XenTag_Model_Tag');
+					}
+
+					$altLink = $tagModel->getTagLink($tagOrText);
+				}
+
+				if (!empty($altLink))
+				{
+					$result[] = sprintf(self::$tagAltLinkTemplate, $altLink, htmlspecialchars($tagText));
+				}
+				else
+				{
+					$link = XenForo_Link::buildPublicLink('tags', $tagText);
+					$result[] = sprintf(self::$tagLinkTemplate, $link, htmlspecialchars($tagText));
+				}
+
 			}
 		}
 		else
 		{
+			$tagTexts = self::getTextsFromTagsOrTexts($tagsOrTexts);
+
 			foreach ($tagTexts as $tagText)
 			{
 				$result[] = htmlspecialchars($tagText);
@@ -163,23 +195,23 @@ class Tinhte_XenTag_Helper
 	{
 		return Tinhte_XenTag_Option::get($key);
 	}
-	
+
 	public static function getTextsFromTagsOrTexts(array $tagsOrTexts)
 	{
 		$tagTexts = array();
-		
-		foreach ($tagsOrTexts as $entry)
+
+		foreach ($tagsOrTexts as $key => $entry)
 		{
 			if (is_string($entry))
 			{
-				$tagTexts[] = $entry;
+				$tagTexts[$key] = $entry;
 			}
 			elseif (is_array($entry) AND !empty($entry['tag_text']))
 			{
-				$tagTexts[] = $entry['tag_text'];
+				$tagTexts[$key] = $entry['tag_text'];
 			}
 		}
-		
+
 		return $tagTexts;
 	}
 

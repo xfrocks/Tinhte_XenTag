@@ -43,7 +43,20 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 		{
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
 			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
-			$tagsCount = Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tagTexts, $this);
+
+			$updated = Tinhte_XenTag_Integration::updateTags('thread', $this->get('thread_id'), $this->get('user_id'), $tagTexts, $this);
+
+			if (is_array($updated))
+			{
+				$tagsCount = count($updated);
+
+				$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $updated, '', array('setAfterPreSave' => true));
+				$this->_db->update('xf_thread', array(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS => serialize($updated)), array('thread_id = ?' => $this->get('thread_id')));
+			}
+			else
+			{
+				$tagsCount = intval($updated);
+			}
 
 			$this->_tagsNeedUpdated = false;
 

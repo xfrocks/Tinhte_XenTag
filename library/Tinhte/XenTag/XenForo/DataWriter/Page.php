@@ -21,7 +21,13 @@ class Tinhte_XenTag_XenForo_DataWriter_Page extends XFCP_Tinhte_XenTag_XenForo_D
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($this->get(Tinhte_XenTag_Constants::FIELD_PAGE_TAGS));
 			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 
-			Tinhte_XenTag_Integration::updateTags(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $this->get('node_id'), XenForo_Visitor::getUserId(), $tagTexts, $this);
+			$updated = Tinhte_XenTag_Integration::updateTags(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $this->get('node_id'), XenForo_Visitor::getUserId(), $tagTexts, $this);
+
+			if (is_array($updated))
+			{
+				$this->set(Tinhte_XenTag_Constants::FIELD_PAGE_TAGS, $updated, '', array('setAfterPreSave' => true));
+				$this->_db->update('xf_page', array(Tinhte_XenTag_Constants::FIELD_PAGE_TAGS => serialize($updated)), array('node_id = ?' => $this->get('node_id')));
+			}
 		}
 	}
 

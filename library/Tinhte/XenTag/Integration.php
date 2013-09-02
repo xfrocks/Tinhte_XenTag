@@ -47,6 +47,7 @@ class Tinhte_XenTag_Integration
 
 		$newTagTexts = array();
 		$removedTagTexts = array();
+		$updatedTags = $existingTags;
 		$tagModel->lookForNewAndRemovedTags($existingTags, $tagTexts, $newTagTexts, $removedTagTexts);
 		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
 
@@ -88,6 +89,8 @@ class Tinhte_XenTag_Integration
 				$dwTagged->set('content_id', $contentId);
 				$dwTagged->set('tagged_user_id', $contentUserId);
 				$dwTagged->save();
+
+				$updatedTags[] = $newTag;
 			}
 		}
 
@@ -108,6 +111,15 @@ class Tinhte_XenTag_Integration
 					);
 					$dwTagged->setExistingData($data, true);
 					$dwTagged->delete();
+
+					// remove the removed tag from updated tags array
+					foreach (array_keys($updatedTags) as $key)
+					{
+						if ($updatedTags[$key]['tag_id'] == $removedTag['tag_id'])
+						{
+							unset($updatedTags[$key]);
+						}
+					}
 				}
 			}
 		}
@@ -117,7 +129,20 @@ class Tinhte_XenTag_Integration
 			$tagModel->rebuildTagTextsCache();
 		}
 
-		return count($existingTags) + count($newTagTexts) - count($removedTagTexts);
+		$packedTags = $tagModel->packTags($updatedTags);
+
+		foreach ($packedTags as $packedTag)
+		{
+			if (!is_string($packedTag))
+			{
+				// at least one of the packed tag is not tag text
+				// we need to return the packed tags array
+				return $packedTags;
+			}
+		}
+
+		// simply return the counter
+		return count($packedTags);
 	}
 
 	/**
@@ -176,7 +201,7 @@ class Tinhte_XenTag_Integration
 		{
 			return $html;
 		}
-		
+
 		$html = strval($html);
 
 		// prepare the options

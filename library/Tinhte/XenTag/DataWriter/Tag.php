@@ -87,16 +87,16 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 				'tag_description' => array('type' => self::TYPE_STRING),
 
 				// since 1.8
-				'content_type' => array(
+				'target_type' => array(
 					'type' => self::TYPE_STRING,
 					'maxLength' => 25,
 					'default' => ''
 				),
-				'content_id' => array(
+				'target_id' => array(
 					'type' => self::TYPE_UINT,
 					'default' => 0,
 				),
-				'content_data' => array(
+				'target_data' => array(
 					'type' => self::TYPE_SERIALIZED,
 					'default' => 'a:0:{}'
 				),

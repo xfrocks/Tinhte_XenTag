@@ -1,19 +1,55 @@
 <?php
+
 class Tinhte_XenTag_Model_Tag extends XenForo_Model
 {
 
 	const FETCH_TAGGED = 1;
 
+	public function packTags($tags)
+	{
+		$packedTags = array();
+
+		foreach ($tags as $tag)
+		{
+			if (empty($tag['target_type']) AND empty($tag['is_staff']))
+			{
+				$packedTags[] = $tag['tag_text'];
+			}
+			else
+			{
+				$packedTag = array('tag_text' => $tag['tag_text']);
+				if (!empty($tag['target_type']) AND isset($tag['target_id']) AND isset($tag['target_data']))
+				{
+					$packedTag += array(
+						'target_type' => $tag['target_type'],
+						'target_id' => $tag['target_id'],
+						'target_data' => $tag['target_data'],
+					);
+				}
+				if (!empty($tag['is_staff']))
+				{
+					$packedTag['is_staff'] = $tag['is_staff'];
+				}
+				$packedTags[] = $packedTag;
+			}
+		}
+
+		return $packedTags;
+	}
+
 	public function getTagLink($tag)
 	{
-		switch ($tag['content_type'])
+		if (!empty($tag['target_type']))
 		{
-			case 'link':
-				if (!empty($tag['content_data']['link']))
-				{
-					return $tag['content_data']['link'];
-				}
-				break;
+			switch ($tag['target_type'])
+			{
+				case 'link':
+					if (!empty($tag['target_data']['link']))
+					{
+						return $tag['target_data']['link'];
+					}
+					break;
+			}
 		}
 
 		return false;
@@ -333,9 +369,9 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 	{
 		foreach ($data as &$tag)
 		{
-			if (!empty($tag['content_data']))
+			if (!empty($tag['target_data']))
 			{
-				$tag['content_data'] = Tinhte_XenTag_Helper::unserialize($tag['content_data']);
+				$tag['target_data'] = Tinhte_XenTag_Helper::unserialize($tag['target_data']);
 			}
 		}
 	}

@@ -56,9 +56,9 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 		'xf_tinhte_xentag_tag' => array(
 			'latest_tagged_contents' => array('name' => 'latest_tagged_contents', 'type' => 'serialized'),
 			'tag_description' => array('name' => 'tag_description', 'type' => 'string'),
-			'content_type' => array('name' => 'content_type', 'type' => 'string', 'length' => 25, 'required' => true, 'default' => ''),
-			'content_id' => array('name' => 'content_id', 'type' => 'uint', 'required' => true, 'default' => 0),
-			'content_data' => array('name' => 'content_data', 'type' => 'serialized'),
+			'target_type' => array('name' => 'target_type', 'type' => 'string', 'length' => 25, 'required' => true, 'default' => ''),
+			'target_id' => array('name' => 'target_id', 'type' => 'uint', 'required' => true, 'default' => 0),
+			'target_data' => array('name' => 'target_data', 'type' => 'serialized'),
 		),
 		'xf_forum' => array(
 			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized'),

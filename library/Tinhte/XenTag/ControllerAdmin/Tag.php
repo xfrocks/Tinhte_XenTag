@@ -106,7 +106,7 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 			$dw->setExistingData($id);
 			$dw->bulkSet($dwInput);
 
-			// process link content_type
+			// process link target_type
 			// since 1.8
 			$link = $this->_input->filterSingle('link', XenForo_Input::STRING);
 			if (!empty($link))
@@ -115,18 +115,18 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 				if ($link != $existingLink)
 				{
 					$dw->bulkSet(array(
-						'content_type' => 'link',
-						'content_id' => 0,
-						'content_data' => array('link' => $link),
+						'target_type' => 'link',
+						'target_id' => 0,
+						'target_data' => array('link' => $link),
 					));
 				}
 			}
 			else
 			{
 				$dw->bulkSet(array(
-					'content_type' => '',
-					'content_id' => 0,
-					'content_data' => array(),
+					'target_type' => '',
+					'target_id' => 0,
+					'target_data' => array(),
 				));
 			}
 
