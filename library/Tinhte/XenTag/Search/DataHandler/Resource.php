@@ -17,14 +17,15 @@ class Tinhte_XenTag_Search_DataHandler_Resource extends XenForo_Search_DataHandl
 			// XenForo_DataWriter::getMergedData doesn't return an array with all the fields
 			// the array only includes new or existing data...
 			// similar to Tinhte_XenTag_Search_DataHandler_Page
-			$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
 		}
 		else
 		{
-			$tags = array();
+			$tagsOrTexts = array();
 		}
 
-		$metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags);
+		$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
+		$metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tagTexts);
 
 		$indexer->insertIntoIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_RESOURCE, $data['resource_id'], $data['title'], $data['tag_line'], XenForo_Application::$time, XenForo_Visitor::getUserId(), 0, $metadata);
 	}

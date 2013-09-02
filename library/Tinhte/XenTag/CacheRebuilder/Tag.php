@@ -19,7 +19,10 @@ class Tinhte_XenTag_CacheRebuilder_Tag extends XenForo_CacheRebuilder_Abstract
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = XenForo_Model::create('Tinhte_XenTag_Model_Tag');
 
-		$tags = $tagModel->getAllTag(array(), array('limit' => $options['batch'], 'offset' => $position));
+		$tags = $tagModel->getAllTag(array(), array(
+			'limit' => $options['batch'],
+			'offset' => $position
+		));
 		if (empty($tags))
 		{
 			if (class_exists('WidgetFramework_Core'))
@@ -41,4 +44,5 @@ class Tinhte_XenTag_CacheRebuilder_Tag extends XenForo_CacheRebuilder_Abstract
 
 		return $position;
 	}
+
 }

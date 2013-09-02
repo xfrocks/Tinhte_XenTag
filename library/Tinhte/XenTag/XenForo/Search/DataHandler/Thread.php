@@ -10,17 +10,18 @@ class Tinhte_XenTag_XenForo_Search_DataHandler_Thread extends XFCP_Tinhte_XenTag
 			// added isset check before trying to unserialize the tags
 			// read more about this in
 			// Tinhte_XenTag_Search_DataHandler_Page::_insertIntoIndex
-			$tags = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($data[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 		}
 		else
 		{
-			$tags = array();
+			$tagsOrTexts = array();
 		}
 
-		if (!empty($tags))
+		if (!empty($tagsOrTexts))
 		{
 			$extraMetadata = array();
-			$extraMetadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tags);
+			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
+			$extraMetadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tagTexts);
 			$indexer = new Tinhte_XenTag_XenForo_Search_Indexer($indexer, $extraMetadata);
 		}
 

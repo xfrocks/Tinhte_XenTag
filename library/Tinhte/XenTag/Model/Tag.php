@@ -1,72 +1,78 @@
 <?php
-class Tinhte_XenTag_Model_Tag extends XenForo_Model {
+class Tinhte_XenTag_Model_Tag extends XenForo_Model
+{
 
 	const FETCH_TAGGED = 1;
-	
-	public function getTagLink($tag) {
-		switch ($tag['content_type']) {
+
+	public function getTagLink($tag)
+	{
+		switch ($tag['content_type'])
+		{
 			case 'link':
-				if (!empty($tag['content_data']['link'])) {
+				if (!empty($tag['content_data']['link']))
+				{
 					return $tag['content_data']['link'];
-				} 
+				}
 				break;
 		}
-		
+
 		return false;
 	}
 
-	public function deleteEmptyTags() {
+	public function deleteEmptyTags()
+	{
 		$this->_getDb()->query("DELETE FROM xf_tinhte_xentag_tag WHERE content_count = 0");
-		$this->rebuildCache();
+		$this->rebuildTagTextsCache();
 	}
 
-	public function rebuildCache() {
+	public function rebuildTagTextsCache()
+	{
 		$max = intval(Tinhte_XenTag_Option::get('autoTagGlobalMax'));
 
-		$tags = $this->_getDb()->fetchCol("
+		$tagTexts = $this->_getDb()->fetchCol("
 				SELECT tag_text
 				FROM xf_tinhte_xentag_tag
 				ORDER BY content_count DESC
 				" . ($max > 0 ? "LIMIT " . $max : "") . "
 				");
-		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $tags);
+		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $tagTexts);
 
-		return $tags;
+		return $tagTexts;
 	}
 
-	public function updateTag($tagId, $contentCountDelta = 0) {
+	public function updateTag($tagId, $contentCountDelta = 0)
+	{
 		/* @var $taggedContentModel Tinhte_XenTag_Model_TaggedContent */
 		$taggedContentModel = $this->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
 
 		// get latest tagged contents
 		$taggedContentsLimit = Tinhte_XenTag_Option::get('latestTaggedContentsLimit');
-		if ($taggedContentsLimit > 0) {
-			$taggedContents = $taggedContentModel->getAllTaggedContent(
-					array('tag_id' => $tagId),
-					array(
-							'order' => 'tagged_date',
-							'direction' => 'desc',
-							'limit' => $taggedContentsLimit,
-					)
-			);
-		} else {
+		if ($taggedContentsLimit > 0)
+		{
+			$taggedContents = $taggedContentModel->getAllTaggedContent(array('tag_id' => $tagId), array(
+				'order' => 'tagged_date',
+				'direction' => 'desc',
+				'limit' => $taggedContentsLimit,
+			));
+		}
+		else
+		{
 			// this feature has been disabled (?)
 			$taggedContents = array();
 		}
 
-		if ($contentCountDelta === 0) {
+		if ($contentCountDelta === 0)
+		{
 			$contentCount = $this->_getDb()->fetchOne('
 					SELECT COUNT(*)
 					FROM xf_tinhte_xentag_tagged_content
 					WHERE tag_id = ?
 			', array($tagId));
 			$contentCountSet = intval($contentCount);
-		} else {
-			$contentCountSet = (
-					($contentCountDelta > 0) ?
-					sprintf('content_count + %d', $contentCountDelta) :
-					sprintf('IF(content_count > 0, content_count + %d, 0)', $contentCountDelta)
-			);
+		}
+		else
+		{
+			$contentCountSet = (($contentCountDelta > 0) ? sprintf('content_count + %d', $contentCountDelta) : sprintf('IF(content_count > 0, content_count + %d, 0)', $contentCountDelta));
 		}
 
 		$this->_getDb()->query("
@@ -75,32 +81,40 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				latest_tagged_contents = ?
 				WHERE tag_id = ?
 				", array(
-						serialize($taggedContents),
-						$tagId,
-				));
+			serialize($taggedContents),
+			$tagId,
+		));
 
 		return $taggedContents;
 	}
 
-	public function getTagTextsFromCache() {
-		$tags = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
+	public function getTagTextsFromCache()
+	{
+		$tagTexts = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
 
-		if ($tags === null) {
+		if ($tagTexts === null)
+		{
 			// cache not found
-			$tags = $this->rebuildCache();
+			$tagTexts = $this->rebuildTagTextsCache();
 		}
 
-		return $tags;
+		return $tagTexts;
 	}
 
-	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null) {
+	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null)
+	{
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);
 
 		$canTagAll = XenForo_Permission::hasContentPermission($nodePermissions, Tinhte_XenTag_Constants::PERM_USER_TAG_ALL);
 
-		if ($canTagAll) return true; // can tag all, nothing to check...
+		if ($canTagAll)
+		{
+			// can tag all, nothing to check...
+			return true;
+		}
 
-		if (!isset($thread['user_id']) OR $thread['user_id'] == $viewingUser['user_id']) {
+		if (!isset($thread['user_id']) OR $thread['user_id'] == $viewingUser['user_id'])
+		{
 			// IMPORTANT: if more data in $thread is used, please make sure to make
 			// the appropriate change to Tinhte_XenTag_Model_Post::preparePost
 			// and Tinhte_XenTag_XenForo_ControllerPublic_Post::Tinhte_XenTag_actionSave
@@ -109,237 +123,245 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 		}
 	}
 
-	public function canTagResource($resource, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null) {
+	public function canTagResource($resource, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null)
+	{
 		$this->standardizeViewingUserReference($viewingUser);
 
 		$canTagAll = XenForo_Permission::hasPermission($viewingUser['permissions'], 'resource', Tinhte_XenTag_Constants::PERM_USER_RESOURCE_TAG_ALL);
 
-		if ($canTagAll) return true; // can tag all, nothing to check...
+		if ($canTagAll)
+		{
+			// can tag all, nothing to check...
+			return true;
+		}
 
-		if (!isset($resource['user_id']) OR $resource['user_id'] == $viewingUser['user_id']) {
+		if (!isset($resource['user_id']) OR $resource['user_id'] == $viewingUser['user_id'])
+		{
 			return XenForo_Permission::hasPermission($viewingUser['permissions'], 'resource', Tinhte_XenTag_Constants::PERM_USER_RESOURCE_TAG);
 		}
 	}
 
-	public function processInput(XenForo_Input $input) {
+	public function processInput(XenForo_Input $input)
+	{
 		$data = $input->filter(array(
-				Tinhte_XenTag_Constants::FORM_TAGS_ARRAY => XenForo_Input::ARRAY_SIMPLE,
-				Tinhte_XenTag_Constants::FORM_TAGS_TEXT => XenForo_Input::STRING,
-				Tinhte_XenTag_Constants::FORM_INCLUDED => XenForo_Input::UINT,
-				Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED => XenForo_Input::STRING,
+			Tinhte_XenTag_Constants::FORM_TAGS_ARRAY => XenForo_Input::ARRAY_SIMPLE,
+			Tinhte_XenTag_Constants::FORM_TAGS_TEXT => XenForo_Input::STRING,
+			Tinhte_XenTag_Constants::FORM_INCLUDED => XenForo_Input::UINT,
+			Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED => XenForo_Input::STRING,
 		));
 
-		if (!empty($data[Tinhte_XenTag_Constants::FORM_INCLUDED])) {
-			$tags = $data[Tinhte_XenTag_Constants::FORM_TAGS_ARRAY];
+		if (!empty($data[Tinhte_XenTag_Constants::FORM_INCLUDED]))
+		{
+			$tagTexts = $data[Tinhte_XenTag_Constants::FORM_TAGS_ARRAY];
 
-			if (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT])) {
-				$tags2 = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT]);
-			} else {
-				$tags2 = array();
+			if (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT]))
+			{
+				$tagTexts2 = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT]);
+			}
+			else
+			{
+				$tagTexts2 = array();
 			}
 
-			$merged = array_merge($tags, $tags2);
+			$merged = array_merge($tagTexts, $tagTexts2);
 
-			foreach (array_keys($merged) as $key) {
+			foreach (array_keys($merged) as $key)
+			{
 				$merged[$key] = trim($merged[$key]);
-				if (empty($merged[$key])) unset($merged[$key]);
+				if (empty($merged[$key]))
+				{
+					unset($merged[$key]);
+				}
 			}
 
 			return $merged;
-		} elseif (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED])) {
+		}
+		elseif (!empty($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]))
+		{
 			// used as a checkbox in search bar
 			// so no *_included field is coming with it
 			// we just use it as it's is
-			$tags = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
+			$tagTexts = Tinhte_XenTag_Helper::explodeTags($data[Tinhte_XenTag_Constants::FORM_TAGS_TEXT_NO_INCLUDED]);
 
-			foreach (array_keys($tags) as $key) {
-				$tags[$key] = trim($tags[$key]);
-				if (empty($tags[$key])) unset($tags[$key]);
+			foreach (array_keys($tagTexts) as $key)
+			{
+				$tagTexts[$key] = trim($tagTexts[$key]);
+				if (empty($tagTexts[$key]))
+				{
+					unset($tagTexts[$key]);
+				}
 			}
 
-			return $tags;
-		} else {
+			return $tagTexts;
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public function calculateCloudLevel(array &$tags) {
+	public function calculateCloudLevel(array &$tags)
+	{
 		$levelCount = Tinhte_XenTag_Option::get('cloudLevelCount');
 		$maxContentCount = 0;
 		$levelStep = 9999;
 
-		foreach ($tags as $tag) {
-			if ($tag['content_count'] > $maxContentCount) {
+		foreach ($tags as $tag)
+		{
+			if ($tag['content_count'] > $maxContentCount)
+			{
 				$maxContentCount = $tag['content_count'];
 			}
 		}
-		if ($levelCount > 0) {
+		if ($levelCount > 0)
+		{
 			$levelStep = max(1, floor($maxContentCount / $levelCount));
 		}
 
-		usort($tags, create_function('$tag1, $tag2', 'return strcmp($tag1["tag_text"], $tag2["tag_text"]);')); // array indeces will not be maintained
+		usort($tags, create_function('$tag1, $tag2', 'return strcmp($tag1["tag_text"], $tag2["tag_text"]);'));
+		// array indeces will not be maintained
 
-		foreach ($tags as &$tag) {
+		foreach ($tags as &$tag)
+		{
 			$tag['cloudLevel'] = max(1, min($levelCount, ceil($tag['content_count'] / $levelStep)));
 		}
 	}
 
-	public function lookForNewAndRemovedTags(array $tagsData, array $newTagsText, array &$foundNewTagsText, array &$foundRemovedTagsText) {
-		foreach (array_keys($newTagsText) as $key) {
-			$tmp = $this->getTagFromArrayByText($tagsData, $newTagsText[$key]);
+	public function lookForNewAndRemovedTags(array $tags, array $newTagTexts, array &$foundNewTagTexts, array &$foundRemovedTagTexts)
+	{
+		foreach (array_keys($newTagTexts) as $key)
+		{
+			$tmp = $this->getTagFromArrayByText($tags, $newTagTexts[$key]);
 
-			if (empty($tmp)) {
+			if (empty($tmp))
+			{
 				// found new tag text!
-				$foundNewTagsText[] = $newTagsText[$key];
-				unset($newTagsText[$key]); // remove it from checking
-			} else {
-				// this will be checked further
-				$newTagsText[$key] = utf8_strtolower($newTagsText[$key]);
+				$foundNewTagTexts[] = $newTagTexts[$key];
+
+				// remove it from checking
+				unset($newTagTexts[$key]);
 			}
 		}
 
-		foreach ($tagsData as $tagData) {
+		foreach ($tags as $tag)
+		{
 			$found = false;
-			foreach ($newTagsText as $textLower) {
-				if ($this->isTagIdenticalWithText($tagData, $textLower)) {
+			foreach ($newTagTexts as $newTagText)
+			{
+				if ($this->isTagIdenticalWithText($tag, $newTagText))
+				{
 					// this is matched, nothing to do
 					$found = true;
 				}
 			}
 
-			if (!$found) {
+			if (!$found)
+			{
 				// found removed tag text!
-				$foundRemovedTagsText[] = $tagData['tag_text'];
+				$foundRemovedTagTexts[] = $tag['tag_text'];
 			}
 		}
 	}
 
-	public function getTagFromArrayByText(array $tagsData, $text) {
-		$textLower = utf8_trim(utf8_strtolower($text));
-
-		foreach ($tagsData as $tagData) {
-			if ($this->isTagIdenticalWithText($tagData, $textLower)) {
-				return $tagData;
+	public function getTagFromArrayByText(array $tags, $tagText)
+	{
+		foreach ($tags as $tag)
+		{
+			if ($this->isTagIdenticalWithText($tag, $tagText))
+			{
+				return $tag;
 			}
 		}
 
 		return false;
 	}
 
-	public function isTagIdenticalWithText(array $tagData, $tagText) {
-		$textLower = utf8_strtolower($tagText);
+	public function isTagIdenticalWithText(array $tag, $tagText)
+	{
+		$tagText = utf8_trim(utf8_strtolower($tagText));
 
-		if (isset($tagData['tagTextLower'])) {
-			if ($tagData['tagTextLower'] == $textLower) {
+		if (isset($tag['tagTextLower']))
+		{
+			if ($tag['tagTextLower'] == $tagText)
+			{
 				return true;
 			}
-		} elseif (utf8_strtolower($tagData['tag_text']) == $textLower) {
+		}
+		elseif (utf8_strtolower($tag['tag_text']) == $tagText)
+		{
 			return true;
 		}
 
 		return false;
 	}
 
-	public function getTagsOfContent($contentType, $contentId, array $fetchOptions = array()) {
-		$conditions = array(
-				'tagged_content' => array(
-						array($contentType, $contentId)
-				),
-		);
+	public function getTagsOfContent($contentType, $contentId, array $fetchOptions = array())
+	{
+		$conditions = array('tagged_content' => array( array(
+					$contentType,
+					$contentId
+				)));
 
-		if (isset($fetchOptions['join'])) {
+		if (isset($fetchOptions['join']))
+		{
 			$fetchOptions['join'] |= self::FETCH_TAGGED;
-		} else {
+		}
+		else
+		{
 			$fetchOptions['join'] = self::FETCH_TAGGED;
 		}
 
 		return $this->getAllTag($conditions, $fetchOptions);
 	}
 
-	public function getTagsByText(array $tagsText, array $fetchOptions = array()) {
-		$conditions = array(
-				'tag_text' => $tagsText,
-		);
+	public function getTagsByText(array $tagTexts, array $fetchOptions = array())
+	{
+		$conditions = array('tag_text' => $tagTexts);
 
 		return $this->getAllTag($conditions, $fetchOptions);
 	}
 
-	public function getTagByText($tagText, array $fetchOptions = array()) {
+	public function getTagByText($tagText, array $fetchOptions = array())
+	{
 		$conditions = array('tag_text' => $tagText);
 		$tags = $this->getAllTag($conditions, $fetchOptions);
 
 		return reset($tags);
 	}
 
-	private function getAllTagCustomized(array &$data, array $fetchOptions) {
-		foreach ($data as &$tag) {
-			if (!empty($tag['content_data'])) {
+	private function getAllTagCustomized(array &$data, array $fetchOptions)
+	{
+		foreach ($data as &$tag)
+		{
+			if (!empty($tag['content_data']))
+			{
 				$tag['content_data'] = Tinhte_XenTag_Helper::unserialize($tag['content_data']);
 			}
 		}
 	}
 
-	private function prepareTagConditionsCustomized(array &$sqlConditions, array $conditions, array &$fetchOptions) {
-		$db = $this->_getDb();
-
-		if (isset($conditions['tag_text'])) {
-			if (is_array($conditions['tag_text'])) {
-				$sqlConditions[] = 'tag.tag_text IN(' . $db->quote($conditions['tag_text']) . ')';
-			} else {
-				$sqlConditions[] = 'tag.tag_text = ' . $db->quote($conditions['tag_text']);
-			}
-		}
-
-		if (isset($conditions['tag_text_like']) AND is_array($conditions['tag_text_like'])) {
-			$sqlConditions[] = 'tag.tag_text LIKE ' . XenForo_Db::quoteLike($conditions['tag_text_like'][0], $conditions['tag_text_like'][1], $db);
-		}
-
-		if (isset($conditions['tagged_content']) AND is_array($conditions['tagged_content'])) {
-			$tmp = array();
-
-			foreach ($conditions['tagged_content'] as $taggedContent) {
-				$tmp[] = 'tagged_content.content_type = ' . $db->quote($taggedContent[0])
-				. ' AND tagged_content.content_id = ' . $db->quote($taggedContent[1]);
-			}
-
-			$sqlConditions[] = implode(' OR ', $tmp);
-		}
-	}
-
-	public function prepareTagFetchOptionsCustomized(&$selectFields, &$joinTables, array $fetchOptions) {
-		$db = $this->_getDb();
-
-		if (!empty($fetchOptions['join'])) {
-			if ($fetchOptions['join'] & self::FETCH_TAGGED) {
-				$selectFields .= ' , tagged_content.* ';
-				$joinTables .= ' INNER JOIN `xf_tinhte_xentag_tagged_content` AS tagged_content '
-						. ' ON (tagged_content.tag_id = tag.tag_id) ';
-			}
-		}
-	}
-
-	public function prepareTagOrderOptionsCustomized(array &$choices, array &$fetchOptions) {
-		$choices['content_count'] = 'tag.content_count';
-	}
-
-	public function getList(array $conditions = array(), array $fetchOptions = array()) {
+	public function getList(array $conditions = array(), array $fetchOptions = array())
+	{
 		$data = $this->getAllTag($conditions, $fetchOptions);
 		$list = array();
 
-		foreach ($data as $id => $row) {
+		foreach ($data as $id => $row)
+		{
 			$list[$id] = $row['tag_text'];
 		}
 
 		return $list;
 	}
 
-	public function getTagById($id, array $fetchOptions = array()) {
-		$data = $this->getAllTag(array ('tag_id' => $id), $fetchOptions);
+	public function getTagById($id, array $fetchOptions = array())
+	{
+		$data = $this->getAllTag(array('tag_id' => $id), $fetchOptions);
 
 		return reset($data);
 	}
 
-	public function getAllTag(array $conditions = array(), array $fetchOptions = array()) {
+	public function getAllTag(array $conditions = array(), array $fetchOptions = array())
+	{
 		$whereConditions = $this->prepareTagConditions($conditions, $fetchOptions);
 
 		$orderClause = $this->prepareTagOrderOptions($fetchOptions);
@@ -353,15 +375,15 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				$joinOptions[joinTables]
 				WHERE $whereConditions
 				$orderClause
-				", $limitOptions['limit'], $limitOptions['offset']
-		), 'tag_id');
+				", $limitOptions['limit'], $limitOptions['offset']), 'tag_id');
 
 		$this->getAllTagCustomized($all, $fetchOptions);
 
 		return $all;
 	}
 
-	public function countAllTag(array $conditions = array(), array $fetchOptions = array()) {
+	public function countAllTag(array $conditions = array(), array $fetchOptions = array())
+	{
 		$whereConditions = $this->prepareTagConditions($conditions, $fetchOptions);
 
 		$orderClause = $this->prepareTagOrderOptions($fetchOptions);
@@ -376,44 +398,84 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model {
 				");
 	}
 
-	public function prepareTagConditions(array $conditions, array &$fetchOptions) {
+	public function prepareTagConditions(array $conditions, array &$fetchOptions)
+	{
 		$sqlConditions = array();
 		$db = $this->_getDb();
 
-		foreach (array('tag_id', 'created_date', 'created_user_id', 'content_count') as $intField) {
-			if (!isset($conditions[$intField])) continue;
+		foreach (array('tag_id', 'created_date', 'created_user_id', 'content_count') as $intField)
+		{
+			if (!isset($conditions[$intField]))
+				continue;
 
-			if (is_array($conditions[$intField])) {
+			if (is_array($conditions[$intField]))
+			{
 				$sqlConditions[] = "tag.$intField IN (" . $db->quote($conditions[$intField]) . ")";
-			} else {
+			}
+			else
+			{
 				$sqlConditions[] = "tag.$intField = " . $db->quote($conditions[$intField]);
 			}
 		}
 
-		$this->prepareTagConditionsCustomized($sqlConditions, $conditions, $fetchOptions);
+		if (isset($conditions['tag_text']))
+		{
+			if (is_array($conditions['tag_text']))
+			{
+				$sqlConditions[] = 'tag.tag_text IN(' . $db->quote($conditions['tag_text']) . ')';
+			}
+			else
+			{
+				$sqlConditions[] = 'tag.tag_text = ' . $db->quote($conditions['tag_text']);
+			}
+		}
+
+		if (isset($conditions['tag_text_like']) AND is_array($conditions['tag_text_like']))
+		{
+			$sqlConditions[] = 'tag.tag_text LIKE ' . XenForo_Db::quoteLike($conditions['tag_text_like'][0], $conditions['tag_text_like'][1], $db);
+		}
+
+		if (isset($conditions['tagged_content']) AND is_array($conditions['tagged_content']))
+		{
+			$tmp = array();
+
+			foreach ($conditions['tagged_content'] as $taggedContent)
+			{
+				$tmp[] = 'tagged_content.content_type = ' . $db->quote($taggedContent[0]) . ' AND tagged_content.content_id = ' . $db->quote($taggedContent[1]);
+			}
+
+			$sqlConditions[] = implode(' OR ', $tmp);
+		}
 
 		return $this->getConditionsForClause($sqlConditions);
 	}
 
-	public function prepareTagFetchOptions(array $fetchOptions) {
+	public function prepareTagFetchOptions(array $fetchOptions)
+	{
 		$selectFields = '';
 		$joinTables = '';
 
-		$this->prepareTagFetchOptionsCustomized($selectFields,  $joinTables, $fetchOptions);
+		if (!empty($fetchOptions['join']))
+		{
+			if ($fetchOptions['join'] & self::FETCH_TAGGED)
+			{
+				$selectFields .= ' , tagged_content.* ';
+				$joinTables .= ' INNER JOIN `xf_tinhte_xentag_tagged_content` AS tagged_content ' . ' ON (tagged_content.tag_id = tag.tag_id) ';
+			}
+		}
 
 		return array(
-				'selectFields' => $selectFields,
-				'joinTables'   => $joinTables
+			'selectFields' => $selectFields,
+			'joinTables' => $joinTables
 		);
 	}
 
-	public function prepareTagOrderOptions(array &$fetchOptions, $defaultOrderSql = '') {
+	public function prepareTagOrderOptions(array &$fetchOptions, $defaultOrderSql = '')
+	{
 		$choices = array(
-				'tag_text' => 'tag.tag_text',
-				'content_count' => 'tag.content_count',
+			'tag_text' => 'tag.tag_text',
+			'content_count' => 'tag.content_count',
 		);
-
-		$this->prepareTagOrderOptionsCustomized($choices, $fetchOptions);
 
 		return $this->getOrderByClause($choices, $fetchOptions, $defaultOrderSql);
 	}

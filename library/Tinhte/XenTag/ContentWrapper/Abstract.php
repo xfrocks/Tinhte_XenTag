@@ -1,54 +1,60 @@
 <?php
 
-abstract class Tinhte_XenTag_ContentWrapper_Abstract {
+abstract class Tinhte_XenTag_ContentWrapper_Abstract
+{
 	protected $_html = '';
-	protected $_tags = array();
+	protected $_tagTexts = array();
 	protected $_useGlobalTags = false;
-	
+
 	static protected $_tagModel = false;
-	
-	public function __toString() {
+
+	public function __toString()
+	{
 		return strval($this->render());
 	}
-	
-	public function render() {
-		if ($this->_useGlobalTags) {
-			$globalTags = $this->_getTagModel()->getTagTextsFromCache();
-			
-			$tags = array();
-			foreach ($this->_tags as $tag) {
-				$tags[Tinhte_XenTag_Helper::getNormalizedTagText($tag)] = $tag;
+
+	public function render()
+	{
+		if ($this->_useGlobalTags)
+		{
+			$globalTagTexts = $this->_getTagModel()->getTagTextsFromCache();
+
+			$tagTexts = array();
+			foreach ($this->_tagTexts as $tagText)
+			{
+				$tagTexts[Tinhte_XenTag_Helper::getNormalizedTagText($tagText)] = $tagText;
 			}
-			foreach ($globalTags as $globalTag) {
-				$tags[Tinhte_XenTag_Helper::getNormalizedTagText($globalTag)] = $globalTag;
+			foreach ($globalTagTexts as $globalTagText)
+			{
+				$tagTexts[Tinhte_XenTag_Helper::getNormalizedTagText($globalTagText)] = $globalTagText;
 			}
-			
-			$this->_tags = $tags;
+
+			$this->_tagTexts = $tagTexts;
 		}
-		
-		if (!empty($this->_tags)) {
-			$autoTagOptions = array(
-				'onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'),
-			);
-			
-			return Tinhte_XenTag_Integration::autoTag(
-				$this->_html,
-				$this->_tags,
-				$autoTagOptions
-			);
-		} else {
+
+		if (!empty($this->_tagTexts))
+		{
+			$autoTagOptions = array('onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'));
+
+			return Tinhte_XenTag_Integration::autoTag($this->_html, $this->_tagTexts, $autoTagOptions);
+		}
+		else
+		{
 			return $this->_html;
 		}
 	}
-	
+
 	/**
 	 * @return Tinhte_XenTag_Model_Tag
 	 */
-	protected function _getTagModel() {
-		if (self::$_tagModel === false) {
+	protected function _getTagModel()
+	{
+		if (self::$_tagModel === false)
+		{
 			self::$_tagModel = XenForo_Model::create('Tinhte_XenTag_Model_Tag');
 		}
-		
+
 		return self::$_tagModel;
 	}
+
 }

@@ -3,93 +3,106 @@
 /**
  * Integration class with helper method to integrate other systems with XenTag.
  * Other developers should only use methods in this class when they need to
- * integrate something. For adventurous people, they can of course dig into 
+ * integrate something. For adventurous people, they can of course dig into
  * other scripts to provide further integration. However, XenTag itself only
- * uses below methods to integrate with XenForo. 
- * 
+ * uses below methods to integrate with XenForo.
+ *
  * @author sondh
  *
  */
-class Tinhte_XenTag_Integration {
-	
+class Tinhte_XenTag_Integration
+{
+
 	/**
 	 * Updates list of tags for specified piece of content. Any addition, removal
 	 * will be processed accordingly with record from database.
-	 * 
+	 *
 	 * @param string $contentType
 	 * @param unsigned int $contentId
 	 * @param unsigned int $contentUserId
 	 * @param array $tagTexts
 	 * @param XenForo_DataWriter $dw
-	 * 
+	 *
 	 * @return number of tags after update.
-	 * 
+	 *
 	 * @throws XenForo_Exception
 	 */
-	public static function updateTags($contentType, $contentId, $contentUserId, array $tagTexts, XenForo_DataWriter $dw) {
+	public static function updateTags($contentType, $contentId, $contentUserId, array $tagTexts, XenForo_DataWriter $dw)
+	{
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = $dw->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		
+
 		/* @var $taggedModel Tinhte_XenTag_Model_TaggedContent */
 		$taggedModel = $dw->getModelFromCache('Tinhte_XenTag_Model_TaggedContent');
-		
-		if ($dw->isInsert()) {
+
+		if ($dw->isInsert())
+		{
 			// saves 1 query
 			$existingTags = array();
-		} else {
+		}
+		else
+		{
 			$existingTags = $tagModel->getTagsOfContent($contentType, $contentId);
 		}
-		
-		$newTags = array();
-		$removedTags = array();
-		$tagModel->lookForNewAndRemovedTags($existingTags, $tagTexts, $newTags, $removedTags);
+
+		$newTagTexts = array();
+		$removedTagTexts = array();
+		$tagModel->lookForNewAndRemovedTags($existingTags, $tagTexts, $newTagTexts, $removedTagTexts);
 		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
-		
-		if (!empty($newTags)) {
+
+		if (!empty($newTagTexts))
+		{
 			// sondh@2012-09-21
 			// remove duplicate
-			foreach (array_keys($newTags) as $key) {
-				$newTags[$key] = utf8_strtolower($newTags[$key]);
+			foreach (array_keys($newTagTexts) as $key)
+			{
+				$newTagTexts[$key] = Tinhte_XenTag_Helper::getNormalizedTagText($newTagTexts[$key]);
 			}
-			$newTags = array_unique($newTags);
-			
-			$newButExistingTags = $tagModel->getTagsByText($newTags);
-			
-			foreach ($newTags as $newTag) {
-				$newTagData = $tagModel->getTagFromArrayByText($newButExistingTags, $newTag);
-				
-				if (empty($newTagData)) {
-					if (!$canCreateNew) {
+			$newTagTexts = array_unique($newTagTexts);
+
+			$newButExistingTags = $tagModel->getTagsByText($newTagTexts);
+
+			foreach ($newTagTexts as $newTagText)
+			{
+				$newTag = $tagModel->getTagFromArrayByText($newButExistingTags, $newTagText);
+
+				if (empty($newTag))
+				{
+					if (!$canCreateNew)
+					{
 						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
 					}
 					/* @var $dwTag Tinhte_XenTag_DataWriter_Tag */
 					$dwTag = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
-					$dwTag->set('tag_text', $newTag);
+					$dwTag->set('tag_text', $newTagText);
 					$dwTag->set('created_user_id', $contentUserId);
 					$dwTag->save();
-					
-					$newTagData = $dwTag->getMergedData();
+
+					$newTag = $dwTag->getMergedData();
 				}
-				
+
 				/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
 				$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
-				$dwTagged->set('tag_id', $newTagData['tag_id']);
+				$dwTagged->set('tag_id', $newTag['tag_id']);
 				$dwTagged->set('content_type', $contentType);
 				$dwTagged->set('content_id', $contentId);
 				$dwTagged->set('tagged_user_id', $contentUserId);
 				$dwTagged->save();
 			}
 		}
-		
-		if (!empty($removedTags)) {
-			foreach ($removedTags as $removedTag) {
-				$removedTagData = $tagModel->getTagFromArrayByText($existingTags, $removedTag);
-				
-				if (!empty($removedTagData)) {
+
+		if (!empty($removedTagTexts))
+		{
+			foreach ($removedTagTexts as $removedTagText)
+			{
+				$removedTag = $tagModel->getTagFromArrayByText($existingTags, $removedTagText);
+
+				if (!empty($removedTag))
+				{
 					/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
 					$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
 					$data = array(
-						'tag_id' => $removedTagData['tag_id'],
+						'tag_id' => $removedTag['tag_id'],
 						'content_type' => $contentType,
 						'content_id' => $contentId,
 					);
@@ -98,28 +111,31 @@ class Tinhte_XenTag_Integration {
 				}
 			}
 		}
-		
-		if (count($newTags) + count($removedTags) > 0) {
-			$tagModel->rebuildCache();
+
+		if (count($newTagTexts) + count($removedTagTexts) > 0)
+		{
+			$tagModel->rebuildTagTextsCache();
 		}
-		
-		return count($existingTags) + count($newTags) - count($removedTags);
+
+		return count($existingTags) + count($newTagTexts) - count($removedTagTexts);
 	}
-	
+
 	/**
 	 * Deletes all tags for specified piece of content.
-	 * 
+	 *
 	 * @param string $contentType
 	 * @param unsigned int $contentId
 	 * @param XenForo_DataWriter $dw
 	 */
-	public static function deleteTags($contentType, $contentId, XenForo_DataWriter $dw) {
+	public static function deleteTags($contentType, $contentId, XenForo_DataWriter $dw)
+	{
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = $dw->getModelFromCache('Tinhte_XenTag_Model_Tag');
-		
+
 		$existingTags = $tagModel->getTagsOfContent($contentType, $contentId);
-		
-		foreach ($existingTags as $tag) {
+
+		foreach ($existingTags as $tag)
+		{
 			/* @var $dwTag Tinhte_XenTag_DataWriter_Tagged */
 			$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
 			$data = array(
@@ -130,98 +146,119 @@ class Tinhte_XenTag_Integration {
 			$dwTagged->setExistingData($data, true);
 			$dwTagged->delete();
 		}
-		
+
 		return count($existingTags);
 	}
-	
+
 	public static function processConstraint(XenForo_Search_SourceHandler_Abstract $sourceHandler, $constraint, $constraintInfo, array $constraints)
 	{
 		if ($constraint == Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS)
 		{
 			return array('metadata' => array(
-				Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS,
-				implode(' ', Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($constraintInfo)),
-			));
+					Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS,
+					implode(' ', Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($constraintInfo)),
+				));
 		}
 
 		return false;
 	}
-	
+
 	/**
-	 * Inserts tag links into an HTML-formatted text. 
-	 * 
+	 * Inserts tag links into an HTML-formatted text.
+	 *
 	 * @param string $html
 	 * @param array $tags
 	 * @param array $options
 	 */
-	public static function autoTag($html, array $tags, array &$options = array()) {
+	public static function autoTag($html, array $tagTexts, array &$options = array())
+	{
+		if (empty($tagTexts))
+		{
+			return $html;
+		}
+		
 		$html = strval($html);
-		
-		if (empty($tags)) return $html;
-		
+
 		// prepare the options
-			$onceOnly = empty($options['onceOnly']) ? false : true;
-			$options['autoTagged'] = array(); // reset this
-		
+		$onceOnly = empty($options['onceOnly']) ? false : true;
+		$options['autoTagged'] = array();
+		// reset this
+
 		// sort tags with the longest one first
 		// since 1.0.3
-		usort($tags, array(__CLASS__, '_autoTag_sortTagsByLength'));
-		
-		foreach ($tags as $tag) {
+		usort($tagTexts, array(
+			__CLASS__,
+			'_autoTag_sortTagsByLength'
+		));
+
+		foreach ($tagTexts as $tagText)
+		{
 			$offset = 0;
-			$tagLength = utf8_strlen($tag);
-			
-			while (true) {
-				$pos = Tinhte_XenTag_Helper::utf8_stripos($html, $tag, $offset);
-				
-				if ($pos !== false) {
+			$tagLength = utf8_strlen($tagText);
+
+			while (true)
+			{
+				$pos = Tinhte_XenTag_Helper::utf8_stripos($html, $tagText, $offset);
+
+				if ($pos !== false)
+				{
 					// the tag has been found
-					if (!self::_autoTag_isBetweenHtmlTags($html, $pos)
-						AND self::_autoTag_hasValidCharacterAround($html, $pos, $tag)) {
+					if (!self::_autoTag_isBetweenHtmlTags($html, $pos) AND self::_autoTag_hasValidCharacterAround($html, $pos, $tagText))
+					{
 						// and it's not between HTML tags,
-						// with good surrounding characters 
+						// with good surrounding characters
 						// start replacing
 
 						$template = new XenForo_Template_Public('tinhte_xentag_bb_code_tag_tag');
-						$template->setParam('tag', $tag);
+						$template->setParam('tag', $tagText);
 						$template->setParam('displayText', utf8_substr($html, $pos, $tagLength));
 						$replacement = $template->render();
-						
+
 						$html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
-						
+
 						// sondh@2012-09-20
 						// keep track of the auto tagged tags
-						$options['autoTagged'][$tag][$pos] = $replacement;
-						
+						$options['autoTagged'][$tagText][$pos] = $replacement;
+
 						$offset = $pos + utf8_strlen($replacement);
-						
-						if ($onceOnly) {
+
+						if ($onceOnly)
+						{
 							// auto link only once per tag
 							// break the loop now
-							break; // while (true)
+							break;
+							// while (true)
 						}
-					} else {
+					}
+					else
+					{
 						$offset = $pos + $tagLength;
 					}
-				} else {
+				}
+				else
+				{
 					// no match has been found, stop working with this tag
-					break; // while (true)
+					break;
+					// while (true)
 				}
 			}
 		}
-		
+
 		return $html;
 	}
-	
-	protected static function _autoTag_isBetweenHtmlTags($html, $position) {
+
+	protected static function _autoTag_isBetweenHtmlTags($html, $position)
+	{
 		$htmlLength = utf8_strlen($html);
-		
+
 		// look for <a> and </a>
 		$aBefore = Tinhte_XenTag_Helper::utf8_strripos($html, '<a', $position - $htmlLength);
-		if ($aBefore !== false) {
+		if ($aBefore !== false)
+		{
 			$aAfter = Tinhte_XenTag_Helper::utf8_stripos($html, '</a>', $aBefore);
-			
-			if ($aAfter > $position) {
+
+			if ($aAfter > $position)
+			{
 				// too bad, this position is between <a> and </a>
 				return true;
 			}
@@ -229,49 +266,62 @@ class Tinhte_XenTag_Integration {
 
 		// now that we are not inside <a />
 		// we have to make sure we are not in the middle of any tag
-		$symbolBefore  = Tinhte_XenTag_Helper::utf8_strrpos($html, '<', $position - $htmlLength);
-		if ($symbolBefore !== false) {
+		$symbolBefore = Tinhte_XenTag_Helper::utf8_strrpos($html, '<', $position - $htmlLength);
+		if ($symbolBefore !== false)
+		{
 			$symbolAfter = utf8_strpos($html, '>', $symbolBefore);
-			
-			if ($symbolAfter > $position) {
+
+			if ($symbolAfter > $position)
+			{
 				// now this is extremly bad, get out of here now!
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	protected static function _autoTag_hasValidCharacterAround($html, $position, $tag) {
+
+	protected static function _autoTag_hasValidCharacterAround($html, $position, $tagText)
+	{
 		static $regEx = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&<>]/u';
-		
-		$pos = $position + utf8_strlen($tag);
+
+		$pos = $position + utf8_strlen($tagText);
 		$htmlLength = utf8_strlen($html);
-		
-		if ($pos >= $htmlLength) {
+
+		if ($pos >= $htmlLength)
+		{
 			// the found position is at the end of the html
 			// no character afterward so... it's valid
-		} else {
-			if (!preg_match($regEx, utf8_substr($html, $pos, 1))) {
+		}
+		else
+		{
+			if (!preg_match($regEx, utf8_substr($html, $pos, 1)))
+			{
 				return false;
 			}
 		}
-		
+
 		// sondh@2012-09-12
 		// check for the previous character too
 		$pos = $position - 1;
-		if ($pos < 0) {
+		if ($pos < 0)
+		{
 			// the found position is at the start of the html
-		} else {
-			if (!preg_match($regEx, utf8_substr($html, $pos, 1))) {
+		}
+		else
+		{
+			if (!preg_match($regEx, utf8_substr($html, $pos, 1)))
+			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	protected static function _autoTag_sortTagsByLength($tagText1, $tagText2) {
+
+	protected static function _autoTag_sortTagsByLength($tagText1, $tagText2)
+	{
 		return utf8_strlen($tagText1) < utf8_strlen($tagText2);
 	}
+
 }

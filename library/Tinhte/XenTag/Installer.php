@@ -1,5 +1,6 @@
 <?php
-class Tinhte_XenTag_Installer {
+class Tinhte_XenTag_Installer
+{
 	/* Start auto-generated lines of code. Change made will be overwriten... */
 
 	protected static $_tables = array(
@@ -142,7 +143,7 @@ class Tinhte_XenTag_Installer {
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-		
+
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
@@ -174,29 +175,88 @@ class Tinhte_XenTag_Installer {
 	}
 
 	/* End auto-generated lines of code. Feel free to make changes below */
-	
-	private static function installCustomized() {
+
+	private static function installCustomized($existingAddOn, $addOnData)
+	{
 		$db = XenForo_Application::get('db');
-		
+
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_page\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_page\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Page\')');
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_forum\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_resource\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_resource\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Resource\')');
-		
+
+		$effectiveVersionId = 0;
+		if (!empty($existingAddOn))
+		{
+			$effectiveVersionId = intval($existingAddOn['version_id']);
+		}
+
+		if ($effectiveVersionId < 1)
+		{
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_tag', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'postThread'
+			");
+
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_tagAll', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'editAnyPost'
+			");
+
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_createNew', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
+			");
+
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_edit', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'general' AND permission_id = 'Tinhte_XenTag_createNew'
+			");
+
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'resource', 'Tinhte_XenTag_resourceAll', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tagAll'
+			");
+
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'resource', 'Tinhte_XenTag_resourceTag', permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
+			");
+		}
+
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
-	
-	private static function uninstallCustomized() {
+
+	private static function uninstallCustomized()
+	{
 		$db = XenForo_Application::get('db');
-		
+
 		$db->query('DELETE FROM xf_content_type WHERE addon_id = ?', array('Tinhte_XenTag'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_resource'));
-		
+
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
-	
+
 }
