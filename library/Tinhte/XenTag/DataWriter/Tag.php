@@ -28,7 +28,7 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 
 	protected function _rebuildCache()
 	{
-		$this->_getTagModel()->rebuildTagTextsCache();
+		$this->_getTagModel()->rebuildTagsCache();
 	}
 
 	protected function _verifyText(&$text)

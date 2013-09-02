@@ -126,7 +126,7 @@ class Tinhte_XenTag_Integration
 
 		if (count($newTagTexts) + count($removedTagTexts) > 0)
 		{
-			$tagModel->rebuildTagTextsCache();
+			$tagModel->rebuildTagsCache();
 		}
 
 		$packedTags = $tagModel->packTags($updatedTags);
@@ -195,14 +195,15 @@ class Tinhte_XenTag_Integration
 	 * @param array $tags
 	 * @param array $options
 	 */
-	public static function autoTag($html, array $tagTexts, array &$options = array())
+	public static function autoTag($html, array $tagsOrTexts, array &$options = array())
 	{
-		if (empty($tagTexts))
+		if (empty($tagsOrTexts))
 		{
 			return $html;
 		}
 
 		$html = strval($html);
+		$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 
 		// prepare the options
 		$onceOnly = empty($options['onceOnly']) ? false : true;

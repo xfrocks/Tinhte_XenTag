@@ -14,19 +14,19 @@ class Tinhte_XenTag_ContentWrapper_Post extends Tinhte_XenTag_ContentWrapper_Abs
 			case Tinhte_XenTag_Option::AUTO_TAG_MODE_THREAD_TAGS:
 				if (!empty($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]))
 				{
-					$this->_tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+					$this->_tagsOrTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 				}
 				break;
 			case Tinhte_XenTag_Option::AUTO_TAG_MODE_THREAD_TAGS_FIRST_POST_ONLY:
 				if ($post['position'] == 0 AND !empty($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]))
 				{
-					$this->_tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+					$this->_tagsOrTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 				}
 				break;
 			case Tinhte_XenTag_Option::AUTO_TAG_MODE_ALL_TAGS:
 				if (!empty($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]))
 				{
-					$this->_tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+					$this->_tagsOrTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 				}
 				$this->_useGlobalTags = true;
 				break;

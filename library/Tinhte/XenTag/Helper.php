@@ -200,19 +200,31 @@ class Tinhte_XenTag_Helper
 	{
 		$tagTexts = array();
 
-		foreach ($tagsOrTexts as $key => $entry)
+		foreach ($tagsOrTexts as $key => $tagOrText)
 		{
-			if (is_string($entry))
+			$tagText = self::getTextFromTagOrText($tagOrText);
+			
+			if (!empty($tagText))
 			{
-				$tagTexts[$key] = $entry;
-			}
-			elseif (is_array($entry) AND !empty($entry['tag_text']))
-			{
-				$tagTexts[$key] = $entry['tag_text'];
+				$tagTexts[$key] = $tagText;
 			}
 		}
 
 		return $tagTexts;
+	}
+
+	public static function getTextFromTagOrText($tagOrText)
+	{
+		if (is_string($tagOrText))
+		{
+			return $tagOrText;
+		}
+		elseif (is_array($tagOrText) AND !empty($tagOrText['tag_text']))
+		{
+			return $tagOrText['tag_text'];
+		}
+
+		return false;
 	}
 
 	public static function getSafeTagsTextArrayForSearch(array $tagTexts)

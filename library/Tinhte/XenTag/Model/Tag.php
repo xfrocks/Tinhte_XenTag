@@ -58,22 +58,28 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 	public function deleteEmptyTags()
 	{
 		$this->_getDb()->query("DELETE FROM xf_tinhte_xentag_tag WHERE content_count = 0");
-		$this->rebuildTagTextsCache();
+		$this->rebuildTagsCache();
 	}
 
-	public function rebuildTagTextsCache()
+	public function rebuildTagsCache()
 	{
+		$fetchOptions = array(
+			'order' => 'content_count',
+			'direction' => 'desc',
+		);
+
 		$max = intval(Tinhte_XenTag_Option::get('autoTagGlobalMax'));
+		if ($max > 0)
+		{
+			$fetchOptions['limit'] = $max;
+		}
 
-		$tagTexts = $this->_getDb()->fetchCol("
-				SELECT tag_text
-				FROM xf_tinhte_xentag_tag
-				ORDER BY content_count DESC
-				" . ($max > 0 ? "LIMIT " . $max : "") . "
-				");
-		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $tagTexts);
+		$tags = $this->getAllTag(array(), $fetchOptions);
+		$packed = $this->packTags($tags);
 
-		return $tagTexts;
+		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $packed);
+
+		return $packed;
 	}
 
 	public function updateTag($tagId, $contentCountDelta = 0)
@@ -124,17 +130,17 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 		return $taggedContents;
 	}
 
-	public function getTagTextsFromCache()
+	public function getTagsOrTextsFromCache()
 	{
-		$tagTexts = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
+		$tagsOrTexts = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
 
-		if ($tagTexts === null)
+		if ($tagsOrTexts === null)
 		{
 			// cache not found
-			$tagTexts = $this->rebuildTagTextsCache();
+			$tagsOrTexts = $this->rebuildTagsCache();
 		}
 
-		return $tagTexts;
+		return $tagsOrTexts;
 	}
 
 	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null)
@@ -365,17 +371,6 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 		return reset($tags);
 	}
 
-	private function getAllTagCustomized(array &$data, array $fetchOptions)
-	{
-		foreach ($data as &$tag)
-		{
-			if (!empty($tag['target_data']))
-			{
-				$tag['target_data'] = Tinhte_XenTag_Helper::unserialize($tag['target_data']);
-			}
-		}
-	}
-
 	public function getList(array $conditions = array(), array $fetchOptions = array())
 	{
 		$data = $this->getAllTag($conditions, $fetchOptions);
@@ -413,7 +408,13 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 				$orderClause
 				", $limitOptions['limit'], $limitOptions['offset']), 'tag_id');
 
-		$this->getAllTagCustomized($all, $fetchOptions);
+		foreach ($all as &$tag)
+		{
+			if (!empty($tag['target_data']))
+			{
+				$tag['target_data'] = Tinhte_XenTag_Helper::unserialize($tag['target_data']);
+			}
+		}
 
 		return $all;
 	}

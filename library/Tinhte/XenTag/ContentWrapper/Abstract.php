@@ -3,7 +3,7 @@
 abstract class Tinhte_XenTag_ContentWrapper_Abstract
 {
 	protected $_html = '';
-	protected $_tagTexts = array();
+	protected $_tagOrTexts = array();
 	protected $_useGlobalTags = false;
 
 	static protected $_tagModel = false;
@@ -17,26 +17,28 @@ abstract class Tinhte_XenTag_ContentWrapper_Abstract
 	{
 		if ($this->_useGlobalTags)
 		{
-			$globalTagTexts = $this->_getTagModel()->getTagTextsFromCache();
+			$globalTagsOrTexts = $this->_getTagModel()->getTagsOrTextsFromCache();
 
-			$tagTexts = array();
-			foreach ($this->_tagTexts as $tagText)
+			$tagsOrTexts = array();
+			foreach ($this->_tagsOrTexts as $tagOrText)
 			{
-				$tagTexts[Tinhte_XenTag_Helper::getNormalizedTagText($tagText)] = $tagText;
+				$tagText = Tinhte_XenTag_Helper::getTextFromTagOrText($tagOrText);
+				$tagsOrTexts[Tinhte_XenTag_Helper::getNormalizedTagText($tagText)] = $tagOrText;
 			}
-			foreach ($globalTagTexts as $globalTagText)
+			foreach ($globalTagsOrTexts as $globalTagOrText)
 			{
-				$tagTexts[Tinhte_XenTag_Helper::getNormalizedTagText($globalTagText)] = $globalTagText;
+				$globalTagText = Tinhte_XenTag_Helper::getTextFromTagOrText($globalTagOrText);
+				$tagsOrTexts[Tinhte_XenTag_Helper::getNormalizedTagText($globalTagText)] = $globalTagOrText;
 			}
 
-			$this->_tagTexts = $tagTexts;
+			$this->_tagsOrTexts = $tagsOrTexts;
 		}
 
-		if (!empty($this->_tagTexts))
+		if (!empty($this->_tagsOrTexts))
 		{
 			$autoTagOptions = array('onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'));
 
-			return Tinhte_XenTag_Integration::autoTag($this->_html, $this->_tagTexts, $autoTagOptions);
+			return Tinhte_XenTag_Integration::autoTag($this->_html, $this->_tagsOrTexts, $autoTagOptions);
 		}
 		else
 		{

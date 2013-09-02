@@ -14,13 +14,13 @@ class Tinhte_XenTag_ContentWrapper_Resource extends Tinhte_XenTag_ContentWrapper
 			case Tinhte_XenTag_Option::AUTO_TAG_RESOURCE_TAGS:
 				if (!empty($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]))
 				{
-					$this->_tags = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+					$this->_tagsOrTexts = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
 				}
 				break;
 			case Tinhte_XenTag_Option::AUTO_TAG_MODE_ALL_TAGS:
 				if (!empty($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]))
 				{
-					$this->_tags = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+					$this->_tagsOrTexts = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
 				}
 				$this->_useGlobalTags = true;
 				break;
