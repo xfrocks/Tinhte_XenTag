@@ -16,7 +16,7 @@ class Tinhte_XenTag_Model_Search extends XenForo_Model
 		}
 
 		$typeHandler = XenForo_Search_DataHandler_Abstract::create('Tinhte_XenTag_Search_DataHandler_General');
-		$typeHandler->setSearchContentTypes($prioritizedContents);
+		$typeHandler->setSearchContentTypes(array_keys($prioritizedContents));
 		$prioritizedResults = $searcher->searchType($typeHandler, $searchQuery, $constraints, $order);
 		if (empty($prioritizedResults))
 		{
