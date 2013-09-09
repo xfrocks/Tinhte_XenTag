@@ -270,7 +270,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 		$sqlConditions = array();
 		$db = $this->_getDb();
 
-		foreach (array('tag_id', 'content_id', 'tagged_user_id', 'tagged_date') as $intField)
+		foreach (array('tag_id', 'content_type', 'content_id', 'tagged_user_id', 'tagged_date') as $intField)
 		{
 			if (!isset($conditions[$intField]))
 				continue;

@@ -263,6 +263,11 @@ class Tinhte_XenTag_Installer
 			");
 		}
 
+		if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))
+		{
+			$db->query("ALTER TABLE `xf_tinhte_xentag_tag` ADD INDEX `target_type_target_id` (`target_type`, `target_id`)");
+		}
+
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
 
