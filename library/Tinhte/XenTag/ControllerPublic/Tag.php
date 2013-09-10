@@ -262,6 +262,11 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 					$q,
 					'r'
 				)), array('limit' => 10));
+
+			$tags = array_merge($tags, $this->_getTagModel()->getAllTag(array('tag_text_like' => array(
+					' ' . $q,
+					'lr'
+				)), array('limit' => 10)));
 		}
 		else
 		{
