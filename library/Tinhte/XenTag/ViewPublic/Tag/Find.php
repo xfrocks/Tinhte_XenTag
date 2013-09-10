@@ -7,7 +7,14 @@ class Tinhte_XenTag_ViewPublic_Tag_Find extends XenForo_ViewPublic_Base
 		$results = array();
 		foreach ($this->_params['tags'] AS $tag)
 		{
-			$results[$tag['tag_text']] = $this->_getPresentationForResult($tag);
+			$normalized = Tinhte_XenTag_Helper::getNormalizedTagText($tag['tag_text']);
+			
+			if (isset($results[$normalized]))
+			{
+				continue;
+			}
+			
+			$results[$normalized] = $this->_getPresentationForResult($tag);
 		}
 
 		return array('results' => $results);
