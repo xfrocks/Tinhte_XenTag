@@ -86,7 +86,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		$tagLink = $tagModel->getTagLink($tag);
 		if (!empty($tagLink))
 		{
-			return $this->responseRedirect(XenForo_ControllerResponse_Redirect::RESOURCE_UPDATED, $tagLink);
+			return $this->responseRedirect(XenForo_ControllerResponse_Redirect::RESOURCE_CANONICAL, $tagLink);
 		}
 
 		if (!empty($tag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
