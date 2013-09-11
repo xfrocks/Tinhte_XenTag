@@ -280,6 +280,14 @@ class Tinhte_XenTag_Installer
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tagAll'
 			");
+			
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value_int)
+				SELECT user_group_id, user_id, 'resource', 'TXT_resourceMaximumTags', permission_value_int
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_maximumTags'
+			");
 		}
 
 		if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))

@@ -36,9 +36,19 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 			}
 
 			$requiresTag = Tinhte_XenTag_Option::get('resourceRequiresTag');
-			if ($requiresTag AND $tagsCount == 0)
+			$maximumTags = intval($this->getModelFromCache('XenResource_Model_Resource')->Tinhte_XenTag_getMaximumTags());
+			
+			if ($requiresTag AND $maximumTags !== 0 AND $tagsCount == 0)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_resource_requires_tag'), true);
+			}
+			
+			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
+			{
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_tags_x_of_y', array(
+					'maximum' => $maximumTags,
+					'count' => $tagsCount
+				)), true);
 			}
 		}
 	}

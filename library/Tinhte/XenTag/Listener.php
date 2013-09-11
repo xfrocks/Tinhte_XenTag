@@ -35,6 +35,7 @@ class Tinhte_XenTag_Listener
 
 			'XenResource_ControllerPublic_Resource',
 			'XenResource_DataWriter_Resource',
+			'XenResource_Model_Resource',
 			'XenResource_ViewPublic_Resource_Description',
 		);
 

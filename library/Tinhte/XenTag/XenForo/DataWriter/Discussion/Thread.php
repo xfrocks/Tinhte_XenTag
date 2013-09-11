@@ -61,22 +61,20 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 			$this->_tagsNeedUpdated = false;
 
 			$forum = $this->Tinhte_XenTag_getForumData();
-
-			$maximumTags = $this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumTags($forum);
-
 			$options = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
 			$requiresTag = Tinhte_XenTag_Option::get('requiresTag');
 			if (isset($options['requiresTag']) AND $options['requiresTag'] !== '')
 			{
 				$requiresTag = $options['requiresTag'];
 			}
-
-			if ($requiresTag AND $tagsCount == 0)
+			$maximumTags = intval($this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumTags($forum));
+			
+			if ($requiresTag AND $maximumTags !== 0 AND $tagsCount == 0)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_thread_requires_tag'), true);
 			}
 
-			if ($maximumTags > 0 AND $tagsCount > $maximumTags)
+			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_tags_x_of_y', array(
 					'maximum' => $maximumTags,
