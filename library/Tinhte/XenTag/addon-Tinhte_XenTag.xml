@@ -31,22 +31,13 @@
 		data-acUrl="{xen:link 'tags/find'}">
 	</xen:textboxunit>
 	<input type="hidden" name="tinhte_xentag_included" value="1" />
-		
+
 	<xen:radiounit label="{xen:phrase option_Tinhte_XenTag_requiresTag}" name="tinhte_xentag_options[requiresTag]" value="{$forum.tinhte_xentag_options.requiresTag}" explain="{xen:phrase tinhte_xentag_forum_requires_tag_explain}">
 		<xen:option value="">{xen:phrase default} ({xen:if '{xen:helper Tinhte_XenTag_getOption, requiresTag} > 0', '{xen:phrase yes}', '{xen:phrase no}'})</xen:option>
 		<xen:option value="1">{xen:phrase yes}</xen:option>
 		<xen:option value="0">{xen:phrase no}</xen:option>
 	</xen:radiounit>
-	
-	<xen:radiounit label="{xen:phrase option_Tinhte_XenTag_maximumTags}" name="tinhte_xentag_options[maximumTags]" explain="{xen:phrase tinhte_xentag_forum_maximum_tags_explain}">
-		<xen:option value="" selected="{$forum.tinhte_xentag_options.maximumTags} == ''">{xen:phrase default} ({xen:if '{xen:helper Tinhte_XenTag_getOption, maximumTags} > 0', '{xen:helper Tinhte_XenTag_getOption, maximumTags}', '{xen:phrase unlimited}'})</xen:option>
-		<xen:option value="other" selected="{$forum.tinhte_xentag_options.maximumTags} != ''" inputclass="Disabler">{xen:phrase other}</xen:option>
-		<xen:html>
-			<div id="ctrl_tinhte_xentag_optionsmaximumTags_other_Disabler">
-				<xen:spinbox name="tinhte_xentag_options_maximumTags_value" value="{xen:calc '{$forum.tinhte_xentag_options.maximumTags} + 0'}" inputclass="OptOut" />
-			</div>
-		</xen:html>
-	</xen:radiounit>
+
 </li>]]></template>
     <template title="tinhte_xentag_hook_admin_forum_edit_tabs"><![CDATA[<li><a>{xen:phrase tinhte_xentag_tags}</a></li>]]></template>
     <template title="tinhte_xentag_hook_admin_page_edit_basic_informati"><![CDATA[<!-- [Tinhte] XenTag / Mark --><!-- slot: after_description --><!-- [Tinhte] XenTag / Mark -->
@@ -258,12 +249,6 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="110"/>
     </option>
-    <option option_id="Tinhte_XenTag_maximumTags" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
-      <default_value>10</default_value>
-      <edit_format_params></edit_format_params>
-      <sub_options></sub_options>
-      <relation group_id="Tinhte_XenTag" display_order="60"/>
-    </option>
     <option option_id="Tinhte_XenTag_prioritizeForums" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>100</default_value>
       <edit_format_params></edit_format_params>
@@ -307,6 +292,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
   <permissions>
     <permission_groups/>
     <permissions>
+      <permission permission_group_id="forum" permission_id="Tinhte_XenTag_maximumTags" permission_type="integer" default_value_int="0" interface_group_id="forumPermissions" display_order="9999"/>
       <permission permission_group_id="forum" permission_id="Tinhte_XenTag_tag" permission_type="flag" depend_permission_id="postThread" default_value="unset" interface_group_id="forumPermissions" display_order="9999"/>
       <permission permission_group_id="forum" permission_id="Tinhte_XenTag_tagAll" permission_type="flag" depend_permission_id="editAnyPost" default_value="unset" interface_group_id="forumModeratorPermissions" display_order="9999"/>
       <permission permission_group_id="general" permission_id="Tinhte_XenTag_createNew" permission_type="flag" default_value="unset" interface_group_id="generalPermissions" display_order="9999"/>
@@ -338,8 +324,6 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_linkFormat_explain" version_id="70" version_string="1.5"><![CDATA[If your tags use special characters and the links don't work properly, switch to the second format.]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkTargetBlank" version_id="77" version_string="1.6"><![CDATA[Open Tag Link in New Window]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkTargetBlank_explain" version_id="77" version_string="1.6"><![CDATA[Enable this option to open the tag page in a new window (or browser tab, if available).]]></phrase>
-    <phrase title="option_Tinhte_XenTag_maximumTags" version_id="34" version_string="1.1"><![CDATA[Maximum Tags]]></phrase>
-    <phrase title="option_Tinhte_XenTag_maximumTags_explain" version_id="34" version_string="1.1"><![CDATA[Set the maximum tags can be tagged in a thread. Set to 0 (zero) to have no limit. This option can be overridden in individual forum by updating its option to override global setting.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums" version_id="70" version_string="1.5"><![CDATA[Prioritize Forums]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize forums in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizePages" version_id="70" version_string="1.5"><![CDATA[Prioritize Pages]]></phrase>
@@ -352,6 +336,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_searchIndexType_explain" version_id="76" version_string="1.6-dev"><![CDATA[Different search engine may cause problem with tag, you can experiment different modes here to choose which works best for your site. You MUST rebuild the search index after changing this option.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength" version_id="6" version_string="0.9.5"><![CDATA[Maximum Tag Length]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength_explain" version_id="6" version_string="0.9.5"><![CDATA[You can set the maximum tag length here. There is a hard limitation of 100, you can't exceed it (the database can only hold a maximum of 100 characters).]]></phrase>
+    <phrase title="permission_forum_Tinhte_XenTag_maximumTags" version_id="93" version_string="1.8.3"><![CDATA[[XenTag] Max tags per thread]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tag" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by self]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tagAll" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by anyone]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_createNew" version_id="5" version_string="0.9.4"><![CDATA[[XenTag] Create new tag]]></phrase>
