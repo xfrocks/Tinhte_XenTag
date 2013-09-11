@@ -25,8 +25,20 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 
 			if (is_array($updated))
 			{
+				$tagsCount = count($updated);
+
 				$this->set(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS, $updated, '', array('setAfterPreSave' => true));
 				$this->_db->update('xf_resource', array(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS => serialize($updated)), array('resource_id = ?' => $this->get('resource_id')));
+			}
+			else
+			{
+				$tagsCount = intval($updated);
+			}
+
+			$requiresTag = Tinhte_XenTag_Option::get('resourceRequiresTag');
+			if ($requiresTag AND $tagsCount == 0)
+			{
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_resource_requires_tag'), true);
 			}
 		}
 	}

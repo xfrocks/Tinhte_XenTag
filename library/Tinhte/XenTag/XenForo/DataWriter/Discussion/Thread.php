@@ -73,7 +73,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 
 			if ($requiresTag AND $tagsCount == 0)
 			{
-				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_tag_required'), true);
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_thread_requires_tag'), true);
 			}
 
 			if ($maximumTags > 0 AND $tagsCount > $maximumTags)
