@@ -151,7 +151,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-		
+
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
@@ -251,7 +251,7 @@ class Tinhte_XenTag_Installer
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
 			");
 		}
-		
+
 		if ($effectiveVersionId < 90)
 		{
 			$db->query("
@@ -262,29 +262,29 @@ class Tinhte_XenTag_Installer
 				WHERE permission_group_id = 'general' AND permission_id = 'Tinhte_XenTag_createNew'
 			");
 		}
-		
+
 		if ($effectiveVersionId < 95)
 		{
 			$db->query("
 				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', 10
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', 'use_int', 10
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
 			");
-			
+
 			$db->query("
 				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', -1
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', 'use_int', -1
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tagAll'
 			");
-			
+
 			$db->query("
 				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value_int)
-				SELECT user_group_id, user_id, 'resource', 'TXT_resourceMaximumTags', permission_value_int
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'resource', 'TXT_resourceMaximumTags', 'use_int', permission_value_int
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_maximumTags'
 			");
@@ -306,6 +306,18 @@ class Tinhte_XenTag_Installer
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_resource'));
+
+		$db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
+			'Tinhte_XenTag_tag',
+			'Tinhte_XenTag_tagAll',
+			'Tinhte_XenTag_createNew',
+			'Tinhte_XenTag_edit',
+			'Tinhte_XenTag_resourceAll',
+			'Tinhte_XenTag_resourceTag',
+			'Tinhte_XenTag_isStaff',
+			'Tinhte_XenTag_maximumTags',
+			'TXT_resourceMaximumTags',
+		)) . ')');
 
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
