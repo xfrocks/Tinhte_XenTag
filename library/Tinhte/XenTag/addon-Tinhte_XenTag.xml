@@ -1062,16 +1062,16 @@ a.Tinhte_XenTag_TagLink:focus {
 	<!-- [Tinhte] XenTag / Mark --></div><!-- [Tinhte] XenTag / Mark -->
 	<!-- [Tinhte] XenTag / Revert Mark --><xen:comment>We want to look for the last occurence of </div> for best effect!</xen:comment>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_widget_cloud" version_id="6" version_string="0.9.5"><![CDATA[<xen:if hascontent="true">
+    <template title="tinhte_xentag_widget_cloud" version_id="95" version_string="1.8.4b"><![CDATA[<xen:if hascontent="true">
     <xen:require css="tinhte_xentag.css" />
     
-    <div class="Tinhte_XenTag_TagCloud">
+    <ul class="Tinhte_XenTag_TagCloud">
         <xen:contentcheck>
             <xen:hook name="tinhte_xentag_tag_cloud_item" params="{xen:array 'max={$widget.options.limit}'}">
             	<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{TAG_LEVEL}"><a href="{TAG_LINK}">{TAG_TEXT}</a></li>
             </xen:hook>
         </xen:contentcheck>
-    </div>
+    </ul>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_related_threads" version_id="88" version_string="1.7.1"><![CDATA[<xen:if hascontent="true">
     <div class="avatarList">
