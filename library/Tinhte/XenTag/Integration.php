@@ -309,7 +309,7 @@ class Tinhte_XenTag_Integration
 				break;
 			}
 
-			if ($pos > $openTagLength)
+			if ($pos >= $openTagLength)
 			{
 				$prefix = substr($bbCode, $pos - $openTagLength, $openTagLength);
 				if (strtoupper($prefix) == $openTag)
