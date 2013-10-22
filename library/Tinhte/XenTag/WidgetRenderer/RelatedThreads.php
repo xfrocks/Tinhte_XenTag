@@ -59,17 +59,17 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 			// $thread is found in the template params, try to fetch the tags
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($params['thread'][Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
 		}
-		if (empty($tags) AND isset($params['page']) AND !empty($params['page']['node_id']))
+		if (empty($tagsOrTexts) AND isset($params['page']) AND !empty($params['page']['node_id']))
 		{
 			// fetch page's tags
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($params['page'][Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
 		}
-		if (empty($tags) AND isset($params['forum']) AND !empty($params['forum']['node_id']))
+		if (empty($tagsOrTexts) AND isset($params['forum']) AND !empty($params['forum']['node_id']))
 		{
 			// fetch forum's tags
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($params['forum'][Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
 		}
-		if (empty($tags) AND isset($params['resource']) AND !empty($params['resource']['resource_id']))
+		if (empty($tagsOrTexts) AND isset($params['resource']) AND !empty($params['resource']['resource_id']))
 		{
 			// fetch resource's tags
 			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($params['resource'][Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
