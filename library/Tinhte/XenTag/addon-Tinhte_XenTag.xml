@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.8.4b" version_id="95" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.9-dev" version_id="96" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -175,6 +175,7 @@
   <code_event_listeners>
     <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
     <listener event_id="init_dependencies" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="init_dependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_Html_Renderer_BbCode" description=""/>
     <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
@@ -279,7 +280,7 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
       <edit_format_params>1 = {xen:phrase yes}
 0 = {xen:phrase no}</edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="Tinhte_XenTag" display_order="50"/>
+      <relation group_id="Tinhte_XenTag" display_order="60"/>
     </option>
     <option option_id="Tinhte_XenTag_searchIndexType" edit_format="radio" data_type="string" can_backup="1">
       <default_value>md5</default_value>
@@ -295,10 +296,18 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="30"/>
     </option>
+    <option option_id="Tinhte_XenTag_tagThreadWithHashtags" edit_format="radio" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>1 = {xen:phrase yes}
+0 = {xen:phrase no}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="50"/>
+    </option>
   </optiongroups>
   <permissions>
     <permission_groups/>
     <permissions>
+      <permission permission_group_id="forum" permission_id="Tinhte_XenTag_maximumHts" permission_type="integer" default_value_int="0" interface_group_id="forumPermissions" display_order="9999"/>
       <permission permission_group_id="forum" permission_id="Tinhte_XenTag_maximumTags" permission_type="integer" default_value_int="0" interface_group_id="forumPermissions" display_order="9999"/>
       <permission permission_group_id="forum" permission_id="Tinhte_XenTag_tag" permission_type="flag" depend_permission_id="postThread" default_value="unset" interface_group_id="forumPermissions" display_order="9999"/>
       <permission permission_group_id="forum" permission_id="Tinhte_XenTag_tagAll" permission_type="flag" depend_permission_id="editAnyPost" default_value="unset" interface_group_id="forumModeratorPermissions" display_order="9999"/>
@@ -346,6 +355,9 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_searchIndexType_explain" version_id="76" version_string="1.6-dev"><![CDATA[Different search engine may cause problem with tag, you can experiment different modes here to choose which works best for your site. You MUST rebuild the search index after changing this option.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength" version_id="6" version_string="0.9.5"><![CDATA[Maximum Tag Length]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagMaxLength_explain" version_id="6" version_string="0.9.5"><![CDATA[You can set the maximum tag length here. There is a hard limitation of 100, you can't exceed it (the database can only hold a maximum of 100 characters).]]></phrase>
+    <phrase title="option_Tinhte_XenTag_tagThreadWithHashtags" version_id="96" version_string="1.9-dev"><![CDATA[Link #hashtags To Thread]]></phrase>
+    <phrase title="option_Tinhte_XenTag_tagThreadWithHashtags_explain" version_id="96" version_string="1.9-dev"><![CDATA[Select "Yes" to set all #hashtags of the first post as tags for the thread.]]></phrase>
+    <phrase title="permission_forum_Tinhte_XenTag_maximumHts" version_id="96" version_string="1.9-dev"><![CDATA[[XenTag] Max #hashtags per post]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumTags" version_id="93" version_string="1.8.3"><![CDATA[[XenTag] Max tags per thread]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tag" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by self]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tagAll" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by anyone]]></phrase>
@@ -445,7 +457,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     </group>
   </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="86" version_string="1.6.5"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="95" version_string="1.8.4b"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -549,9 +561,8 @@ a.Tinhte_XenTag_TagLink:focus {
 }
 	.Tinhte_XenTag_TagResult_ContentCount {
 		float: right;
-	}
-
-]]></template>
+	}]]></template>
+    <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="95" version_string="1.8.4b"><![CDATA[<xen:require css="tinhte_xentag.css" />#<a href="{xen:link tags, $tag}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="77" version_string="1.6"><![CDATA[<xen:require css="tinhte_xentag.css" /><a href="{xen:link tags, $tag}" class="Tinhte_XenTag_TagLink"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
     <template title="tinhte_xentag_copyright" version_id="0" version_string=""><![CDATA[<xen:comment>Please do not remove this copyright notice. Thank you.</xen:comment>
 
@@ -560,6 +571,10 @@ a.Tinhte_XenTag_TagLink:focus {
 <div class="Tinhte_XenTag_Copyright">
 	XenTag by <a href="http://www.tinhte.vn" target="_blank">Tinhte.vn</a>
 </div>]]></template>
+    <template title="tinhte_xentag_editor" version_id="95" version_string="1.8.4b"><![CDATA[<xen:if is="{$showWysiwyg}">
+	<xen:require css="tinhte_xentag.css" />
+	<xen:require js="js/Tinhte/XenTag/bb_code_edit.js" />
+</xen:if>]]></template>
     <template title="tinhte_xentag_forum_view" version_id="69" version_string="1.4"><![CDATA[<xen:if hascontent="true">
 	<div class="sectionMain">
 		{xen:phrase tinhte_xentag_tags}:

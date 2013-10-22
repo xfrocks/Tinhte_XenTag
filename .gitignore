@@ -2,3 +2,4 @@
 *.devhelper
 library/Tinhte/XenTag/DevHelper/Generated/*
 library/Tinhte/XenTag/FileSums.php
+js/Tinhte/XenTag/bb_code_edit.js

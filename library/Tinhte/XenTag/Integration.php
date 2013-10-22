@@ -290,6 +290,81 @@ class Tinhte_XenTag_Integration
 		return $html;
 	}
 
+	public static function parseHashtags(&$bbCode, $editBbCode = false)
+	{
+		$tagTexts = array();
+
+		$openTag = '[HASHTAG]';
+		$closeTag = '[/HASHTAG]';
+		$openTagLength = strlen($openTag);
+
+		$offset = 0;
+		while (true)
+		{
+			$pos = strpos($bbCode, '#', $offset);
+			$foundWrapping = false;
+
+			if ($pos === false)
+			{
+				break;
+			}
+
+			if ($pos > $openTagLength)
+			{
+				$prefix = substr($bbCode, $pos - $openTagLength, $openTagLength);
+				if (strtoupper($prefix) == $openTag)
+				{
+					// this hashtag has been wrapped around our bbcode tag
+					$closePos = stripos($bbCode, $closeTag, $pos);
+					if ($closePos !== false)
+					{
+						$tagText = trim(substr($bbCode, $pos + 1, $closePos - 1 - $pos));
+
+						if (!empty($tagText))
+						{
+							$tagTexts[] = $tagText;
+							$foundWrapping = true;
+						}
+					}
+				}
+			}
+
+			if (!$foundWrapping)
+			{
+				// no bb code wrapping?
+				if (preg_match('/[^#a-zA-Z0-9]/', $bbCode, $matches, PREG_OFFSET_CAPTURE, $pos))
+				{
+					$nonTagTextPos = $matches[0][1];
+				}
+				else
+				{
+					// get all of the remaining characters
+					$nonTagTextPos = strlen($bbCode);
+				}
+
+				$tagText = trim(substr($bbCode, $pos + 1, $nonTagTextPos - 1 - $pos));
+
+				if (!empty($tagText))
+				{
+					$tagTexts[] = $tagText;
+
+					if ($editBbCode)
+					{
+						// add bb code wrapping
+						$replacement = sprintf('%s#%s%s', $openTag, $tagText, $closeTag);
+
+						$bbCode = substr_replace($bbCode, $replacement, $pos, $nonTagTextPos - $pos);
+						$pos += $openTagLength;
+					}
+				}
+			}
+
+			$offset = $pos + 1;
+		}
+
+		return $tagTexts;
+	}
+
 	protected static function _autoTag_isBetweenHtmlTags($html, $position)
 	{
 		$htmlLength = utf8_strlen($html);

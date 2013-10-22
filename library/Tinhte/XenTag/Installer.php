@@ -290,6 +290,17 @@ class Tinhte_XenTag_Installer
 			");
 		}
 
+		if ($effectiveVersionId < 96)
+		{
+			$db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumHts', permission_value, permission_value_int
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_maximumTags'
+			");
+		}
+
 		if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))
 		{
 			$db->query("ALTER TABLE `xf_tinhte_xentag_tag` ADD INDEX `target_type_target_id` (`target_type`, `target_id`)");

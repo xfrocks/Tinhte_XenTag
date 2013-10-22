@@ -7,6 +7,7 @@ class Tinhte_XenTag_Listener
 	{
 		static $classes = array(
 			'XenForo_BbCode_Formatter_Base',
+			'XenForo_BbCode_Formatter_Wysiwyg',
 
 			'XenForo_ControllerAdmin_Forum',
 			'XenForo_ControllerAdmin_Page',
@@ -37,6 +38,9 @@ class Tinhte_XenTag_Listener
 			'XenResource_DataWriter_Resource',
 			'XenResource_Model_Resource',
 			'XenResource_ViewPublic_Resource_Description',
+
+			// XenForo 1.2+
+			'XenForo_Html_Renderer_BbCode',
 		);
 
 		if (in_array($class, $classes))
@@ -87,6 +91,7 @@ class Tinhte_XenTag_Listener
 	{
 		switch ($templateName)
 		{
+			case 'editor':
 			case 'tools_rebuild':
 			case 'forum_view':
 			case 'post_edit':
@@ -155,6 +160,7 @@ class Tinhte_XenTag_Listener
 	{
 		switch ($templateName)
 		{
+			case 'editor':
 			case 'tools_rebuild':
 			case 'forum_view':
 			case 'post_edit':

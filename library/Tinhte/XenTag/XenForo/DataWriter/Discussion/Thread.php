@@ -9,6 +9,19 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 	// TODO: drop this property as it's not necessary
 	protected $_tagsNeedUpdated = false;
 
+	public function Tinhte_XenTag_getTags()
+	{
+		$tags = array();
+
+		$value = $this->get(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS);
+		if (!empty($value))
+		{
+			$tags = Tinhte_XenTag_Helper::unserialize($value);
+		}
+
+		return $tags;
+	}
+
 	public function Tinhte_XenTag_setTags(array $tags)
 	{
 		// sondh@2012-08-11
