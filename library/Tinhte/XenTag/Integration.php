@@ -292,75 +292,51 @@ class Tinhte_XenTag_Integration
 
 	public static function parseHashtags(&$bbCode, $editBbCode = false)
 	{
-		$tagTexts = array();
+		static $_declaredHashtagPick = false;
+		static $_declaredAutoHashtag = false;
+		static $_formatters = array();
 
-		$openTag = '[HASHTAG]';
-		$closeTag = '[/HASHTAG]';
-		$openTagLength = strlen($openTag);
-
-		$offset = 0;
-		while (true)
+		$bbCodeFormatterClass = XenForo_Application::resolveDynamicClass('XenForo_BbCode_Formatter_Base', 'bb_code');
+		if (!$_declaredHashtagPick)
 		{
-			$pos = strpos($bbCode, '#', $offset);
-			$foundWrapping = false;
-
-			if ($pos === false)
-			{
-				break;
-			}
-
-			if ($pos >= $openTagLength)
-			{
-				$prefix = substr($bbCode, $pos - $openTagLength, $openTagLength);
-				if (strtoupper($prefix) == $openTag)
-				{
-					// this hashtag has been wrapped around our bbcode tag
-					$closePos = stripos($bbCode, $closeTag, $pos);
-					if ($closePos !== false)
-					{
-						$tagText = trim(substr($bbCode, $pos + 1, $closePos - 1 - $pos));
-
-						if (!empty($tagText))
-						{
-							$tagTexts[] = $tagText;
-							$foundWrapping = true;
-						}
-					}
-				}
-			}
-
-			if (!$foundWrapping)
-			{
-				// no bb code wrapping?
-				if (preg_match('/[^#a-zA-Z0-9]/', $bbCode, $matches, PREG_OFFSET_CAPTURE, $pos))
-				{
-					$nonTagTextPos = $matches[0][1];
-				}
-				else
-				{
-					// get all of the remaining characters
-					$nonTagTextPos = strlen($bbCode);
-				}
-
-				$tagText = trim(substr($bbCode, $pos + 1, $nonTagTextPos - 1 - $pos));
-
-				if (!empty($tagText))
-				{
-					$tagTexts[] = $tagText;
-
-					if ($editBbCode)
-					{
-						// add bb code wrapping
-						$replacement = sprintf('%s#%s%s', $openTag, $tagText, $closeTag);
-
-						$bbCode = substr_replace($bbCode, $replacement, $pos, $nonTagTextPos - $pos);
-						$pos += $openTagLength;
-					}
-				}
-			}
-
-			$offset = $pos + 1;
+			eval('class XFCP_Tinhte_XenTag_BbCode_Formatter_HashtagPick extends ' . $bbCodeFormatterClass . ' {}');
+			$_declaredHashtagPick = true;
 		}
+		$bbCodeFormatterClass = 'Tinhte_XenTag_BbCode_Formatter_HashtagPick';
+
+		if ($editBbCode)
+		{
+			if (!$_declaredAutoHashtag)
+			{
+				eval('class XFCP_Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends ' . $bbCodeFormatterClass . ' {}');
+				$_declaredAutoHashtag = true;
+			}
+			$bbCodeFormatterClass = 'Tinhte_XenTag_BbCode_Formatter_AutoHashtag';
+		}
+
+		if (!isset($_formatters[$bbCodeFormatterClass]))
+		{
+			$_formatters[$bbCodeFormatterClass] = new $bbCodeFormatterClass();
+		}
+		$bbCodeFormatter = $_formatters[$bbCodeFormatterClass];
+
+		if (XenForo_Application::$versionId > 1020000)
+		{
+			$bbCodeParser = XenForo_BbCode_Parser::create($bbCodeFormatter);
+		}
+		else
+		{
+			$bbCodeParser = new XenForo_BbCode_Parser($bbCodeFormatter);
+		}
+
+		$bbCodeEdited = $bbCodeParser->render($bbCode);
+		$tagTexts = $bbCodeFormatter->Tinhte_XenTag_getTagTexts();
+		if ($editBbCode)
+		{
+			$tagTexts = array_merge($tagTexts, $bbCodeFormatter->Tinhte_XenTag_getAutoHashtagTexts());
+			$bbCode = $bbCodeEdited;
+		}
+		$tagTexts = array_values($tagTexts);
 
 		return $tagTexts;
 	}
