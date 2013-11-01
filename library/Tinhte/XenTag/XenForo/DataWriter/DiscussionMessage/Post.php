@@ -36,15 +36,6 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		}
 	}
 
-	protected function _checkMessageValidity()
-	{
-		$message = $this->get('message');
-		$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($message, true);
-		$this->set('message', $message);
-
-		return parent::_checkMessageValidity();
-	}
-
 	protected function _messagePreSave()
 	{
 		// checks for our controller and call it first
@@ -62,7 +53,7 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 
 		$this->_Tinhte_XenTag_updateTagsInDatabase();
 
-		if (!!$this->getExtraData(self::DATA_SKIP_UPDATE_THREAD_TAGS) AND !empty($tagTexts) AND $this->get('position') == 0)
+		if (!$this->getExtraData(self::DATA_SKIP_UPDATE_THREAD_TAGS) AND !empty($tagTexts) AND $this->get('position') == 0)
 		{
 			$threadDw = $this->getDiscussionDataWriter();
 			$isChanged = false;
@@ -79,6 +70,16 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		}
 
 		return parent::_messagePostSave();
+	}
+
+	protected function _setInternal($table, $field, $newValue, $forceSet = false)
+	{
+		if ($table === 'xf_post' AND $field === 'message')
+		{
+			$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($newValue, true);
+		}
+
+		return parent::_setInternal($table, $field, $newValue, $forceSet);
 	}
 
 	public static function updateThreadDwFromPostDw(XenForo_DataWriter_Discussion_Thread $threadDw, XenForo_DataWriter_DiscussionMessage_Post $postDw, $tagTexts = null)
