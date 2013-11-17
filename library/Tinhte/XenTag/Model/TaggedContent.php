@@ -203,7 +203,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 				$dw->setExistingData($resource, true);
 				// save queries
 				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
-				$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Forum::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
+				$dw->setExtraData(Tinhte_XenTag_XenResource_DataWriter_Resource::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
 				$dw->save();
 			}
 		}
