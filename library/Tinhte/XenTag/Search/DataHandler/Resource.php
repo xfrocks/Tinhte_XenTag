@@ -82,17 +82,23 @@ class Tinhte_XenTag_Search_DataHandler_Resource extends XenForo_Search_DataHandl
 
 	public function getDataForResults(array $ids, array $viewingUser, array $resultsGrouped)
 	{
-		$resources = $this->_getResourceModel()->getResourcesByIds($ids, array('join' => XenResource_Model_Resource::FETCH_CATEGORY + XenResource_Model_Resource::FETCH_USER));
+		$resources = $this->_getResourceModel()->getResourcesByIds($ids, array(
+			'join' => XenResource_Model_Resource::FETCH_CATEGORY + XenResource_Model_Resource::FETCH_USER,
+			'permissionCombinationId' => $viewingUser['permission_combination_id']
+		));
 
 		return $resources;
 	}
 
 	public function canViewResult(array $result, array $viewingUser)
 	{
-		$errorPhraseKey = '';
-		$null = null;
+		if (!empty($result['category_permission_cache']))
+		{
+			// XenForo Resource Manager 1.1 support
+			$categoryPermissions = XenForo_Permission::unserializePermissions($result['category_permission_cache']);
+		}
 
-		return $this->_getResourceModel()->canViewResource($result, $result, $errorPhraseKey, $null, $viewingUser);
+		return $this->_getResourceModel()->canViewResource($result, $result, $errorPhraseKey, $viewingUser, $categoryPermissions);
 	}
 
 	public function getResultDate(array $result)
