@@ -26,6 +26,8 @@ class Tinhte_XenTag_Helper
 	{
 		if (UTF8_MBSTRING)
 		{
+			self::_fixMbStrrposPhp52($haystack, $offset);
+
 			return mb_strrpos($haystack, $needle, $offset);
 		}
 		else
@@ -50,11 +52,23 @@ class Tinhte_XenTag_Helper
 	{
 		if (UTF8_MBSTRING)
 		{
+			self::_fixMbStrrposPhp52($haystack, $offset);
+
 			return mb_strripos($haystack, $needle, $offset);
 		}
 		else
 		{
 			return strripos($haystack, $needle, $offset);
+		}
+	}
+
+	protected static function _fixMbStrrposPhp52(&$haystack, &$offset)
+	{
+		if ($offset < 0 AND (!defined('PHP_VERSION_ID') OR PHP_VERSION_ID < 50300))
+		{
+			// fix problem with negative offset for old version of mb_strripos
+			$haystack = mb_substr($haystack, 0, -1 * $offset);
+			$offset = 0;
 		}
 	}
 
@@ -161,7 +175,7 @@ class Tinhte_XenTag_Helper
 						{
 							continue;
 						}
-						
+
 						$isStaff = true;
 					}
 
@@ -176,7 +190,7 @@ class Tinhte_XenTag_Helper
 
 					$altLink = $tagModel->getTagLink($tagOrText);
 				}
-				
+
 				$escapedText = htmlspecialchars($tagText);
 				if ($isStaff)
 				{
@@ -206,7 +220,7 @@ class Tinhte_XenTag_Helper
 						continue;
 					}
 				}
-				
+
 				$escapedText = htmlspecialchars(self::getTextFromTagOrText($tagOrText));
 
 				$result[] = htmlspecialchars($escapedText);
