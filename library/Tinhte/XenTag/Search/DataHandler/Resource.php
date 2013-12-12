@@ -92,6 +92,8 @@ class Tinhte_XenTag_Search_DataHandler_Resource extends XenForo_Search_DataHandl
 
 	public function canViewResult(array $result, array $viewingUser)
 	{
+		$categoryPermissions = null;
+
 		if (!empty($result['category_permission_cache']))
 		{
 			// XenForo Resource Manager 1.1 support
