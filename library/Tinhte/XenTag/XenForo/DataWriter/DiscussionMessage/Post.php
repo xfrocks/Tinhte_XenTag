@@ -23,7 +23,7 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 
 			$this->_Tinhte_XenTag_tagTexts = false;
 
-			$forum = $this->_getForumInfo();
+			$forum = $this->_Tinhte_XenTag_getForumInfo();
 			$maximumTags = intval($this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumHashtags($forum));
 
 			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
@@ -33,6 +33,25 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 					'count' => $tagsCount
 				)), true);
 			}
+		}
+	}
+
+	protected function _Tinhte_XenTag_getForumInfo()
+	{
+		if (XenForo_Application::$versionId > 1020000)
+		{
+			return $this->_getForumInfo();
+		}
+		else
+		{
+			if (!$forum = $this->getExtraData(self::DATA_FORUM))
+			{
+				$forum = $this->getModelFromCache('XenForo_Model_Forum')->getForumByThreadId($this->get('thread_id'));
+
+				$this->setExtraData(self::DATA_FORUM, $forum ? $forum : array());
+			}
+
+			return $this->getExtraData(self::DATA_FORUM);
 		}
 	}
 
