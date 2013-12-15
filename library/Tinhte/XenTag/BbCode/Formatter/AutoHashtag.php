@@ -60,24 +60,36 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 			$offset = 0;
 			while (true)
 			{
-				$pos = strpos($string, '#', $offset);
+				$pos = utf8_strpos($string, '#', $offset);
 
 				if ($pos === false)
 				{
 					break;
 				}
 
-				if (preg_match('/[^#a-zA-Z0-9]/', $string, $matches, PREG_OFFSET_CAPTURE, $pos))
+				$stringForPregMatch = utf8_substr($string, $pos + 1);
+				if (preg_match('/[^a-zA-Z0-9]/', $stringForPregMatch, $matches, PREG_OFFSET_CAPTURE))
 				{
 					$nonTagTextPos = $matches[0][1];
 				}
 				else
 				{
 					// get all of the remaining characters
-					$nonTagTextPos = strlen($string);
+					$nonTagTextPos = utf8_strlen($stringForPregMatch);
 				}
+				$nonTagTextPos += $pos + 1;
 
-				$tagText = trim(substr($string, $pos + 1, $nonTagTextPos - 1 - $pos));
+				$tagText = utf8_trim(utf8_substr($string, $pos + 1, $nonTagTextPos - 1 - $pos));
+				
+				$afterTagText = utf8_substr($string, $nonTagTextPos, 1);
+				if (!empty($afterTagText))
+				{
+					if (!preg_match(Tinhte_XenTag_Integration::REGEX_VALID_CHARACTER_AROUND, $afterTagText))
+					{
+						// the after character of tag text is not a valid character, dismiss the found tag text
+						$tagText = '';
+					}
+				}
 
 				if (!empty($tagText))
 				{
@@ -86,8 +98,8 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 					// add bb code wrapping
 					$replacement = sprintf('[HASHTAG]#%s[/HASHTAG]', $tagText);
 
-					$string = substr_replace($string, $replacement, $pos, $nonTagTextPos - $pos);
-					$pos += strlen($replacement) - 1;
+					$string = utf8_substr_replace($string, $replacement, $pos, $nonTagTextPos - $pos);
+					$pos += utf8_strlen($replacement) - 1;
 				}
 
 				$offset = $pos + 1;

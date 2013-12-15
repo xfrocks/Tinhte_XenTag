@@ -12,6 +12,7 @@
  */
 class Tinhte_XenTag_Integration
 {
+	const REGEX_VALID_CHARACTER_AROUND = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&<>]/u';
 
 	/**
 	 * Updates list of tags for specified piece of content. Any addition, removal
@@ -377,8 +378,6 @@ class Tinhte_XenTag_Integration
 
 	protected static function _autoTag_hasValidCharacterAround($html, $position, $tagText)
 	{
-		static $regEx = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&<>]/u';
-
 		$pos = $position + utf8_strlen($tagText);
 		$htmlLength = utf8_strlen($html);
 
@@ -389,7 +388,7 @@ class Tinhte_XenTag_Integration
 		}
 		else
 		{
-			if (!preg_match($regEx, utf8_substr($html, $pos, 1)))
+			if (!preg_match(self::REGEX_VALID_CHARACTER_AROUND, utf8_substr($html, $pos, 1)))
 			{
 				return false;
 			}
@@ -404,7 +403,7 @@ class Tinhte_XenTag_Integration
 		}
 		else
 		{
-			if (!preg_match($regEx, utf8_substr($html, $pos, 1)))
+			if (!preg_match(self::REGEX_VALID_CHARACTER_AROUND, utf8_substr($html, $pos, 1)))
 			{
 				return false;
 			}
