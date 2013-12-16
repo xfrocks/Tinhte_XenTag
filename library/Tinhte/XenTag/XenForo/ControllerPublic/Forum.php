@@ -47,7 +47,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Forum extends XFCP_Tinhte_XenTag_Xe
 
 		$postDw = $dw->getFirstMessageDw();
 		$postDw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post::DATA_SKIP_UPDATE_THREAD_TAGS, true);
-		Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post::updateThreadDwFromPostDw($dw, $postDw);
+		$dw->setExtraData(Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base::DATA_UPDATE_TAGS_FROM_POST, true);
 
 		// sondh@2012-08-11
 		// just to be safe...

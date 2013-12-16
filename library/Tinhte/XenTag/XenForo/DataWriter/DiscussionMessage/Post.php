@@ -79,9 +79,9 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		return parent::_messagePreSave();
 	}
 
-	protected function _submitSpamLog()
+	protected function _updateDeletionLog()
 	{
-		// we have to use _submitSpamLog here because _messagePostSave is triggered too
+		// we have to use _updateDeletionLog here because _messagePostSave is triggered too
 		// late and we can't update the search index from there...
 
 		$tagTexts = $this->_Tinhte_XenTag_tagTexts;
@@ -93,18 +93,13 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 			$threadDw = $this->getDiscussionDataWriter();
 			$isChanged = false;
 
-			if (self::updateThreadDwFromPostDw($threadDw, $this, $tagTexts))
-			{
-				$isChanged = true;
-			}
-
-			if ($isChanged)
+			if (self::updateThreadDwFromPostDw($threadDw, $this))
 			{
 				$threadDw->save();
 			}
 		}
 
-		return parent::_submitSpamLog();
+		return parent::_updateDeletionLog();
 	}
 
 	protected function _setInternal($table, $field, $newValue, $forceSet = false)
@@ -142,30 +137,29 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 			}
 
 			$offset = $posOpen + 1;
-			$posTagText = utf8_substr($message, $posOpen + utf8_strlen($bbCodeOpen), $posClose - utf8_strlen($bbCodeOpen) - $posOpen);
+			$posTagTextOffset = $posOpen + utf8_strlen($bbCodeOpen) + 1;
+			$posTagTextLength = $posClose - $posTagTextOffset;
+			$posTagText = utf8_substr($message, $posTagTextOffset, $posTagTextLength);
 			$posSafeTag = Tinhte_XenTag_Helper::getSafeTagTextForSearch($posTagText);
 
 			if (!in_array($posSafeTag, $dbSafeTags))
 			{
-				$message = utf8_substr_replace($message, $posTagText, $posOpen, $posClose + utf8_strlen($bbCodeClose) - $posOpen);
+				$message = utf8_substr_replace($message, '#' . $posTagText, $posOpen, $posClose + utf8_strlen($bbCodeClose) - $posOpen);
 			}
 		}
 
 		return $message;
 	}
 
-	public static function updateThreadDwFromPostDw(XenForo_DataWriter_Discussion_Thread $threadDw, XenForo_DataWriter_DiscussionMessage_Post $postDw, $tagTexts = null)
+	public static function updateThreadDwFromPostDw(XenForo_DataWriter_Discussion_Thread $threadDw, XenForo_DataWriter_DiscussionMessage_Post $postDw)
 	{
 		if (!Tinhte_XenTag_Option::get('tagThreadWithHashtags'))
 		{
 			return false;
 		}
 
-		if ($tagTexts === null)
-		{
-			$message = $postDw->get('message');
-			$tagTexts = Tinhte_XenTag_Integration::parseHashtags($message);
-		}
+		$message = $postDw->get('message');
+		$tagTexts = Tinhte_XenTag_Integration::parseHashtags($message);
 
 		$threadTags = $threadDw->Tinhte_XenTag_getTags();
 		$threadTagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($threadTags);

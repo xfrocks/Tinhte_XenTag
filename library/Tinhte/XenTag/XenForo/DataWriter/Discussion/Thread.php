@@ -5,6 +5,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 
 	const DATA_FORCE_UPDATE_TAGS_IN_DATABASE = 'Tinhte_XenTag_forceUpdateTagsInDatabase';
 	const DATA_SKIP_UPDATE_TAGS_IN_DATABASE = 'Tinhte_XenTag_skipUpdateTagsInDatabase';
+	const DATA_UPDATE_TAGS_FROM_POST = 'Tinhte_XenTag_updateTagsFromPost';
 
 	// TODO: drop this property as it's not necessary
 	protected $_tagsNeedUpdated = false;
@@ -35,8 +36,13 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 		// In special case when user give some invalid tag text, an exception will
 		// be thrown. It's done post save but because it's still in the same db
 		// transaction, the incorrect date will not be saved.
-		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $tags);
+		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $tags, '', array('setAfterPreSave' => true));
 		$this->_tagsNeedUpdated = true;
+
+		if ($this->_preSaveCalled)
+		{
+			$this->_db->update('xf_thread', array(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS => serialize($tags)), array('thread_id = ?' => $this->get('thread_id')));
+		}
 	}
 
 	public function Tinhte_XenTag_getForumData()
@@ -81,7 +87,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 				$requiresTag = $options['requiresTag'];
 			}
 			$maximumTags = intval($this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumTags($forum));
-			
+
 			if ($requiresTag AND $maximumTags !== 0 AND $tagsCount == 0)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_thread_requires_tag'), true);
@@ -127,6 +133,20 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 	protected function _needsSearchIndexUpdate()
 	{
 		return (parent::_needsSearchIndexUpdate() || $this->isChanged(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS));
+	}
+
+	protected function _updateDeletionLog()
+	{
+		// we have to use _updateDeletionLog here because _discussionPostSave is
+		// triggered
+		// too late and we can't update the search index from there...
+
+		if ($this->_firstMessageDw AND !!$this->getExtraData(self::DATA_UPDATE_TAGS_FROM_POST))
+		{
+			Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post::updateThreadDwFromPostDw($this, $this->_firstMessageDw);
+		}
+
+		return parent::_updateDeletionLog();
 	}
 
 }
