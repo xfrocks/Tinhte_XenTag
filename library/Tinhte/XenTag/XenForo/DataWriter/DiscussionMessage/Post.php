@@ -10,7 +10,7 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 	{
 		if ($this->_Tinhte_XenTag_tagTexts !== false)
 		{
-			$updated = Tinhte_XenTag_Integration::updateTags('post', $this->get('post_id'), $this->get('user_id'), $this->_Tinhte_XenTag_tagTexts, $this);
+			$updated = Tinhte_XenTag_Integration::updateTags('post', $this->get('post_id'), $this->get('user_id'), $this->_Tinhte_XenTag_tagTexts, $this, array('throwException' => false));
 
 			if (is_array($updated))
 			{
@@ -19,6 +19,19 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 			else
 			{
 				$tagsCount = intval($updated);
+			}
+
+			if ($tagsCount != count($this->_Tinhte_XenTag_tagTexts))
+			{
+				// there are something wrong with the hashtag...
+				// probably a new hashtag without tag creating permission
+				// we have to remove the problematic hashtags
+				$message = $this->get('message');
+
+				$message = $this->_filterHashtagsFromMessage($message);
+
+				parent::_setInternal('xf_post', 'message', $message);
+				$this->_db->update('xf_post', array('message' => $message), array('post_id = ?' => $this->get('post_id')));
 			}
 
 			$this->_Tinhte_XenTag_tagTexts = false;
@@ -66,8 +79,11 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		return parent::_messagePreSave();
 	}
 
-	protected function _messagePostSave()
+	protected function _submitSpamLog()
 	{
+		// we have to use _submitSpamLog here because _messagePostSave is triggered too
+		// late and we can't update the search index from there...
+
 		$tagTexts = $this->_Tinhte_XenTag_tagTexts;
 
 		$this->_Tinhte_XenTag_updateTagsInDatabase();
@@ -88,7 +104,7 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 			}
 		}
 
-		return parent::_messagePostSave();
+		return parent::_submitSpamLog();
 	}
 
 	protected function _setInternal($table, $field, $newValue, $forceSet = false)
@@ -99,6 +115,43 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		}
 
 		return parent::_setInternal($table, $field, $newValue, $forceSet);
+	}
+
+	protected function _filterHashtagsFromMessage($message)
+	{
+		$bbCodeOpen = '[HASHTAG]';
+		$bbCodeClose = '[/HASHTAG]';
+
+		$dbTags = $this->getModelFromCache('Tinhte_XenTag_Model_Tag')->getTagsOfContent('post', $this->get('post_id'));
+		$dbTagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($dbTags);
+		$dbSafeTags = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($dbTagTexts);
+
+		$offset = 0;
+		while (true)
+		{
+			$posOpen = Tinhte_XenTag_Helper::utf8_stripos($message, $bbCodeOpen, $offset);
+			if ($posOpen === false)
+			{
+				break;
+			}
+
+			$posClose = Tinhte_XenTag_Helper::utf8_stripos($message, $bbCodeClose, $posOpen);
+			if ($posClose === false)
+			{
+				break;
+			}
+
+			$offset = $posOpen + 1;
+			$posTagText = utf8_substr($message, $posOpen + utf8_strlen($bbCodeOpen), $posClose - utf8_strlen($bbCodeOpen) - $posOpen);
+			$posSafeTag = Tinhte_XenTag_Helper::getSafeTagTextForSearch($posTagText);
+
+			if (!in_array($posSafeTag, $dbSafeTags))
+			{
+				$message = utf8_substr_replace($message, $posTagText, $posOpen, $posClose + utf8_strlen($bbCodeClose) - $posOpen);
+			}
+		}
+
+		return $message;
 	}
 
 	public static function updateThreadDwFromPostDw(XenForo_DataWriter_Discussion_Thread $threadDw, XenForo_DataWriter_DiscussionMessage_Post $postDw, $tagTexts = null)

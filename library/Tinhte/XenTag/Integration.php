@@ -23,13 +23,16 @@ class Tinhte_XenTag_Integration
 	 * @param unsigned int $contentUserId
 	 * @param array $tagTexts
 	 * @param XenForo_DataWriter $dw
+	 * @param array $options
 	 *
 	 * @return number of tags after update.
 	 *
 	 * @throws XenForo_Exception
 	 */
-	public static function updateTags($contentType, $contentId, $contentUserId, array $tagTexts, XenForo_DataWriter $dw)
+	public static function updateTags($contentType, $contentId, $contentUserId, array $tagTexts, XenForo_DataWriter $dw, array $options = array())
 	{
+		$options = array_merge(array('throwException' => true), $options);
+
 		/* @var $tagModel Tinhte_XenTag_Model_Tag */
 		$tagModel = $dw->getModelFromCache('Tinhte_XenTag_Model_Tag');
 
@@ -51,7 +54,14 @@ class Tinhte_XenTag_Integration
 		$removedTagTexts = array();
 		$updatedTags = $existingTags;
 		$tagModel->lookForNewAndRemovedTags($existingTags, $tagTexts, $newTagTexts, $removedTagTexts);
+
 		$canCreateNew = XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_CREATE_NEW);
+
+		$errorHandler = XenForo_DataWriter::ERROR_SILENT;
+		if (!empty($options['throwException']))
+		{
+			$errorHandler = XenForo_DataWriter::ERROR_EXCEPTION;
+		}
 
 		if (!empty($newTagTexts))
 		{
@@ -71,17 +81,31 @@ class Tinhte_XenTag_Integration
 
 				if (empty($newTag))
 				{
-					if (!$canCreateNew)
+					if ($canCreateNew)
 					{
-						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
-					}
-					/* @var $dwTag Tinhte_XenTag_DataWriter_Tag */
-					$dwTag = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
-					$dwTag->set('tag_text', $newTagText);
-					$dwTag->set('created_user_id', $contentUserId);
-					$dwTag->save();
+						/* @var $dwTag Tinhte_XenTag_DataWriter_Tag */
+						$dwTag = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag', $errorHandler);
+						$dwTag->set('tag_text', $newTagText);
+						$dwTag->set('created_user_id', $contentUserId);
 
-					$newTag = $dwTag->getMergedData();
+						if ($dwTag->save())
+						{
+							$newTag = $dwTag->getMergedData();
+						}
+					}
+					else
+					{
+						if (!empty($options['throwException']))
+						{
+							throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
+						}
+					}
+				}
+
+				if (empty($newTag))
+				{
+					// no tag to use, abort
+					continue;
 				}
 
 				if (!empty($newTag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
@@ -91,16 +115,17 @@ class Tinhte_XenTag_Integration
 				}
 
 				/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
-				$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
+				$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent', $errorHandler);
 				$dwTagged->set('tag_id', $newTag['tag_id']);
 				$dwTagged->set('content_type', $contentType);
 				$dwTagged->set('content_id', $contentId);
 				$dwTagged->set('tagged_user_id', $contentUserId);
-				$dwTagged->save();
 
-				$updatedTags[] = $newTag;
-
-				$changed = true;
+				if ($dwTagged->save())
+				{
+					$updatedTags[] = $newTag;
+					$changed = true;
+				}
 			}
 		}
 
@@ -119,25 +144,27 @@ class Tinhte_XenTag_Integration
 					}
 
 					/* @var $dwTag Tinhte_XenTag_DataWriter_TaggedContent */
-					$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent');
+					$dwTagged = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_TaggedContent', $errorHandler);
 					$data = array(
 						'tag_id' => $removedTag['tag_id'],
 						'content_type' => $contentType,
 						'content_id' => $contentId,
 					);
 					$dwTagged->setExistingData($data, true);
-					$dwTagged->delete();
 
-					// remove the removed tag from updated tags array
-					foreach (array_keys($updatedTags) as $key)
+					if ($dwTagged->delete())
 					{
-						if ($updatedTags[$key]['tag_id'] == $removedTag['tag_id'])
+						// remove the removed tag from updated tags array
+						foreach (array_keys($updatedTags) as $key)
 						{
-							unset($updatedTags[$key]);
+							if ($updatedTags[$key]['tag_id'] == $removedTag['tag_id'])
+							{
+								unset($updatedTags[$key]);
+							}
 						}
-					}
 
-					$changed = true;
+						$changed = true;
+					}
 				}
 			}
 		}
