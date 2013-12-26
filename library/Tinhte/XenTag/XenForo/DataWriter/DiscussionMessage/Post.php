@@ -34,18 +34,19 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 				$this->_db->update('xf_post', array('message' => $message), array('post_id = ?' => $this->get('post_id')));
 			}
 
-			$this->_Tinhte_XenTag_tagTexts = false;
-
 			$forum = $this->_Tinhte_XenTag_getForumInfo();
 			$maximumTags = intval($this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumHashtags($forum));
 
 			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
 			{
-				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_tags_x_of_y', array(
+				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_hashtags_x_of_y_list_z', array(
 					'maximum' => $maximumTags,
-					'count' => $tagsCount
+					'count' => $tagsCount,
+					'tagTexts' => '#' . implode(', #', $this->_Tinhte_XenTag_tagTexts),
 				)), true);
 			}
+
+			$this->_Tinhte_XenTag_tagTexts = false;
 		}
 	}
 

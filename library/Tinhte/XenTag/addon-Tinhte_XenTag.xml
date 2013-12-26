@@ -436,6 +436,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_tag_text_explain" version_id="68" version_string="1.3.4.1"><![CDATA[The tag text that will be used and referenced throughout the system. It's not recommended to change this because it may break URLs or render strange search behaviors among other things.]]></phrase>
     <phrase title="tinhte_xentag_these_are_x_most_used_tags" version_id="1" version_string="0.9"><![CDATA[These are the {count} most used tags.]]></phrase>
     <phrase title="tinhte_xentag_thread_requires_tag" version_id="93" version_string="1.8.3"><![CDATA[The thread must be tagged with at least one tag.]]></phrase>
+    <phrase title="tinhte_xentag_too_many_hashtags_x_of_y_list_z" version_id="103" version_string="1.9-dev"><![CDATA[{count} hashtags have been used: {tagTexts}. Only {maximum} allowed.]]></phrase>
     <phrase title="tinhte_xentag_too_many_tags_x_of_y" version_id="99" version_string="1.9-dev"><![CDATA[{count} tags have been used; only {maximum} tags allowed.]]></phrase>
     <phrase title="tinhte_xentag_viewing_tag" version_id="55" version_string="1.2.16"><![CDATA[Viewing tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tags" version_id="55" version_string="1.2.16"><![CDATA[Viewing tags]]></phrase>
