@@ -81,8 +81,8 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 
 	protected function _updateDeletionLog()
 	{
-		// we have to use _updateDeletionLog here because _messagePostSave is triggered too
-		// late and we can't update the search index from there...
+		// we have to use _updateDeletionLog here because _messagePostSave is triggered
+		// too late and we can't update the search index from there...
 
 		$tagTexts = $this->_Tinhte_XenTag_tagTexts;
 
@@ -106,7 +106,13 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 	{
 		if ($table === 'xf_post' AND $field === 'message')
 		{
-			$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($newValue, true);
+			$forum = $this->_Tinhte_XenTag_getForumInfo();
+			$maximumTags = intval($this->getModelFromCache('XenForo_Model_Forum')->Tinhte_XenTag_getMaximumHashtags($forum));
+
+			if ($maximumTags === -1 OR $maximumTags > 0)
+			{
+				$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($newValue, true);
+			}
 		}
 
 		return parent::_setInternal($table, $field, $newValue, $forceSet);
