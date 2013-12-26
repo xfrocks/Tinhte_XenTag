@@ -67,6 +67,17 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 					break;
 				}
 
+				if ($pos > 0)
+				{
+					$beforeTagText = utf8_substr($string, $pos - 1, 1);
+					if (!preg_match(Tinhte_XenTag_Integration::REGEX_VALID_CHARACTER_AROUND, $beforeTagText))
+					{
+						// the before character of tag text is not a valid character, dismiss the found
+						// tag text
+						break;
+					}
+				}
+
 				$stringForPregMatch = utf8_substr($string, $pos + 1);
 				if (preg_match('/[^a-zA-Z0-9]/', $stringForPregMatch, $matches, PREG_OFFSET_CAPTURE))
 				{
@@ -80,13 +91,14 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 				$nonTagTextPos += $pos + 1;
 
 				$tagText = utf8_trim(utf8_substr($string, $pos + 1, $nonTagTextPos - 1 - $pos));
-				
+
 				$afterTagText = utf8_substr($string, $nonTagTextPos, 1);
 				if (!empty($afterTagText))
 				{
 					if (!preg_match(Tinhte_XenTag_Integration::REGEX_VALID_CHARACTER_AROUND, $afterTagText))
 					{
-						// the after character of tag text is not a valid character, dismiss the found tag text
+						// the after character of tag text is not a valid character, dismiss the found
+						// tag text
 						$tagText = '';
 					}
 				}
