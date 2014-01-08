@@ -52,6 +52,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 	protected $_dataPatches = array(
 		'xf_thread' => array(
 			'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized'),
+			'tinhte_xentag_is_tagged' => array('name' => 'tinhte_xentag_is_tagged', 'type' => 'uint', 'default' => 0),
 		),
 		'xf_tinhte_xentag_tag' => array(
 			'latest_tagged_contents' => array('name' => 'latest_tagged_contents', 'type' => 'serialized'),

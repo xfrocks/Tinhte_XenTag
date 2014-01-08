@@ -24,6 +24,7 @@ class Tinhte_XenTag_Constants
 	
 
 	const FIELD_THREAD_TAGS = 'tinhte_xentag_tags';
+	const FIELD_THREAD_IS_TAGGED = 'tinhte_xentag_is_tagged';
 	const FIELD_FORUM_OPTIONS = 'tinhte_xentag_options';
 	const FIELD_PAGE_TAGS = 'tinhte_xentag_tags';
 	const FIELD_FORUM_TAGS = 'tinhte_xentag_tags';

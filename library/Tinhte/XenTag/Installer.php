@@ -39,6 +39,14 @@ class Tinhte_XenTag_Installer
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_tags`',
 		),
 		array(
+			'table' => 'xf_thread',
+			'field' => 'tinhte_xentag_is_tagged',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_thread\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_thread` LIKE \'tinhte_xentag_is_tagged\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_thread` ADD COLUMN `tinhte_xentag_is_tagged` INT(10) UNSIGNED DEFAULT \'0\'',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_is_tagged`',
+		),
+		array(
 			'table' => 'xf_tinhte_xentag_tag',
 			'field' => 'latest_tagged_contents',
 			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
@@ -151,7 +159,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-
+		
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
@@ -194,6 +202,7 @@ class Tinhte_XenTag_Installer
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_resource\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_resource\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Resource\')');
+		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 
 		$effectiveVersionId = 0;
 		if (!empty($existingAddOn))
@@ -263,6 +272,14 @@ class Tinhte_XenTag_Installer
 			");
 		}
 
+		if ($effectiveVersionId < 91)
+		{
+			if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))
+			{
+				$db->query("ALTER TABLE `xf_tinhte_xentag_tag` ADD INDEX `target_type_target_id` (`target_type`, `target_id`)");
+			}
+		}
+
 		if ($effectiveVersionId < 95)
 		{
 			$db->query("
@@ -301,12 +318,15 @@ class Tinhte_XenTag_Installer
 			");
 		}
 
-		if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))
+		if ($effectiveVersionId < 105)
 		{
-			$db->query("ALTER TABLE `xf_tinhte_xentag_tag` ADD INDEX `target_type_target_id` (`target_type`, `target_id`)");
+			$db->query("
+				UPDATE `xf_thread`
+				SET `tinhte_xentag_is_tagged` = 1
+				WHERE `tinhte_xentag_tags` IS NOT NULL
+					AND `tinhte_xentag_tags` <> 'a:0:{}'
+			");
 		}
-
-		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 	}
 
 	private static function uninstallCustomized()

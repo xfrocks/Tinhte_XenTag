@@ -4,6 +4,7 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
 {
 
 	const CONDITIONS_THREAD_ID = 'Tinhte_XenTag_thread_id';
+	const CONDITIONS_IS_TAGGED = 'Tinhte_XenTag_is_tagged';
 
 	public function prepareThreadConditions(array $conditions, array &$fetchOptions)
 	{
@@ -22,6 +23,11 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
 			{
 				$sqlConditions[] = "thread.thread_id = " . $this->_getDb()->quote($conditions[self::CONDITIONS_THREAD_ID]);
 			}
+		}
+
+		if (isset($conditions[self::CONDITIONS_IS_TAGGED]))
+		{
+			$sqlConditions[] = "thread.tinhte_xentag_is_tagged = " . ($conditions[self::CONDITIONS_IS_TAGGED] ? 1 : 0);
 		}
 
 		if (count($sqlConditions) > 1)

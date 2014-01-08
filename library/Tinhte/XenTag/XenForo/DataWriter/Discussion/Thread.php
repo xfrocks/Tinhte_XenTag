@@ -37,11 +37,15 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 		// be thrown. It's done post save but because it's still in the same db
 		// transaction, the incorrect date will not be saved.
 		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $tags, '', array('setAfterPreSave' => true));
+		$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_IS_TAGGED, empty($tags) ? 0 : 1, '', array('setAfterPreSave' => true));
 		$this->_tagsNeedUpdated = true;
 
 		if ($this->_preSaveCalled)
 		{
-			$this->_db->update('xf_thread', array(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS => serialize($tags)), array('thread_id = ?' => $this->get('thread_id')));
+			$this->_db->update('xf_thread', array(
+				Tinhte_XenTag_Constants::FIELD_THREAD_TAGS => serialize($tags),
+				Tinhte_XenTag_Constants::FIELD_THREAD_IS_TAGGED => $this->get(Tinhte_XenTag_Constants::FIELD_THREAD_IS_TAGGED),
+			), array('thread_id = ?' => $this->get('thread_id')));
 		}
 	}
 
@@ -68,16 +72,11 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 			if (is_array($updated))
 			{
 				$tagsCount = count($updated);
-
-				$this->set(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS, $updated, '', array('setAfterPreSave' => true));
-				$this->_db->update('xf_thread', array(Tinhte_XenTag_Constants::FIELD_THREAD_TAGS => serialize($updated)), array('thread_id = ?' => $this->get('thread_id')));
 			}
 			else
 			{
 				$tagsCount = intval($updated);
 			}
-
-			$this->_tagsNeedUpdated = false;
 
 			$forum = $this->Tinhte_XenTag_getForumData();
 			$options = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_OPTIONS]);
@@ -100,6 +99,13 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 					'count' => $tagsCount
 				)), true);
 			}
+
+			if (is_array($updated))
+			{
+				$this->Tinhte_XenTag_setTags($updated);
+			}
+
+			$this->_tagsNeedUpdated = false;
 		}
 	}
 
@@ -110,6 +116,11 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 		$fields['xf_thread'][Tinhte_XenTag_Constants::FIELD_THREAD_TAGS] = array(
 			'type' => XenForo_DataWriter::TYPE_SERIALIZED,
 			'default' => 'a:0:{}'
+		);
+
+		$fields['xf_thread'][Tinhte_XenTag_Constants::FIELD_THREAD_IS_TAGGED] = array(
+			'type' => XenForo_DataWriter::TYPE_UINT,
+			'default' => '0',
 		);
 
 		return $fields;
