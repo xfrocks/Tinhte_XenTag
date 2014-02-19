@@ -104,6 +104,10 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 					'type' => self::TYPE_UINT,
 					'default' => 0,
 				),
+
+				// since 1.9
+				'tag_title' => array('type' => self::TYPE_STRING),
+				'tag_options' => array('type' => self::TYPE_SERIALIZED),
 			));
 	}
 

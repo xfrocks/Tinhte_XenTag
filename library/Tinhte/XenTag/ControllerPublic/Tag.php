@@ -311,7 +311,10 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 		if ($this->isConfirmedPost())
 		{
-			$dwInput = $this->_input->filter(array('tag_description' => XenForo_Input::STRING, ));
+			$dwInput = $this->_input->filter(array(
+				'tag_title' => XenForo_Input::STRING,
+				'tag_description' => XenForo_Input::STRING,
+			));
 
 			$dw = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
 			$dw->setExistingData($tag['tag_id']);

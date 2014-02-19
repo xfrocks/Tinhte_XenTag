@@ -99,6 +99,7 @@ class Tinhte_XenTag_ControllerAdmin_Tag extends XenForo_ControllerAdmin_Abstract
 		{
 			$dwInput = $this->_input->filter(array(
 				'tag_text' => XenForo_Input::STRING,
+				'tag_title' => XenForo_Input::STRING,
 				'tag_description' => XenForo_Input::STRING,
 				'is_staff' => XenForo_Input::UINT,
 			));

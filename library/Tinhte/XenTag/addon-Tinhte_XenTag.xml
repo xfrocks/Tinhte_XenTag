@@ -79,6 +79,8 @@
 	<xen:textboxunit label="{xen:phrase tinhte_xentag_tag_text}:" name="tag_text" value="{$tag.tag_text}">
 		<xen:explain>{xen:phrase tinhte_xentag_tag_text_explain}</xen:explain>
 	</xen:textboxunit>
+
+	<xen:textboxunit label="{xen:phrase tinhte_xentag_tag_title}:" name="tag_title" value="{$tag.tag_title}" />
 	
 	<xen:textboxunit label="{xen:phrase tinhte_xentag_tag_description}:" name="tag_description" value="{$tag.tag_description}"
 		rows="5" inputclass="Elastic">
@@ -131,7 +133,7 @@
     <template title="tinhte_xentag_tag_list_item"><![CDATA[<xen:foreach loop="$tags" value="$tag">
 	<xen:listitem
 		id="{$tag.tag_id}"
-		label="{$tag.tag_text}{xen:if '{$tag.is_staff}', '*'}"
+		label="{xen:if '{$tag.tag_title}', '{$tag.tag_title} ({$tag.tag_text})', $tag.tag_text}{xen:if '{$tag.is_staff}', '*'}"
 		snippet="{xen:if '{$tag.tag_description}', '{$tag.tag_description} | '}{xen:if '{$tag._tagLink}', '{$tag._tagLink} | '}{xen:phrase tinhte_xentag_content_count}: {xen:number $tag.content_count}"
 		href="{xen:adminlink 'xentag-tags/edit', $tag}"
 		delete="{xen:adminlink 'xentag-tags/delete', $tag}">
@@ -830,7 +832,7 @@ a.Tinhte_XenTag_TagLink:focus {
     	</div>
     </xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tag_edit" version_id="89" version_string="1.7.2"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_edit}: {$tag.tag_text}</xen:title>
+    <template title="tinhte_xentag_tag_edit" version_id="105" version_string="1.9-dev"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_edit}: {$tag.tag_text}</xen:title>
 
 <xen:navigation>
 	<xen:breadcrumb href="{xen:link tags}">{xen:phrase tinhte_xentag_tags}</xen:breadcrumb>
@@ -840,9 +842,16 @@ a.Tinhte_XenTag_TagLink:focus {
 <form method="post" class="xenForm formOverlay" action="{xen:link 'tags/edit', $tag}">
 
 	<dl class="ctrlUnit">
+		<dt><label for="ctrl_tag_title">{xen:phrase tinhte_xentag_tag_title}:</label></dt>
+		<dd>
+			<input type="text" name="tag_title" id="ctrl_tag_title" class="textCtrl" value="{$tag.tag_title}" />
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit">
 		<dt><label for="ctrl_tag_description">{xen:phrase tinhte_xentag_tag_description}:</label></dt>
 		<dd>
-			<textarea name="tag_description" id="tag_description" rows="5" class="textCtrl Elastic">{$tag.tag_description}</textarea>
+			<textarea name="tag_description" id="ctrl_tag_description" rows="5" class="textCtrl Elastic">{$tag.tag_description}</textarea>
 		</dd>
 	</dl>
 
@@ -855,7 +864,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_list" version_id="27" version_string="1.0.1"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_list" version_id="105" version_string="1.9-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
 <xen:require js="js/Tinhte/XenTag/jquery.tinysort.js" />
 <xen:require js="js/Tinhte/XenTag/frontend.js" />
 
@@ -873,7 +882,10 @@ a.Tinhte_XenTag_TagLink:focus {
 	<ul class="Tinhte_XenTag_TagCloud sectionMain" data-toggler="{xen:phrase tinhte_xentag_sort}">
 		<xen:foreach loop="$tags" value="$tag">
 			<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{$tag.cloudLevel}">
-				<a href="{xen:link tags, $tag}">{$tag.tag_text}</a>
+				<a href="{xen:link tags, $tag}"
+					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
+					{$tag.tag_text}
+				</a>
 			</li>
 		</xen:foreach>
 	</ul>
@@ -906,11 +918,11 @@ a.Tinhte_XenTag_TagLink:focus {
 </form>
 
 <xen:include template="tinhte_xentag_copyright" />]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="69" version_string="1.4"><![CDATA[<xen:title>{$tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
-<xen:h1>{$tag.tag_text}</xen:h1>
+    <template title="tinhte_xentag_tag_view" version_id="105" version_string="1.9-dev"><![CDATA[<xen:title>{xen:if '{$tag.tag_title}', '{$tag.tag_title} - {$tag.tag_text}', $tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
+<xen:h1>{xen:if '{$tag.tag_title}', $tag.tag_title, $tag.tag_text}</xen:h1>
 <xen:description>
 	{$tag.tag_description}
-	{xen:phrase tinhte_xentag_all_contents_tagged_x, 'board_title={$xenOptions.boardTitle}', 'tag_text={$tag.tag_text}'}
+	{xen:if '!{$tag.tag_description}', {xen:phrase tinhte_xentag_all_contents_tagged_x, 'board_title={$xenOptions.boardTitle}', 'tag_text={$tag.tag_text}'}}
 	{xen:if '{$page} > 1', '{xen:phrase tinhte_xentag_page_x, 'page={$page}'}'}
 </xen:description>
 

@@ -8,9 +8,17 @@ class Tinhte_XenTag_Installer
 			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag` (
 				`tag_id` INT(10) UNSIGNED AUTO_INCREMENT
 				,`tag_text` VARCHAR(100) NOT NULL
+				,`tag_title` TEXT
+				,`tag_description` TEXT
 				,`created_date` INT(10) UNSIGNED NOT NULL
 				,`created_user_id` INT(10) UNSIGNED NOT NULL
 				,`content_count` INT(10) UNSIGNED DEFAULT \'0\'
+				,`target_type` VARCHAR(25) NOT NULL DEFAULT \'\'
+				,`target_id` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+				,`target_data` MEDIUMBLOB
+				,`is_staff` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+				,`latest_tagged_contents` MEDIUMBLOB
+				,`tag_options` MEDIUMBLOB
 				, PRIMARY KEY (`tag_id`)
 				, INDEX `tag_text` (`tag_text`)
 			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
@@ -93,6 +101,22 @@ class Tinhte_XenTag_Installer
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'is_staff\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `is_staff` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `is_staff`',
+		),
+		array(
+			'table' => 'xf_tinhte_xentag_tag',
+			'field' => 'tag_title',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_title\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_title` TEXT',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_title`',
+		),
+		array(
+			'table' => 'xf_tinhte_xentag_tag',
+			'field' => 'tag_options',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_options\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_options` MEDIUMBLOB',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_options`',
 		),
 		array(
 			'table' => 'xf_forum',
