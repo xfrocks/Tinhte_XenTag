@@ -120,7 +120,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		}
 
 		$page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
-		$perPage = XenForo_Application::get('options')->discussionsPerPage;
+		$perPage = Tinhte_XenTag_Option::get('perPage');
 
 		if (Tinhte_XenTag_Option::get('searchForceUseCache') == true)
 		{
