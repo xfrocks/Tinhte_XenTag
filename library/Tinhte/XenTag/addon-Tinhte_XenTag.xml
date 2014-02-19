@@ -224,6 +224,13 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1000"/>
     </option>
+    <option option_id="Tinhte_XenTag_cloudMax" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>100</default_value>
+      <edit_format_params>min=1
+step=25</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5010"/>
+    </option>
     <option option_id="Tinhte_XenTag_displayPosition" edit_format="radio" data_type="string" can_backup="1">
       <default_value>thread_qr_below</default_value>
       <edit_format_params>post_message_below = {xen:phrase tinhte_xentag_display_position_post_message_below}
@@ -251,6 +258,13 @@ ugly = {xen:phrase tinhte_xentag_link_format_ugly}</edit_format_params>
       <edit_format_params></edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="110"/>
+    </option>
+    <option option_id="Tinhte_XenTag_perPage" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>20</default_value>
+      <edit_format_params>min=1
+step=10</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5000"/>
     </option>
     <option option_id="Tinhte_XenTag_prioritizeForums" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>100</default_value>
@@ -335,6 +349,8 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="77" version_string="1.6"><![CDATA[Enable this option to auto tag each tag once in a piece of content.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource" version_id="77" version_string="1.6"><![CDATA[Resource Auto Tag]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource_explain" version_id="77" version_string="1.6"><![CDATA[Select the mode for auto tagging feature in resource.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_cloudMax" version_id="105" version_string="1.9-dev"><![CDATA[Maximum Tags in Tag-Cloud]]></phrase>
+    <phrase title="option_Tinhte_XenTag_cloudMax_explain" version_id="105" version_string="1.9-dev"><![CDATA[]]></phrase>
     <phrase title="option_Tinhte_XenTag_displayPosition" version_id="77" version_string="1.6"><![CDATA[Thread Display Position]]></phrase>
     <phrase title="option_Tinhte_XenTag_displayPositionResource" version_id="77" version_string="1.6"><![CDATA[Resource Display Position]]></phrase>
     <phrase title="option_Tinhte_XenTag_displayPositionResource_explain" version_id="77" version_string="1.6"><![CDATA[Display position in resource view. The tag will be displayed in the specified place only.]]></phrase>
@@ -343,6 +359,8 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_linkFormat_explain" version_id="70" version_string="1.5"><![CDATA[If your tags use special characters and the links don't work properly, switch to the second format.]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkTargetBlank" version_id="77" version_string="1.6"><![CDATA[Open Tag Link in New Window]]></phrase>
     <phrase title="option_Tinhte_XenTag_linkTargetBlank_explain" version_id="77" version_string="1.6"><![CDATA[Enable this option to open the tag page in a new window (or browser tab, if available).]]></phrase>
+    <phrase title="option_Tinhte_XenTag_perPage" version_id="105" version_string="1.9-dev"><![CDATA[Tagged Contents Per Page]]></phrase>
+    <phrase title="option_Tinhte_XenTag_perPage_explain" version_id="105" version_string="1.9-dev"><![CDATA[]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums" version_id="70" version_string="1.5"><![CDATA[Prioritize Forums]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize forums in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizePages" version_id="70" version_string="1.5"><![CDATA[Prioritize Pages]]></phrase>

@@ -38,10 +38,6 @@ class Tinhte_XenTag_Option
 
 		switch ($key)
 		{
-			case 'perPage':
-				return 20;
-			case 'cloudMax':
-				return 100;
 			case 'cloudLevelCount':
 				return 5;
 			case 'majorSection':
@@ -64,8 +60,6 @@ class Tinhte_XenTag_Option
 					$mode = self::AUTO_TAG_MODE_THREAD_TAGS_FIRST_POST_ONLY;
 				}
 				return $mode;
-			// case 'autoTagOnceOnly': return true;
-			// case 'autoTagGlobalMax': return 1000;
 
 			case 'latestTaggedContentsLimit':
 				return 10;
