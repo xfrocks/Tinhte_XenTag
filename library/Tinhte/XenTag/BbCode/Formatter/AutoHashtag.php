@@ -152,6 +152,21 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 		{
 			return parent::_getTagRule($tagName);
 		}
+		else
+		{
+			$tagRule = parent::_getTagRule($tagName);
+
+			if (!empty($tagRule['plainChildren']) OR !empty($tagRule['stopSmilies']) OR !empty($tagRule['stopLineBreakConversion']))
+			{
+				return array(
+					'plainChildren' => true,
+					'callback' => array(
+						$this,
+						'renderTagUnparsed'
+					)
+				);
+			}
+		}
 
 		return false;
 	}
