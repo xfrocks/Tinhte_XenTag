@@ -176,6 +176,11 @@
 <xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
 </xen:spinboxunit>]]></template>
+    <template title="tinhte_xentag_widget_trending_thread_tags_options"><![CDATA[<xen:selectunit label="{xen:phrase tinhte_xentag_widget_trending_thread_tags_forums}:" name="{$namePrefix}forums" value="" size="5" multiple="true" inputclass="textCtrl">
+	<xen:options source="$forums" />
+</xen:selectunit>
+
+<xen:include template="tinhte_xentag_widget_trending_options" />]]></template>
   </admin_templates>
   <admin_template_modifications/>
   <code_events/>
@@ -498,6 +503,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_trending" version_id="107" version_string="1.9-dev"><![CDATA[Trending]]></phrase>
     <phrase title="tinhte_xentag_viewing_tag" version_id="55" version_string="1.2.16"><![CDATA[Viewing tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tags" version_id="55" version_string="1.2.16"><![CDATA[Viewing tags]]></phrase>
+    <phrase title="tinhte_xentag_widget_trending_thread_tags_forums" version_id="107" version_string="1.9-dev"><![CDATA[Forums]]></phrase>
     <phrase title="tinhte_xentag_you_can_not_create_new_tag" version_id="5" version_string="0.9.4"><![CDATA[Sorry, you do not have the permission to create new tag. Please use existing tags only.]]></phrase>
   </phrases>
   <route_prefixes>
@@ -946,18 +952,20 @@ a.Tinhte_XenTag_TagLink:focus {
 	</ul>
 </fieldset>
 
-<ul class="Tinhte_XenTag_Trending sectionMain listInline">
-	<li>{xen:phrase tinhte_xentag_trending}:</li>
+<xen:if is="{$trending}">
+	<ul class="Tinhte_XenTag_Trending sectionMain listInline">
+		<li>{xen:phrase tinhte_xentag_trending}:</li>
 
-	<xen:foreach loop="$trending" value="$tag">
-		<li>
-			<a href="{xen:link tags, $tag}"
-				{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
-				{$tag.tag_text}
-			</a>
-		</li>
-	</xen:foreach>
-</ul>
+		<xen:foreach loop="$trending" value="$tag">
+			<li>
+				<a href="{xen:link tags, $tag}"
+					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
+					{$tag.tag_text}
+				</a>
+			</li>
+		</xen:foreach>
+	</ul>
+</xen:if>
 
 <form action="{xen:link 'tags/search'}" method="post" class="xenForm">
 	<h3 class="textHeading">{xen:phrase tinhte_xentag_search_by_tag}</h3>
@@ -1223,16 +1231,18 @@ a.Tinhte_XenTag_TagLink:focus {
     </div>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
-    <template title="tinhte_xentag_widget_trending" version_id="107" version_string="1.9-dev"><![CDATA[<ul class="listInline">
-	<xen:foreach loop="$tags" value="$tag">
-		<li>
-			<a href="{xen:link tags, $tag}"
-				{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
-				{$tag.tag_text}
-			</a>
-		</li>
-	</xen:foreach>
-</ul>]]></template>
+    <template title="tinhte_xentag_widget_trending" version_id="107" version_string="1.9-dev"><![CDATA[<xen:if is="{$tags}">
+	<ul class="listInline">
+		<xen:foreach loop="$tags" value="$tag">
+			<li>
+				<a href="{xen:link tags, $tag}"
+					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
+					{$tag.tag_text}
+				</a>
+			</li>
+		</xen:foreach>
+	</ul>
+</xen:if>]]></template>
   </templates>
   <public_template_modifications/>
   <bb_code_media_sites/>

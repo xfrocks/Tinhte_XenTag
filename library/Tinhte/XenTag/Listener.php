@@ -366,6 +366,7 @@ class Tinhte_XenTag_Listener
 		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_RelatedThreads';
 		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_TaggedThreads';
 		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_Trending';
+		$renderers[] = 'Tinhte_XenTag_WidgetRenderer_TrendingThreadTags';
 	}
 
 }
