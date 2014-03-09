@@ -53,12 +53,16 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 
 	public function getTrendingFromCache()
 	{
-		$tags = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
+		$cache = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
 
-		if (empty($tags['time']) OR XenForo_Application::$time - $tags['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400)
+		if (empty($cache['time']) OR XenForo_Application::$time - $cache['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400)
 		{
 			// cache not found or expired
 			$tags = $this->rebuildTrendingCache();
+		}
+		else
+		{
+			$tags = $cache['tags'];
 		}
 
 		return $tags;

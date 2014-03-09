@@ -23,10 +23,12 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 		$tags = $tagModel->getAllTag($conditions, $fetchOptions);
 		$tagModel->calculateCloudLevel($tags);
+		
+		$trending = $tagModel->getTrendingFromCache();
 
 		$viewParams = array(
 			'tags' => $tags,
-			'trending' => $tagModel->getTrendingFromCache(),
+			'trending' => $trending,
 		);
 
 		return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_List', 'tinhte_xentag_tag_list', $viewParams);
