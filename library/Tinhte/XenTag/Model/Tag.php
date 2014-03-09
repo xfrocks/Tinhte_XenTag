@@ -5,6 +5,65 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 
 	const FETCH_TAGGED = 1;
 
+	public function getTrendingTags($cutoff, $limit)
+	{
+		$taggedCount = $this->_getDb()->fetchPairs('
+			SELECT tag_id, count(*) AS tagged_count
+			FROM `xf_tinhte_xentag_tagged_content`
+			WHERE tagged_date > ?
+			GROUP BY tag_id
+			ORDER BY tagged_count DESC
+			LIMIT ?;
+		', array(
+			$cutoff,
+			$limit
+		));
+
+		$tags = array();
+		if (!empty($taggedCount))
+		{
+			$tagsDb = $this->getAllTag(array('tag_id' => array_keys($taggedCount)));
+			foreach ($taggedCount as $tagId => $count)
+			{
+				if (isset($tagsDb[$tagId]))
+				{
+					$tags[$tagId] = $tagsDb[$tagId];
+					$tags[$tagId]['tagged_count'] = $count;
+				}
+			}
+		}
+
+		return $tags;
+	}
+
+	public function rebuildTrendingCache()
+	{
+		$cutoff = XenForo_Application::$time - Tinhte_XenTag_Option::get('trendingDays') * 86400;
+		$limit = Tinhte_XenTag_Option::get('trendingMax');
+
+		$tags = $this->getTrendingTags($cutoff, $limit);
+
+		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING, array(
+			'tags' => $tags,
+			'time' => XenForo_Application::$time,
+		));
+
+		return $tags;
+	}
+
+	public function getTrendingFromCache()
+	{
+		$tags = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
+
+		if (empty($tags['time']) OR XenForo_Application::$time - $tags['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400)
+		{
+			// cache not found or expired
+			$tags = $this->rebuildTrendingCache();
+		}
+
+		return $tags;
+	}
+
 	public function packTags($tags)
 	{
 		$packedTags = array();
@@ -77,7 +136,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 		$tags = $this->getAllTag(array(), $fetchOptions);
 		$packed = $this->packTags($tags);
 
-		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY, $packed);
+		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS, $packed);
 
 		return $packed;
 	}
@@ -132,7 +191,7 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 
 	public function getTagsOrTextsFromCache()
 	{
-		$tagsOrTexts = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY);
+		$tagsOrTexts = $this->getModelFromCache('XenForo_Model_DataRegistry')->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
 
 		if ($tagsOrTexts === null)
 		{

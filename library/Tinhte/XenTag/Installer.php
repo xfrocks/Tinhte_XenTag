@@ -183,7 +183,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-		
+
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
@@ -378,6 +378,10 @@ class Tinhte_XenTag_Installer
 		)) . ')');
 
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
+
+		$dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
+		$dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
+		$dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
 	}
 
 }

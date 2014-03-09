@@ -319,6 +319,27 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="50"/>
     </option>
+    <option option_id="Tinhte_XenTag_trendingDays" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>14</default_value>
+      <edit_format_params>min=1
+step=7</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5021"/>
+    </option>
+    <option option_id="Tinhte_XenTag_trendingMax" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>10</default_value>
+      <edit_format_params>min=1
+step=5</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5020"/>
+    </option>
+    <option option_id="Tinhte_XenTag_trendingTtl" edit_format="spinbox" data_type="positive_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>min=1
+step=7</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5022"/>
+    </option>
   </optiongroups>
   <permissions>
     <permission_groups/>
@@ -377,6 +398,12 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="option_Tinhte_XenTag_tagMaxLength_explain" version_id="6" version_string="0.9.5"><![CDATA[You can set the maximum tag length here. There is a hard limitation of 100, you can't exceed it (the database can only hold a maximum of 100 characters).]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagThreadWithHashtags" version_id="96" version_string="1.9-dev"><![CDATA[Link #hashtags To Thread]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagThreadWithHashtags_explain" version_id="96" version_string="1.9-dev"><![CDATA[Select "Yes" to set all #hashtags of the first post as tags for the thread.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDays" version_id="107" version_string="1.9-dev"><![CDATA[Days to calculate Trending]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDays_explain" version_id="107" version_string="1.9-dev"><![CDATA[Only content tagged within specified number of days will be taken into account when Trending is calculated.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingMax" version_id="107" version_string="1.9-dev"><![CDATA[Maximum Tags in Trending]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingMax_explain" version_id="107" version_string="1.9-dev"><![CDATA[]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingTtl" version_id="107" version_string="1.9-dev"><![CDATA[Trending TTL]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingTtl_explain" version_id="107" version_string="1.9-dev"><![CDATA[Enter how often (in days) the trending tags should be calculated.]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumHts" version_id="96" version_string="1.9-dev"><![CDATA[[XenTag] Max #hashtags per post]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumTags" version_id="93" version_string="1.8.3"><![CDATA[[XenTag] Max tags per thread]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tag" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by self]]></phrase>
@@ -463,6 +490,7 @@ md5dashes = {xen:phrase tinhte_xentag_search_index_md5_dashes}</edit_format_para
     <phrase title="tinhte_xentag_thread_requires_tag" version_id="93" version_string="1.8.3"><![CDATA[The thread must be tagged with at least one tag.]]></phrase>
     <phrase title="tinhte_xentag_too_many_hashtags_x_of_y_list_z" version_id="103" version_string="1.9-dev"><![CDATA[{count} hashtags have been used: {tagTexts}. Only {maximum} allowed.]]></phrase>
     <phrase title="tinhte_xentag_too_many_tags_x_of_y" version_id="99" version_string="1.9-dev"><![CDATA[{count} tags have been used; only {maximum} tags allowed.]]></phrase>
+    <phrase title="tinhte_xentag_trending" version_id="107" version_string="1.9-dev"><![CDATA[Trending]]></phrase>
     <phrase title="tinhte_xentag_viewing_tag" version_id="55" version_string="1.2.16"><![CDATA[Viewing tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tags" version_id="55" version_string="1.2.16"><![CDATA[Viewing tags]]></phrase>
     <phrase title="tinhte_xentag_you_can_not_create_new_tag" version_id="5" version_string="0.9.4"><![CDATA[Sorry, you do not have the permission to create new tag. Please use existing tags only.]]></phrase>
@@ -887,8 +915,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_list" version_id="105" version_string="1.9-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
-<xen:require js="js/Tinhte/XenTag/jquery.tinysort.js" />
+    <template title="tinhte_xentag_tag_list" version_id="107" version_string="1.9-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
 <xen:require js="js/Tinhte/XenTag/frontend.js" />
 
 <xen:title>{xen:phrase tinhte_xentag_tags}</xen:title>
@@ -913,6 +940,19 @@ a.Tinhte_XenTag_TagLink:focus {
 		</xen:foreach>
 	</ul>
 </fieldset>
+
+<ul class="Tinhte_XenTag_Trending sectionMain listInline">
+	<li>{xen:phrase tinhte_xentag_trending}:</li>
+
+	<xen:foreach loop="$trending" value="$tag">
+		<li>
+			<a href="{xen:link tags, $tag}"
+				{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
+				{$tag.tag_text}
+			</a>
+		</li>
+	</xen:foreach>
+</ul>
 
 <form action="{xen:link 'tags/search'}" method="post" class="xenForm">
 	<h3 class="textHeading">{xen:phrase tinhte_xentag_search_by_tag}</h3>

@@ -47,7 +47,8 @@ class Tinhte_XenTag_Constants
 	const PERM_USER_IS_STAFF = 'Tinhte_XenTag_isStaff';
 	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
 
-	const DATA_REGISTRY_KEY = 'Tinhte_XenTag_tags';
+	const DATA_REGISTRY_KEY_TAGS = 'Tinhte_XenTag_tags';
+	const DATA_REGISTRY_KEY_TRENDING = 'Tinhte_XenTag_trending';
 
 	const REGEX_SEPARATOR = '(,|،)';
 }

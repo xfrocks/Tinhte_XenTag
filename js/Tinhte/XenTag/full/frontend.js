@@ -239,32 +239,8 @@
 		}
 	};
 	
-	// *********************************************************************
-	
-	XenForo.Tinhte_XenTag_TagCloud = function($element) { this.__construct($element); };
-	XenForo.Tinhte_XenTag_TagCloud.prototype = {
-		__construct: function($element) {
-			this.$element = $element;
-			
-			var sortToggler = $element.data('toggler');
-			if (sortToggler) {
-				var $sortToggler = $('<a href="#"/>')
-					.text($element.data('toggler'))
-					.toggle(function(e) {
-						$element.find('li').tsort({order: 'desc', attr: 'data-level'});
-						e.preventDefault();
-					}, function(e) {
-						$element.find('li').tsort({order: 'asc', attr: 'data-text'});
-						e.preventDefault();
-					});
-				$sortToggler.xfInsert('insertAfter', $element);
-			}
-		}
-	};
-	
 	XenForo.register('ul.Tinhte_XenTag_TagsEditor', 'XenForo.Tinhte_XenTag_TagsEditor');
 	XenForo.register('.Tinhte_XenTag_TagsInlineEditor', 'XenForo.Tinhte_XenTag_TagsInlineEditor');
-	XenForo.register('.Tinhte_XenTag_TagCloud', 'XenForo.Tinhte_XenTag_TagCloud');
 
 }
 (jQuery, this, document);
