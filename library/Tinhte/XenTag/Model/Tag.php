@@ -143,6 +143,18 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 		return $tagsOrTexts;
 	}
 
+	public function canEditTag($tag, &$errorPhraseKey = '', array $viewingUser = null)
+	{
+		$this->standardizeViewingUserReference($viewingUser);
+
+		return XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_EDIT);
+	}
+
+	public function canReportTag($tag, &$errorPhraseKey = '', array $viewingUser = null)
+	{
+		return $this->getModelFromCache('XenForo_Model_User')->canReportContent($errorPhraseKey, $viewingUser);
+	}
+
 	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null)
 	{
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);

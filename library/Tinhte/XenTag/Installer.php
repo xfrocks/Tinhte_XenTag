@@ -226,6 +226,8 @@ class Tinhte_XenTag_Installer
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
 		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_resource\', \'Tinhte_XenTag\')');
 		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_resource\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Resource\')');
+		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_tag\', \'Tinhte_XenTag\')');
+		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_tag\', \'report_handler_class\', \'Tinhte_XenTag_ReportHandler_Tag\')');
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
 
 		$effectiveVersionId = 0;
@@ -361,6 +363,7 @@ class Tinhte_XenTag_Installer
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
 		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_resource'));
+		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_tag'));
 
 		$db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
 			'Tinhte_XenTag_tag',

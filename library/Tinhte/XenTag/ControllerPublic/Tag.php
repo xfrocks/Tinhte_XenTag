@@ -174,7 +174,9 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			'linkParams' => $linkParams,
 
 			// since 1.4
-			'canEdit' => XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_EDIT),
+			'canEdit' => $this->_getTagModel()->canEditTag($tag),
+			// since 1.9
+			'canReport' => $this->_getTagModel()->canReportTag($tag),
 		);
 
 		return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_View', 'tinhte_xentag_tag_view', $viewParams);
@@ -291,11 +293,6 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 	public function actionEdit()
 	{
-		if (!XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_EDIT))
-		{
-			return $this->responseNoPermission();
-		}
-
 		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
 		if (empty($tagText))
 		{
@@ -307,6 +304,11 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		if (empty($tag))
 		{
 			return $this->responseNoPermission();
+		}
+
+		if (!$this->_getTagModel()->canEditTag($tag, $errorPhraseKey))
+		{
+			throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
 		}
 
 		if ($this->isConfirmedPost())
@@ -328,6 +330,52 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			$viewParams = array('tag' => $tag, );
 
 			return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
+		}
+	}
+
+	public function actionReport()
+	{
+		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
+		if (empty($tagText))
+		{
+			return $this->responseNoPermission();
+		}
+
+		$tagModel = $this->_getTagModel();
+		$tag = $tagModel->getTagByText($tagText);
+		if (empty($tag))
+		{
+			return $this->responseNoPermission();
+		}
+
+		if (!$this->_getTagModel()->canReportTag($tag, $errorPhraseKey))
+		{
+			throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
+		}
+
+		if ($this->_request->isPost())
+		{
+			$message = $this->_input->filterSingle('message', XenForo_Input::STRING);
+			if (!$message)
+			{
+				return $this->responseError(new XenForo_Phrase('tinhte_xentag_please_enter_reason_for_reporting_this_tag'));
+			}
+
+			$this->assertNotFlooding('report');
+
+			/* @var $reportModel XenForo_Model_Report */
+			$reportModel = XenForo_Model::create('XenForo_Model_Report');
+			$reportModel->reportContent('tinhte_xentag_tag', $tag, $message);
+
+			$controllerResponse = $this->responseRedirect(XenForo_ControllerResponse_Redirect::RESOURCE_UPDATED, XenForo_Link::buildPublicLink('tags', $tag));
+			$controllerResponse->redirectMessage = new XenForo_Phrase('tinhte_xentag_thank_you_for_reporting_this_tag');
+			return $controllerResponse;
+		}
+		else
+		{
+			$viewParams = array('tag' => $tag);
+
+			return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Report', 'tinhte_xentag_tag_report', $viewParams);
 		}
 	}
 
