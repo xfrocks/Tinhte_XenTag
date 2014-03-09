@@ -171,6 +171,11 @@
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
+    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase days}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+
+<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
+	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
+</xen:spinboxunit>]]></template>
   </admin_templates>
   <admin_template_modifications/>
   <code_events/>
@@ -1218,6 +1223,16 @@ a.Tinhte_XenTag_TagLink:focus {
     </div>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
+    <template title="tinhte_xentag_widget_trending" version_id="107" version_string="1.9-dev"><![CDATA[<ul class="listInline">
+	<xen:foreach loop="$tags" value="$tag">
+		<li>
+			<a href="{xen:link tags, $tag}"
+				{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
+				{$tag.tag_text}
+			</a>
+		</li>
+	</xen:foreach>
+</ul>]]></template>
   </templates>
   <public_template_modifications/>
   <bb_code_media_sites/>
