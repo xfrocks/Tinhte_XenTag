@@ -496,6 +496,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_tag_text_explain" version_id="68" version_string="1.3.4.1"><![CDATA[The tag text that will be used and referenced throughout the system. It's not recommended to change this because it may break URLs or render strange search behaviors among other things.]]></phrase>
     <phrase title="tinhte_xentag_tag_title" version_id="106" version_string="1.9-dev"><![CDATA[Title]]></phrase>
     <phrase title="tinhte_xentag_thank_you_for_reporting_this_tag" version_id="107" version_string="1.9-dev"><![CDATA[Thank you for reporting this tag.]]></phrase>
+    <phrase title="tinhte_xentag_these_are_x_most_trending_tags" version_id="110" version_string="1.9.1-dev"><![CDATA[These are {count} trending tags recently.]]></phrase>
     <phrase title="tinhte_xentag_these_are_x_most_used_tags" version_id="1" version_string="0.9"><![CDATA[These are the {count} most used tags.]]></phrase>
     <phrase title="tinhte_xentag_thread_requires_tag" version_id="93" version_string="1.8.3"><![CDATA[The thread must be tagged with at least one tag.]]></phrase>
     <phrase title="tinhte_xentag_too_many_hashtags_x_of_y_list_z" version_id="103" version_string="1.9-dev"><![CDATA[{count} hashtags have been used: {tagTexts}. Only {maximum} allowed.]]></phrase>
@@ -522,7 +523,7 @@ step=7</edit_format_params>
     </group>
   </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="95" version_string="1.8.4b"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="110" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -587,7 +588,6 @@ step=7</edit_format_params>
 }
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag {
 		margin: 6px 3px;
-		display: inline;
 	}
 		.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag a {
 			text-decoration: none;
@@ -602,6 +602,16 @@ step=7</edit_format_params>
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level3 { font-size: 150% }
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level4 { font-size: 175% }
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level5 { font-size: 200% }
+
+/* Trending */
+.Tinhte_XenTag_Trending .Tinhte_XenTag_TrendingTag {
+	margin: 6px 3px;
+}
+	.Tinhte_XenTag_Trending .Tinhte_XenTag_TrendingTag a {
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
 	
 .tinhte_xentag_tag_list .xenForm fieldset {
 	/* disable the separating line for fieldset */
@@ -928,7 +938,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_list" version_id="107" version_string="1.9-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_list" version_id="110" version_string="1.9.1-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
 <xen:require js="js/Tinhte/XenTag/frontend.js" />
 
 <xen:title>{xen:phrase tinhte_xentag_tags}</xen:title>
@@ -942,7 +952,7 @@ a.Tinhte_XenTag_TagLink:focus {
 <xen:container var="$canSearch">0</xen:container>
 
 <fieldset>
-	<ul class="Tinhte_XenTag_TagCloud sectionMain" data-toggler="{xen:phrase tinhte_xentag_sort}">
+	<ul class="Tinhte_XenTag_TagCloud sectionMain listInline">
 		<xen:foreach loop="$tags" value="$tag">
 			<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{$tag.cloudLevel}">
 				<a href="{xen:link tags, $tag}"
@@ -955,11 +965,14 @@ a.Tinhte_XenTag_TagLink:focus {
 </fieldset>
 
 <xen:if is="{$trending}">
-	<ul class="Tinhte_XenTag_Trending sectionMain listInline">
-		<li>{xen:phrase tinhte_xentag_trending}:</li>
+	<div class="titleBar">
+		<h1>{xen:phrase tinhte_xentag_trending}</h1>
+		<p id="pageDescription" class="muted">{xen:phrase tinhte_xentag_these_are_x_most_trending_tags, 'count={xen:count $trending}'}</p>
+	</div>
 
+	<ul class="Tinhte_XenTag_Trending sectionMain listInline">
 		<xen:foreach loop="$trending" value="$tag">
-			<li>
+			<li class="Tinhte_XenTag_TrendingTag">
 				<a href="{xen:link tags, $tag}"
 					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
 					{$tag.tag_text}
