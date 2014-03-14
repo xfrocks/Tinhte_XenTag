@@ -3,7 +3,7 @@
 abstract class Tinhte_XenTag_ContentWrapper_Abstract
 {
 	protected $_html = '';
-	protected $_tagOrTexts = array();
+	protected $_tagsOrTexts = array();
 	protected $_useGlobalTags = false;
 
 	static protected $_tagModel = false;
