@@ -127,4 +127,18 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 		return $template->render();
 	}
 
+	protected function _getCacheId(array $widget, $positionCode, array $params, array $suffix = array())
+	{
+		if ($this->_helperDetectSpecialForums($widget['options']['forums']))
+		{
+			// we have to use special cache id when special forum ids are used
+			if (isset($params['forum']))
+			{
+				$suffix[] = 'f' . $params['forum']['node_id'];
+			}
+		}
+
+		return parent::_getCacheId($widget, $positionCode, $params, $suffix);
+	}
+
 }
