@@ -122,6 +122,8 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 			}
 		}
 
+		$tagModel->calculateCloudLevel($tags);
+
 		$template->setParam('tags', $tags);
 
 		return $template->render();

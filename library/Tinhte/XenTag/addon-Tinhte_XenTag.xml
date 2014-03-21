@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.9.1-dev" version_id="112" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.9.1-dev" version_id="113" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -523,7 +523,7 @@ step=7</edit_format_params>
     </group>
   </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="110" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="112" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -584,34 +584,38 @@ step=7</edit_format_params>
 /* Tag cloud */
 
 .Tinhte_XenTag_TagCloud {
-	
 }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag {
-		margin: 6px 3px;
-	}
-		.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag a {
-			text-decoration: none;
-			white-space: nowrap;
-		}
-	.Tinhte_XenTag_TagsEditor.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag {
-		float: none;
-	}
-	
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level1 { font-size: 100% }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level2 { font-size: 120% }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level3 { font-size: 150% }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level4 { font-size: 175% }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level5 { font-size: 200% }
+{xen:helper clearfix, '.Tinhte_XenTag_TagCloud'}
 
-/* Trending */
-.Tinhte_XenTag_Trending .Tinhte_XenTag_TrendingTag {
-	margin: 6px 3px;
-}
-	.Tinhte_XenTag_Trending .Tinhte_XenTag_TrendingTag a {
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag {
+		background: {xen:property primaryMedium};
+		color: {xen:property primaryLightest};
+		display: inline;
+		float: left;
+		margin: 0.2em;
+		padding: 0;
+	}
+
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag:hover {
+		background: {xen:property secondaryLighter};
+		color: {xen:property primaryDark};
+	}
+	
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag a {
+		color: inherit;
+		display: block;
+		font-size: 1em;
+		font-weight: bold;
+		margin: 0.5em;
 		text-decoration: none;
 		white-space: nowrap;
 	}
 
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level1 { background-color: {xen:property primaryLighterStill}; color: {xen:property primaryMedium}; }
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level2 { background-color: {xen:property primaryLighter}; }
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level3 { background-color: {xen:property primaryLight}; }
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level4 { background-color: {xen:property primaryLightish}; }
+	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level5 { background-color: {xen:property primaryMedium}; }
 	
 .tinhte_xentag_tag_list .xenForm fieldset {
 	/* disable the separating line for fieldset */
@@ -938,7 +942,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_list" version_id="110" version_string="1.9.1-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_list" version_id="112" version_string="1.9.1-dev"><![CDATA[<xen:require css="tinhte_xentag.css" />
 <xen:require js="js/Tinhte/XenTag/frontend.js" />
 
 <xen:title>{xen:phrase tinhte_xentag_tags}</xen:title>
@@ -952,7 +956,7 @@ a.Tinhte_XenTag_TagLink:focus {
 <xen:container var="$canSearch">0</xen:container>
 
 <fieldset>
-	<ul class="Tinhte_XenTag_TagCloud sectionMain listInline">
+	<ul class="Tinhte_XenTag_TagCloud sectionMain cloud">
 		<xen:foreach loop="$tags" value="$tag">
 			<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{$tag.cloudLevel}">
 				<a href="{xen:link tags, $tag}"
@@ -970,9 +974,9 @@ a.Tinhte_XenTag_TagLink:focus {
 		<p id="pageDescription" class="muted">{xen:phrase tinhte_xentag_these_are_x_most_trending_tags, 'count={xen:count $trending}'}</p>
 	</div>
 
-	<ul class="Tinhte_XenTag_Trending sectionMain listInline">
+	<ul class="Tinhte_XenTag_TagCloud sectionMain trending">
 		<xen:foreach loop="$trending" value="$tag">
-			<li class="Tinhte_XenTag_TrendingTag">
+			<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{$tag.cloudLevel}">
 				<a href="{xen:link tags, $tag}"
 					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
 					{$tag.tag_text}
@@ -1207,10 +1211,10 @@ a.Tinhte_XenTag_TagLink:focus {
 	<!-- [Tinhte] XenTag / Mark --></div><!-- [Tinhte] XenTag / Mark -->
 	<!-- [Tinhte] XenTag / Revert Mark --><xen:comment>We want to look for the last occurence of </div> for best effect!</xen:comment>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_widget_cloud" version_id="95" version_string="1.8.4b"><![CDATA[<xen:if hascontent="true">
+    <template title="tinhte_xentag_widget_cloud" version_id="112" version_string="1.9.1-dev"><![CDATA[<xen:if hascontent="true">
     <xen:require css="tinhte_xentag.css" />
     
-    <ul class="Tinhte_XenTag_TagCloud">
+    <ul class="Tinhte_XenTag_TagCloud cloud">
         <xen:contentcheck>
             <xen:hook name="tinhte_xentag_tag_cloud_item" params="{xen:array 'max={$widget.options.limit}'}">
             	<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{TAG_LEVEL}"><a href="{TAG_LINK}">{TAG_TEXT}</a></li>
@@ -1246,10 +1250,12 @@ a.Tinhte_XenTag_TagLink:focus {
     </div>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
-    <template title="tinhte_xentag_widget_trending" version_id="107" version_string="1.9-dev"><![CDATA[<xen:if is="{$tags}">
-	<ul class="listInline">
+    <template title="tinhte_xentag_widget_trending" version_id="112" version_string="1.9.1-dev"><![CDATA[<xen:if is="{$tags}">
+	<xen:require css="tinhte_xentag.css" />
+
+	<ul class="Tinhte_XenTag_TagCloud trending">
 		<xen:foreach loop="$tags" value="$tag">
-			<li>
+			<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{$tag.cloudLevel}">
 				<a href="{xen:link tags, $tag}"
 					{xen:if '{$tag.tag_title}', 'title="{$tag.tag_title}" class="Tooltip"'}>
 					{$tag.tag_text}

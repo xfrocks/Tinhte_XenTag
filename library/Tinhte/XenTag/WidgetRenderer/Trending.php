@@ -80,6 +80,7 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
 		}
 
 		$tags = $tagModel->getTrendingTags($cutoff, $limit);
+		$tagModel->calculateCloudLevel($tags);
 
 		$template->setParam('tags', $tags);
 
