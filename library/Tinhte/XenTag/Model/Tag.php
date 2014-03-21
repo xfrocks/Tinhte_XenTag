@@ -5,18 +5,19 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 
 	const FETCH_TAGGED = 1;
 
-	public function getTrendingTags($cutoff, $limit)
+	public function getTrendingTags($cutoff, $limit, $createdCutoff = 0)
 	{
 		$taggedCount = $this->_getDb()->fetchPairs('
 			SELECT tag_id, count(*) AS tagged_count
 			FROM `xf_tinhte_xentag_tagged_content`
-			WHERE tagged_date > ?
+			WHERE tagged_date > ? AND created_date > ?
 			GROUP BY tag_id
 			ORDER BY tagged_count DESC
 			LIMIT ?;
 		', array(
 			$cutoff,
-			$limit
+			$createdCutoff,
+			$limit,
 		));
 
 		$tags = array();

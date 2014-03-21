@@ -171,7 +171,9 @@
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
-    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase days}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase tinhte_xentag_trending_days}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+<xen:spinboxunit label="{xen:phrase tinhte_xentag_created_days}:" name="{$namePrefix}created_days" value="{$options.created_days}" min="0" step="7"
+				 explain="{xen:phrase tinhte_xentag_created_days_explain}" />
 
 <xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
@@ -436,6 +438,8 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_auto_tag_resource_tags" version_id="77" version_string="1.6"><![CDATA[Auto tag resource tags only]]></phrase>
     <phrase title="tinhte_xentag_content_count" version_id="3" version_string="0.9.2"><![CDATA[Content Count]]></phrase>
     <phrase title="tinhte_xentag_created_date" version_id="1" version_string="0.9"><![CDATA[Created Date]]></phrase>
+    <phrase title="tinhte_xentag_created_days" version_id="113" version_string="1.9.1-dev"><![CDATA[Days since creation]]></phrase>
+    <phrase title="tinhte_xentag_created_days_explain" version_id="113" version_string="1.9.1-dev"><![CDATA[If entered, only tags that was created recently will be included.]]></phrase>
     <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
     <phrase title="tinhte_xentag_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Delete Empty Tags]]></phrase>
     <phrase title="tinhte_xentag_display_position_post_below" version_id="89" version_string="1.7.2"><![CDATA[Below first post]]></phrase>
@@ -502,6 +506,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_too_many_hashtags_x_of_y_list_z" version_id="103" version_string="1.9-dev"><![CDATA[{count} hashtags have been used: {tagTexts}. Only {maximum} allowed.]]></phrase>
     <phrase title="tinhte_xentag_too_many_tags_x_of_y" version_id="99" version_string="1.9-dev"><![CDATA[{count} tags have been used; only {maximum} tags allowed.]]></phrase>
     <phrase title="tinhte_xentag_trending" version_id="107" version_string="1.9-dev"><![CDATA[Trending]]></phrase>
+    <phrase title="tinhte_xentag_trending_days" version_id="113" version_string="1.9.1-dev"><![CDATA[Days of recent usage]]></phrase>
     <phrase title="tinhte_xentag_viewing_tag" version_id="55" version_string="1.2.16"><![CDATA[Viewing tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tags" version_id="55" version_string="1.2.16"><![CDATA[Viewing tags]]></phrase>
     <phrase title="tinhte_xentag_widget_trending_thread_tags_forums" version_id="107" version_string="1.9-dev"><![CDATA[Forums]]></phrase>

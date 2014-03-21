@@ -19,6 +19,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 			'options' => array(
 				'forums' => XenForo_Input::ARRAY_SIMPLE,
 				'days' => XenForo_Input::UINT,
+				'created_days' => XenForo_Input::UINT,
 				'limit' => XenForo_Input::UINT
 			),
 			'useCache' => true,
@@ -81,6 +82,12 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 		}
 		$cutoff = XenForo_Application::$time - $days * 86400;
 
+		$createdCutoff = 0;
+		if (!empty($widget['options']['created_days']))
+		{
+			$createdCutoff = XenForo_Application::$time - $widget['options']['created_days'] * 86400;
+		}
+
 		if (!empty($widget['options']['limit']))
 		{
 			$limit = $widget['options']['limit'];
@@ -98,6 +105,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 			FROM `xf_tinhte_xentag_tagged_content` AS tagged
 			INNER JOIN `xf_thread` AS thread
 				ON (thread.thread_id = tagged.content_id)
+			' . ($createdCutoff > 0 ? 'INNER JOIN `xf_tinhte_xentag_tag` AS tag ON (tag.tag_id = tagged.tag_id AND tag.created_date > ' . $createdCutoff . ')' : '') . '
 			WHERE tagged.content_type = "thread" AND tagged.tagged_date > ?
 				' . (!empty($forumIds) ? 'AND thread.node_id IN (' . $db->quote($forumIds) . ')' : '') . '
 			GROUP BY tagged.tag_id
