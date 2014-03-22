@@ -321,28 +321,28 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 	public function calculateCloudLevel(array &$tags)
 	{
 		$levelCount = Tinhte_XenTag_Option::get('cloudLevelCount');
-		$maxContentCount = 0;
-		$levelStep = 9999;
 
-		foreach ($tags as $tag)
-		{
-			if ($tag['content_count'] > $maxContentCount)
-			{
-				$maxContentCount = $tag['content_count'];
-			}
-		}
-		if ($levelCount > 0)
-		{
-			$levelStep = max(1, floor($maxContentCount / $levelCount));
-		}
+		// sort by content count
+		uasort($tags, create_function('$tag1, $tag2', 'return $tag1["content_count"] > $tag2["content_count"] ? 1 : -1;'));
 
-		usort($tags, create_function('$tag1, $tag2', 'return strcmp($tag1["tag_text"], $tag2["tag_text"]);'));
-		// array indeces will not be maintained
-
+		$i = 0;
+		$levelEach = ceil(count($tags) / $levelCount);
 		foreach ($tags as &$tag)
 		{
-			$tag['cloudLevel'] = max(1, min($levelCount, ceil($tag['content_count'] / $levelStep)));
+			for ($j = 1; $j <= $levelCount; $j++)
+			{
+				if ($i < $j * $levelEach)
+				{
+					$tag['cloudLevel'] = $j;
+					break;
+				}
+			}
+
+			$i++;
 		}
+
+		// sort by tag text
+		uasort($tags, create_function('$tag1, $tag2', 'return strcmp($tag1["tag_text"], $tag2["tag_text"]);'));
 	}
 
 	public function lookForNewAndRemovedTags(array $tags, array $newTagTexts, array &$foundNewTagTexts, array &$foundRemovedTagTexts)

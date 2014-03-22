@@ -39,7 +39,7 @@ class Tinhte_XenTag_Option
 		switch ($key)
 		{
 			case 'cloudLevelCount':
-				return 5;
+				return 3;
 			case 'majorSection':
 				return 'forums';
 			case 'searchForceUseCache':

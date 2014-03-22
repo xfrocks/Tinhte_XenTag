@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.9.1-dev" version_id="113" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="1.9.1-dev" version_id="115" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -528,7 +528,7 @@ step=7</edit_format_params>
     </group>
   </style_properties>
   <templates>
-    <template title="tinhte_xentag.css" version_id="112" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
+    <template title="tinhte_xentag.css" version_id="114" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
 	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
@@ -619,8 +619,6 @@ step=7</edit_format_params>
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level1 { background-color: {xen:property primaryLighterStill}; color: {xen:property primaryMedium}; }
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level2 { background-color: {xen:property primaryLighter}; }
 	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level3 { background-color: {xen:property primaryLight}; }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level4 { background-color: {xen:property primaryLightish}; }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level5 { background-color: {xen:property primaryMedium}; }
 	
 .tinhte_xentag_tag_list .xenForm fieldset {
 	/* disable the separating line for fieldset */
