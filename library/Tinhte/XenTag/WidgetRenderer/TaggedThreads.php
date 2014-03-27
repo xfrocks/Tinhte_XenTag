@@ -111,7 +111,7 @@ class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetR
 
 				$conditions = array(
 					'node_id' => $forumIds,
-					'thread_id' => $threadIds,
+					Tinhte_XenTag_XenForo_Model_Thread::CONDITIONS_THREAD_ID => $threadIds,
 					'deleted' => false,
 					'moderated' => false,
 				);
