@@ -56,6 +56,29 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 				'controller_admin' => false,
 			),
 		),
+		'tag_watch' => array(
+			'name' => 'tag_watch',
+			'camelCase' => 'TagWatch',
+			'camelCaseWSpace' => 'Tag Watch',
+			'fields' => array(
+				'user_id' => array('name' => 'user_id', 'type' => 'uint', 'required' => true),
+				'tag_id' => array('name' => 'tag_id', 'type' => 'uint', 'required' => true),
+				'send_alert' => array('name' => 'send_alert', 'type' => 'uint', 'required' => true, 'default' => 0),
+				'send_email' => array('name' => 'send_email', 'type' => 'uint', 'required' => true, 'default' => 0),
+			),
+			'id_field' => 'n/a',
+			'title_field' => 'n/a',
+			'primaryKey' => array('tag_id', 'user_id'),
+			'indeces' => array(
+				'user_id' => array('name' => 'user_id', 'fields' => array('user_id'), 'type' => 'NORMAL'),
+			),
+			'files' => array(
+				'data_writer' => false,
+				'model' => false,
+				'route_prefix_admin' => false,
+				'controller_admin' => false,
+			),
+		),
 	);
 	protected $_dataPatches = array(
 		'xf_thread' => array(

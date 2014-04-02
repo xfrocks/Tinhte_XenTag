@@ -45,6 +45,7 @@ class Tinhte_XenTag_Constants
 	const PERM_USER_RESOURCE_TAG = 'Tinhte_XenTag_resourceTag';
 	const PERM_USER_RESOURCE_TAG_ALL = 'Tinhte_XenTag_resourceAll';
 	const PERM_USER_IS_STAFF = 'Tinhte_XenTag_isStaff';
+	const PERM_USER_WATCH = 'Tinhte_XenTag_watch';
 	const PERM_ADMIN_MANAGE = 'Tinhte_XenTag';
 
 	const DATA_REGISTRY_KEY_TAGS = 'Tinhte_XenTag_tags';

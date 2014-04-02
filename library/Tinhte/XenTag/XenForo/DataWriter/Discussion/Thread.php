@@ -107,6 +107,24 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 
 			$this->_tagsNeedUpdated = false;
 		}
+
+		if ($this->get('discussion_state') == 'visible')
+		{
+			$contentData = array_merge(array(
+				'content_type' => 'post',
+				'content_id' => $this->get('first_post_id'),
+			), $this->getMergedData(), $this->getFirstMessageDw()->getMergedData());
+			$contentPermissionConfig = array(
+				'content_type' => 'node',
+				'content_id' => $this->get('node_id'),
+				'permissions' => array(
+					'view',
+					'viewOthers',
+					'viewContent'
+				),
+			);
+			Tinhte_XenTag_Integration::sendNotificationToWatchUsersOnTagged($contentData, $this, $contentPermissionConfig);
+		}
 	}
 
 	protected function _getFields()

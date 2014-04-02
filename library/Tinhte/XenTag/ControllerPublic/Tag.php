@@ -23,7 +23,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 		$tags = $tagModel->getAllTag($conditions, $fetchOptions);
 		$tagModel->calculateCloudLevel($tags);
-		
+
 		$trending = $tagModel->getTrendingFromCache();
 		$tagModel->calculateCloudLevel($trending);
 
@@ -83,7 +83,7 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		/* @var $threadModel XenForo_Model_Thread */
 		$threadModel = $this->getModelFromCache('XenForo_Model_Thread');
 
-		$tag = $tagModel->getTagByText($tagText);
+		$tag = $tagModel->getTagByText($tagText, array('watchUserId' => XenForo_Visitor::getUserId()));
 		if (empty($tag))
 		{
 			return $this->_getNoResultsResponse($tagText);
@@ -183,6 +183,8 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			'canEdit' => $this->_getTagModel()->canEditTag($tag),
 			// since 1.9
 			'canReport' => $this->_getTagModel()->canReportTag($tag),
+			// since 2.0
+			'canWatch' => $this->_getTagModel()->canWatchTag($tag),
 		);
 
 		return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_View', 'tinhte_xentag_tag_view', $viewParams);
@@ -383,6 +385,76 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 			return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Report', 'tinhte_xentag_tag_report', $viewParams);
 		}
+	}
+
+	public function actionWatchConfirm()
+	{
+		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
+		if (empty($tagText))
+		{
+			return $this->responseNoPermission();
+		}
+
+		$tagModel = $this->_getTagModel();
+		$tag = $tagModel->getTagByText($tagText);
+		if (empty($tag))
+		{
+			return $this->responseNoPermission();
+		}
+
+		if (!$this->_getTagModel()->canWatchTag($tag, $errorPhraseKey))
+		{
+			throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
+		}
+
+		$tagWatch = $this->getModelFromCache('Tinhte_XenTag_Model_TagWatch')->getUserTagWatchByIds(XenForo_Visitor::getUserId(), $tag['tag_id']);
+
+		$viewParams = array(
+			'tag' => $tag,
+			'tagWatch' => $tagWatch,
+		);
+
+		return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_WatchConfirm', 'tinhte_xentag_tag_watch', $viewParams);
+	}
+
+	public function actionWatch()
+	{
+		$this->_assertPostOnly();
+
+		$tagText = $this->_input->filterSingle(Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT, XenForo_Input::STRING);
+		if (empty($tagText))
+		{
+			return $this->responseNoPermission();
+		}
+
+		$tagModel = $this->_getTagModel();
+		$tag = $tagModel->getTagByText($tagText);
+		if (empty($tag))
+		{
+			return $this->responseNoPermission();
+		}
+
+		if (!$this->_getTagModel()->canWatchTag($tag, $errorPhraseKey))
+		{
+			throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
+		}
+
+		if ($this->_input->filterSingle('stop', XenForo_Input::STRING))
+		{
+			$sendAlert = null;
+			$sendEmail = null;
+			$linkPhrase = new XenForo_Phrase('tinhte_xentag_watch_tag');
+		}
+		else
+		{
+			$sendAlert = $this->_input->filterSingle('send_alert', XenForo_Input::BOOLEAN);
+			$sendEmail = $this->_input->filterSingle('send_email', XenForo_Input::BOOLEAN);
+			$linkPhrase = new XenForo_Phrase('tinhte_xentag_unwatch_tag');
+		}
+
+		$this->getModelFromCache('Tinhte_XenTag_Model_TagWatch')->setTagWatchState(XenForo_Visitor::getUserId(), $tag['tag_id'], $sendAlert, $sendEmail);
+
+		return $this->responseRedirect(XenForo_ControllerResponse_Redirect::SUCCESS, XenForo_Link::buildPublicLink('tags', $tag), null, array('linkPhrase' => $linkPhrase));
 	}
 
 	/**

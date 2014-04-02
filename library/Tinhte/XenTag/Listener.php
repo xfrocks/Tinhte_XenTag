@@ -7,6 +7,8 @@ class Tinhte_XenTag_Listener
 	{
 		static $classes = array(
 			'XenForo_BbCode_Formatter_Base',
+			'XenForo_BbCode_Formatter_HtmlEmail',
+			'XenForo_BbCode_Formatter_Text',
 			'XenForo_BbCode_Formatter_Wysiwyg',
 
 			'XenForo_ControllerAdmin_Forum',
@@ -16,6 +18,7 @@ class Tinhte_XenTag_Listener
 			'XenForo_ControllerPublic_Post',
 			'XenForo_ControllerPublic_Search',
 			'XenForo_ControllerPublic_Thread',
+			'XenForo_ControllerPublic_Watched',
 
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
@@ -23,6 +26,7 @@ class Tinhte_XenTag_Listener
 			'XenForo_DataWriter_Page',
 
 			'XenForo_Model_Forum',
+			'XenForo_Model_ForumWatch',
 			'XenForo_Model_Post',
 			'XenForo_Model_Page',
 			'XenForo_Model_Search',

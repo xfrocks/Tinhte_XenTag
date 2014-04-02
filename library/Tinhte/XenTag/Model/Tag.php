@@ -219,6 +219,13 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 		return $this->getModelFromCache('XenForo_Model_User')->canReportContent($errorPhraseKey, $viewingUser);
 	}
 
+	public function canWatchTag($tag, &$errorPhraseKey = '', array $viewingUser = null)
+	{
+		$this->standardizeViewingUserReference($viewingUser);
+
+		return XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_WATCH);
+	}
+
 	public function canTagThread($thread, array $forum, &$errorPhraseKey = '', array $nodePermissions = null, array $viewingUser = null)
 	{
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);
@@ -574,6 +581,24 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 			{
 				$selectFields .= ' , tagged_content.* ';
 				$joinTables .= ' INNER JOIN `xf_tinhte_xentag_tagged_content` AS tagged_content ' . ' ON (tagged_content.tag_id = tag.tag_id) ';
+			}
+		}
+
+		if (isset($fetchOptions['watchUserId']))
+		{
+			if (!empty($fetchOptions['watchUserId']))
+			{
+				$selectFields .= ',
+					IF(tag_watch.user_id IS NULL, 0, 1) AS tag_is_watched';
+				$joinTables .= '
+					LEFT JOIN xf_tinhte_xentag_tag_watch AS tag_watch
+						ON (tag_watch.tag_id = tag.tag_id
+							AND tag_watch.user_id = ' . $this->_getDb()->quote($fetchOptions['watchUserId']) . ')';
+			}
+			else
+			{
+				$selectFields .= ',
+					0 AS tag_is_watched';
 			}
 		}
 

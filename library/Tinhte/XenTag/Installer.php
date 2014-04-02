@@ -36,6 +36,17 @@ class Tinhte_XenTag_Installer
 			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
 			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tagged_content`',
 		),
+		'tag_watch' => array(
+			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_watch` (
+				`user_id` INT(10) UNSIGNED NOT NULL
+				,`tag_id` INT(10) UNSIGNED NOT NULL
+				,`send_alert` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+				,`send_email` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+				, PRIMARY KEY (`tag_id`,`user_id`)
+				, INDEX `user_id` (`user_id`)
+			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
+			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_watch`',
+		),
 	);
 	protected static $_patches = array(
 		array(
@@ -183,7 +194,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-
+		
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 

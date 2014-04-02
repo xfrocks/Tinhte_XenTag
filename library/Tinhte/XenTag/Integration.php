@@ -14,6 +14,11 @@ class Tinhte_XenTag_Integration
 {
 	const REGEX_VALID_CHARACTER_AROUND = '/[\s\(\)\.,!\?:;@\\\\\[\]{}"&<>]/u';
 
+	protected static $_newTaggeds = array();
+
+	protected static $_emailed = array();
+	protected static $_alerted = array();
+
 	/**
 	 * Updates list of tags for specified piece of content. Any addition, removal
 	 * will be processed accordingly with record from database.
@@ -124,6 +129,7 @@ class Tinhte_XenTag_Integration
 				if ($dwTagged->save())
 				{
 					$updatedTags[] = $newTag;
+					self::$_newTaggeds[] = array_merge($dwTagged->getMergedData(), $newTag);
 					$changed = true;
 				}
 			}
@@ -188,6 +194,30 @@ class Tinhte_XenTag_Integration
 
 		// simply return the counter
 		return count($packedTags);
+	}
+
+	/**
+	 * Sends out tag watch notification to users
+	 *
+	 * @param array $contentData
+	 * @param XenForo_DataWriter $dw
+	 * @param array $contentPermissionConfig
+	 */
+	public static function sendNotificationToWatchUsersOnTagged(array $contentData, XenForo_DataWriter $dw, $contentPermissionConfig = array())
+	{
+		foreach (self::$_newTaggeds as $newTagged)
+		{
+			if ($newTagged['content_type'] != $contentData['content_type'])
+			{
+				continue;
+			}
+			if ($newTagged['content_id'] != $contentData['content_id'])
+			{
+				continue;
+			}
+
+			$dw->getModelFromCache('Tinhte_XenTag_Model_TagWatch')->sendNotificationToWatchUsersOnTagged($newTagged, $contentData, $contentPermissionConfig);
+		}
 	}
 
 	/**
@@ -367,6 +397,57 @@ class Tinhte_XenTag_Integration
 		$tagTexts = array_values($tagTexts);
 
 		return $tagTexts;
+	}
+
+	public static function getNoEmailAndAlert($contentType, $contentId)
+	{
+		if (!empty(self::$_emailed[$contentType][$contentId]))
+		{
+			$noEmail = self::$_emailed[$contentType][$contentId];
+		}
+		else
+		{
+			$noEmail = array();
+		}
+
+		if (!empty(self::$_alerted[$contentType][$contentId]))
+		{
+			$noAlert = self::$_alerted[$contentType][$contentId];
+		}
+		else
+		{
+			$noAlert = array();
+		}
+
+		return array(
+			$noEmail,
+			$noAlert
+		);
+	}
+
+	public static function updateNoEmailAndAlert($contentType, $contentId, $emailed, $alerted)
+	{
+		if (empty(self::$_emailed[$contentType][$contentId]))
+		{
+			self::$_emailed[$contentType][$contentId] = array();
+		}
+		$noEmail = &self::$_emailed[$contentType][$contentId];
+
+		if (empty(self::$_alerted[$contentType][$contentId]))
+		{
+			self::$_alerted[$contentType][$contentId] = array();
+		}
+		$noAlert = &self::$_alerted[$contentType][$contentId];
+
+		foreach ($emailed as $userId)
+		{
+			$noEmail[] = $userId;
+		}
+
+		foreach ($alerted as $userId)
+		{
+			$noAlert[] = $userId;
+		}
 	}
 
 	protected static function _autoTag_isBetweenHtmlTags($html, $position)

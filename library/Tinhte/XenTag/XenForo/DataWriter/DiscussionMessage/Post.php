@@ -39,6 +39,11 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 
 			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
 			{
+				if ($maximumTags === 0)
+				{
+					throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_no_hashtags_allowed'), true);
+				}
+
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_hashtags_x_of_y_list_z', array(
 					'maximum' => $maximumTags,
 					'count' => $tagsCount,
@@ -103,6 +108,33 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 		return parent::_updateDeletionLog();
 	}
 
+	protected function _postSaveAfterTransaction()
+	{
+		$response = parent::_postSaveAfterTransaction();
+
+		if ($this->get('message_state') == 'visible')
+		{
+			$contentData = array_merge(array(
+				'content_type' => 'post',
+				'content_id' => $this->get('post_id'),
+			), $this->getDiscussionData(), $this->getMergedData());
+
+			$forumInfo = $this->_Tinhte_XenTag_getForumInfo();
+			$contentPermissionConfig = array(
+				'content_type' => 'node',
+				'content_id' => $forumInfo['node_id'],
+				'permissions' => array(
+					'view',
+					'viewOthers',
+					'viewContent'
+				),
+			);
+			Tinhte_XenTag_Integration::sendNotificationToWatchUsersOnTagged($contentData, $this, $contentPermissionConfig);
+		}
+
+		return $response;
+	}
+
 	protected function _setInternal($table, $field, $newValue, $forceSet = false)
 	{
 		if ($table === 'xf_post' AND $field === 'message')
@@ -113,6 +145,11 @@ class Tinhte_XenTag_XenForo_DataWriter_DiscussionMessage_Post extends XFCP_Tinht
 			if ($maximumTags === -1 OR $maximumTags > 0)
 			{
 				$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($newValue, true);
+			}
+			else
+			{
+				// always pickup [HAHSTAG]s in post, we will show error message later if found
+				$this->_Tinhte_XenTag_tagTexts = Tinhte_XenTag_Integration::parseHashtags($newValue);
 			}
 		}
 
