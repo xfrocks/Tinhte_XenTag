@@ -67,6 +67,10 @@ class Tinhte_XenTag_Listener
 
 	public static function init_dependencies(XenForo_Dependencies_Abstract $dependencies, array $data)
 	{
+		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_canwatchtag'] = array(
+			'Tinhte_XenTag_Helper',
+			'canWatchTag'
+		);
 		XenForo_Template_Helper_Core::$helperCallbacks['tinhte_xentag_getimplodedtagsfromthread'] = array(
 			'Tinhte_XenTag_Helper',
 			'getImplodedTagsFromThread'
@@ -96,27 +100,27 @@ class Tinhte_XenTag_Listener
 		switch ($templateName)
 		{
 			case 'editor':
-			case 'tools_rebuild':
 			case 'forum_view':
 			case 'post_edit':
+			case 'resource_add':
+			case 'resource_description':
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
-			case 'resource_add':
-			case 'resource_description':
+			case 'tools_rebuild':
 				$template->preloadTemplate('tinhte_xentag_' . $templateName);
 				break;
 			case 'PAGE_CONTAINER':
 				// these template will be preloaded in all pages
-				// should over-use this...
+				$template->preloadTemplate('tinhte_xentag_bb_code_tag_tag');
 				$template->preloadTemplate('tinhte_xentag_hook_message_below');
 				$template->preloadTemplate('tinhte_xentag_hook_message_content');
 				$template->preloadTemplate('tinhte_xentag_hook_message_notices');
+				$template->preloadTemplate('tinhte_xentag_hook_navigation_tabs_forums');
 				$template->preloadTemplate('tinhte_xentag_hook_post_private_controls');
 				$template->preloadTemplate('tinhte_xentag_hook_post_public_controls');
-				$template->preloadTemplate('tinhte_xentag_bb_code_tag_tag');
 				break;
 		}
 
@@ -165,15 +169,15 @@ class Tinhte_XenTag_Listener
 		switch ($templateName)
 		{
 			case 'editor':
-			case 'tools_rebuild':
 			case 'forum_view':
 			case 'post_edit':
+			case 'resource_add':
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
-			case 'resource_add':
+			case 'tools_rebuild':
 				$ourTemplate = $template->create('tinhte_xentag_' . $templateName, $template->getParams());
 				$rendered = $ourTemplate->render();
 
@@ -221,23 +225,19 @@ class Tinhte_XenTag_Listener
 		{
 			case 'admin_forum_edit_tabs':
 			case 'admin_forum_edit_panes':
-
 			case 'admin_page_edit_basic_information':
-
 			case 'message_below':
 			case 'message_content':
 			case 'message_notices':
+			case 'navigation_tabs_forums':
+			case 'pagenode_container_article':
 			case 'post_private_controls':
 			case 'post_public_controls':
-
+			case 'resource_view_sidebar_resource_info':
 			case 'thread_view_pagenav_before':
 			case 'thread_view_form_before':
 			case 'thread_view_qr_before':
 			case 'thread_view_qr_after':
-
-			case 'pagenode_container_article':
-
-			case 'resource_view_sidebar_resource_info':
 				$ourTemplate = $template->create(substr('tinhte_xentag_hook_' . $hookName, 0, 50), $template->getParams());
 				$ourTemplate->setParams($hookParams);
 				$rendered = $ourTemplate->render();

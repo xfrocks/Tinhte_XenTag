@@ -18,10 +18,24 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
 	public function getUserTagWatchByUserId($userId)
 	{
 		return $this->fetchAllKeyed('
+			SELECT tag_watch.*, tag.*, user.*
+			FROM xf_tinhte_xentag_tag_watch AS tag_watch
+			INNER JOIN xf_tinhte_xentag_tag AS tag
+				ON (tag.tag_id = tag_watch.tag_id)
+			LEFT JOIN xf_user AS user
+				ON (user.user_id = tag.created_user_id)
+			WHERE tag_watch.user_id = ?
+		', 'tag_id', $userId);
+	}
+
+	public function getUserTagWatchByUserIdAndTagIds($userId, array $tagIds)
+	{
+		return $this->_getDb()->fetchAll('
 			SELECT *
 			FROM xf_tinhte_xentag_tag_watch
 			WHERE user_id = ?
-		', 'tag_id', $userId);
+				AND tag_id IN (' . $this->_getDb()->quote($tagIds) . ')
+		', array($userId));
 	}
 
 	public function getUsersWatchingTag($tagId, $contentPermissionType = '', $contentPermissionId = 0)

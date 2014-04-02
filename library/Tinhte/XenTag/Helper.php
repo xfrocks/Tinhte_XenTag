@@ -72,6 +72,11 @@ class Tinhte_XenTag_Helper
 		}
 	}
 
+	public static function canWatchTag()
+	{
+		return XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_WATCH);
+	}
+
 	public static function explodeTags($tagsStr)
 	{
 		// sondh@2013-03-27
