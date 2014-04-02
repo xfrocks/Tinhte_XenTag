@@ -81,9 +81,34 @@ class Tinhte_XenTag_Option
 
 	public static function xfrmFound()
 	{
-		$moderatorModel = XenForo_Model::create('XenForo_Model_Moderator');
-		$gmigi = $moderatorModel->getGeneralModeratorInterfaceGroupIds();
-		return in_array('resourceModeratorPermissions', $gmigi);
+		static $result = false;
+
+		if ($result === false)
+		{
+			$result = 0;
+
+			if (XenForo_Application::$versionId >= 1020000)
+			{
+				// XenForo 1.2 and upper, check running add-ons
+				$addOns = XenForo_Application::get('addOns');
+				if (isset($addOns['XenResource']))
+				{
+					$result = intval($addOns['XenResource']);
+				}
+			}
+			else
+			{
+				$moderatorModel = XenForo_Model::create('XenForo_Model_Moderator');
+				$gmigi = $moderatorModel->getGeneralModeratorInterfaceGroupIds();
+				if (in_array('resourceModeratorPermissions', $gmigi))
+				{
+					// XenForo 1.1 can only run XenForo Resource Manager 1.0
+					$result = 10000000;
+				}
+			}
+		}
+
+		return $result;
 	}
 
 }
