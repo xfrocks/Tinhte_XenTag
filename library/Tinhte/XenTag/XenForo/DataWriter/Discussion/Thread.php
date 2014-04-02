@@ -123,7 +123,7 @@ class Tinhte_XenTag_XenForo_DataWriter_Discussion_Thread_Base extends XFCP_Tinht
 					'viewContent'
 				),
 			);
-			Tinhte_XenTag_Integration::sendNotificationToWatchUsersOnTagged($contentData, $this, $contentPermissionConfig);
+			Tinhte_XenTag_Integration::sendNotificationToWatchUsersOnTagged('thread', $this->get('thread_id'), $contentData, $this, $contentPermissionConfig);
 		}
 	}
 

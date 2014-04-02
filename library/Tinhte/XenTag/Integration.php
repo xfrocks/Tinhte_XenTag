@@ -203,15 +203,15 @@ class Tinhte_XenTag_Integration
 	 * @param XenForo_DataWriter $dw
 	 * @param array $contentPermissionConfig
 	 */
-	public static function sendNotificationToWatchUsersOnTagged(array $contentData, XenForo_DataWriter $dw, $contentPermissionConfig = array())
+	public static function sendNotificationToWatchUsersOnTagged($contentType, $contentId, array $contentData, XenForo_DataWriter $dw, $contentPermissionConfig = array())
 	{
 		foreach (self::$_newTaggeds as $newTagged)
 		{
-			if ($newTagged['content_type'] != $contentData['content_type'])
+			if ($newTagged['content_type'] != $contentType)
 			{
 				continue;
 			}
-			if ($newTagged['content_id'] != $contentData['content_id'])
+			if ($newTagged['content_id'] != $contentId)
 			{
 				continue;
 			}
