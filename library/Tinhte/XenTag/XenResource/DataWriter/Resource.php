@@ -37,12 +37,12 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 
 			$requiresTag = Tinhte_XenTag_Option::get('resourceRequiresTag');
 			$maximumTags = intval($this->getModelFromCache('XenResource_Model_Resource')->Tinhte_XenTag_getMaximumTags());
-			
+
 			if ($requiresTag AND $maximumTags !== 0 AND $tagsCount == 0)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_resource_requires_tag'), true);
 			}
-			
+
 			if ($maximumTags !== -1 AND $tagsCount > $maximumTags)
 			{
 				throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_too_many_tags_x_of_y', array(
@@ -103,6 +103,37 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 		$this->_Tinhte_XenTag_indexForSearch();
 
 		return parent::_postSave();
+	}
+
+	protected function _postSaveAfterTransaction()
+	{
+		$response = parent::_postSaveAfterTransaction();
+
+		if ($this->get('resource_state') == 'visible' AND $this->get('description_update_id') > 0)
+		{
+			$contentData = array_merge(array(
+				'content_type' => 'resource_update',
+				'content_id' => $this->get('description_update_id'),
+			), $this->getMergedData(), $this->getDescriptionDw()->getMergedData());
+
+			if (Tinhte_XenTag_Option::xfrmFound() >= 1010000)
+			{
+				// XenForo Resource Manager 1.1 introduces category permission
+				$contentPermissionConfig = array(
+					'content_type' => 'resource_category',
+					'content_id' => $this->get('resource_category_id'),
+					'permissions' => array('view'),
+				);
+			}
+			else
+			{
+				$contentPermissionConfig = array();
+			}
+
+			Tinhte_XenTag_Integration::sendNotificationToWatchUsersOnTagged(Tinhte_XenTag_Constants::CONTENT_TYPE_RESOURCE, $this->get('resource_id'), $contentData, $this, $contentPermissionConfig);
+		}
+
+		return $response;
 	}
 
 	protected function _postDelete()

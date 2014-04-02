@@ -326,6 +326,112 @@
 	'board_link={xen:link 'canonical:index'}',
 	'board_title={$xenOptions.boardTitle}'}</p>]]></body_html>
     </template>
+    <template title="tinhte_xentag_watch_tag_resource_update">
+      <subject><![CDATA[{xen:phrase tinhte_xentag_new_tagged_resource_x, "title={$contentData.titleCensored}"}]]></subject>
+      <body_text><![CDATA[{$receiver.username},
+{xen:phrase tinhte_xentag_x_tagged_resource_y,
+	'name={$contentData.username}',
+	'title={xen:helper resourcePrefix, $contentData, plain}{$contentData.title}'}
+<xen:if is="{$contentData.messageText}">
+{xen:phrase tinhte_xentag_this_is_the_resource_they_posted}:
+----------------------------------------------------------------------
+{$contentData.messageText}
+----------------------------------------------------------------------</xen:if>
+
+{xen:phrase tinhte_xentag_to_view_this_resource_click_here}:
+{xen:link canonical:resources, $contentData}
+----------------------------------------------------------------------
+
+{xen:phrase tinhte_xentag_watch_tag_email_footer_1,
+	'tag_text={$tag.tag_text}',
+	'board_title={$xenOptions.boardTitle}'}
+
+{xen:phrase tinhte_xentag_watch_tag_email_footer_2,
+	'disable_this_link={xen:link canonical:watched/via-email, '', 'u={$receiver.user_id}', 'c={$receiver.email_confirm_key}', 'a=no_email', 't=tag', 'id={$tag.tag_id}'}',
+	'disable_all_link={xen:link canonical:watched/via-email, '', 'u={$receiver.user_id}', 'c={$receiver.email_confirm_key}', 'a=no_email'}',
+	'board_link={xen:link 'canonical:index'}',
+	'board_title={$xenOptions.boardTitle}'}]]></body_text>
+      <body_html><![CDATA[<p style="margin-top: 0">{$receiver.username},
+{xen:phrase tinhte_xentag_x_tagged_resource_y,
+	'name=<a href="{xen:link canonical:members, $contentData}" style="color: #176093; text-decoration: none">{$contentData.username}</a>',
+	'title=<a href="{xen:link canonical:resources, $contentData}" style="color: #176093; text-decoration: none">{xen:helper resourcePrefix, $contentData, plain}{$contentData.title}</a>'}</p>
+
+<hr style="height: 1px; margin: 10px 0; border: 0; color: #D7EDFC; background-color: #D7EDFC" />
+<xen:if is="{$contentData.messageHtml}">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 10px 0 20px">
+<tr valign="top">
+	<td style="font-size: 13px; line-height: 1.231; padding-{xen:if $emailIsRtl, left, right}: 20px">
+		<div style="
+			background-color: #D7EDFC;
+			border: 1px solid #D7EDFC;
+			border-radius: 5px">
+			<table cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td style="
+					background-color: #F0F7FC;
+					padding: 5px;
+					border-radius: 4px">
+					<a href="{xen:link canonical:members, $contentData}" title="{$contentData.username}"
+						><img src="{xen:helper avatar, $contentData, s, '', 1}" alt="{$contentData.username}" title="{$contentData.username}" style="
+							width: 48px;
+							height: 48px;
+							background-color: #FCFCFF;
+							border: 1px solid #A5CAE4;
+							padding: 2px;
+							border-radius: 4px"
+						/></a>
+					</td>
+				</tr>
+			</table>
+			<span style="
+				padding: 3px 5px;
+				display: block"><!--{$contentData.username}-->&nbsp;</span>
+		</div>
+	</td>
+	<td width="100%" style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.4">
+		{xen:raw $contentData.messageHtml}
+	</td>	
+</tr>
+</table></xen:if>
+
+<table cellpadding="10" cellspacing="0" border="0" width="100%" style="margin: 20px 0; background-color: #f0f7fc; border-top: 1px solid #d7edfc">
+<tr>
+	<td>
+		<a href="{xen:link canonical:resources, $contentData}" style="
+			display: block;
+			float: {xen:if $emailIsRtl, right, left};
+			padding: 5px 10px;
+			background-color: #65a5d1;
+			border: none;
+			border-radius: 3px;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: white;
+			text-decoration: none">{xen:phrase view_this_resource}</a>
+	</td>
+	<td align="{xen:if $emailIsRtl, left, right}">
+		<a href="{xen:link canonical:watched/tags}" style="
+			display: block;
+			padding: 5px 0;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: #176093;
+			text-decoration: none">{xen:phrase tinhte_xentag_watched_tags}</a>
+	</td>
+</tr>
+</table>
+
+<p style="font-size: 11px; color: #969696">{xen:phrase tinhte_xentag_watch_tag_email_footer_1,
+	'tag_text={$tag.tag_text}',
+	'board_title={$xenOptions.boardTitle}'}</p>
+
+<p style="font-size: 11px; color: #969696">{xen:phrase tinhte_xentag_watch_tag_email_footer_2_html,
+	'disable_this_link={xen:link canonical:watched/via-email, '', 'u={$receiver.user_id}', 'c={$receiver.email_confirm_key}', 'a=no_email', 't=tag', 'id={$tag.tag_id}'}',
+	'disable_all_link={xen:link canonical:watched/via-email, '', 'u={$receiver.user_id}', 'c={$receiver.email_confirm_key}', 'a=no_email'}',
+	'link_style=color: #969696',
+	'board_link={xen:link 'canonical:index'}',
+	'board_title={$xenOptions.boardTitle}'}</p>]]></body_html>
+    </template>
   </email_templates>
   <email_template_modifications/>
   <optiongroups>
@@ -582,8 +688,8 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_link_format_beautiful" version_id="65" version_string="1.3.3"><![CDATA[http://domain.com/xenforo/tags/something/page-10]]></phrase>
     <phrase title="tinhte_xentag_link_format_ugly" version_id="65" version_string="1.3.3"><![CDATA[http://domain.com/xenforo/tags?t=something&page=10]]></phrase>
     <phrase title="tinhte_xentag_matched_tags" version_id="86" version_string="1.6.5"><![CDATA[Matched Tags]]></phrase>
-    <phrase title="tinhte_xentag_new_tagged_content_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New content with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_reply_in_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New reply with watched tag]]></phrase>
+    <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
     <phrase title="tinhte_xentag_no_contents_has_been_found" version_id="50" version_string="1.2.11"><![CDATA[No content has been found.]]></phrase>
     <phrase title="tinhte_xentag_no_hashtags_allowed" version_id="115" version_string="1.9.1-dev"><![CDATA[You are not allowed to use hashtags.]]></phrase>
@@ -632,9 +738,11 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_these_are_x_most_trending_tags" version_id="110" version_string="1.9.1-dev"><![CDATA[These are {count} trending tags recently.]]></phrase>
     <phrase title="tinhte_xentag_these_are_x_most_used_tags" version_id="1" version_string="0.9"><![CDATA[These are the {count} most used tags.]]></phrase>
     <phrase title="tinhte_xentag_this_is_the_message_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the message they posted]]></phrase>
+    <phrase title="tinhte_xentag_this_is_the_resource_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the resource they posted]]></phrase>
     <phrase title="tinhte_xentag_thread_requires_tag" version_id="93" version_string="1.8.3"><![CDATA[The thread must be tagged with at least one tag.]]></phrase>
     <phrase title="tinhte_xentag_too_many_hashtags_x_of_y_list_z" version_id="103" version_string="1.9-dev"><![CDATA[{count} hashtags have been used: {tagTexts}. Only {maximum} allowed.]]></phrase>
     <phrase title="tinhte_xentag_too_many_tags_x_of_y" version_id="99" version_string="1.9-dev"><![CDATA[{count} tags have been used; only {maximum} tags allowed.]]></phrase>
+    <phrase title="tinhte_xentag_to_view_this_resource_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this resource, click here]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
     <phrase title="tinhte_xentag_trending" version_id="107" version_string="1.9-dev"><![CDATA[Trending]]></phrase>
     <phrase title="tinhte_xentag_trending_days" version_id="113" version_string="1.9.1-dev"><![CDATA[Days of recent usage]]></phrase>
@@ -654,6 +762,7 @@ To disable all emails:
     <phrase title="tinhte_xentag_watch_tag_email_footer_2_html" version_id="115" version_string="1.9.1-dev"><![CDATA[If you no longer wish to receive these emails, you may <a href="{disable_this_link}" style="{link_style}">disable emails from this tag</a> or  <a href="{disable_all_link}" style="{link_style}">disable all emails</a>.]]></phrase>
     <phrase title="tinhte_xentag_widget_trending_thread_tags_forums" version_id="107" version_string="1.9-dev"><![CDATA[Forums]]></phrase>
     <phrase title="tinhte_xentag_x_tagged_reply_thread_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged a reply to the thread {title} with a tag you are watching.]]></phrase>
+    <phrase title="tinhte_xentag_x_tagged_resource_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged the resource {title} with a tag you are watching.]]></phrase>
     <phrase title="tinhte_xentag_x_tagged_thread_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged a thread called {title} with a tag you are watching.]]></phrase>
     <phrase title="tinhte_xentag_you_can_not_create_new_tag" version_id="5" version_string="0.9.4"><![CDATA[Sorry, you do not have the permission to create new tag. Please use existing tags only.]]></phrase>
     <phrase title="tinhte_xentag_you_sure_you_want_to_update_notification_settings_for_all_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Are you sure you want to update your email notification settings for all tags?]]></phrase>
@@ -684,6 +793,9 @@ To disable all emails:
 		'name={xen:helper username, $user, 'subject'}',
 		'title=<a href="{xen:link posts, $content}" class="PopupItemLink">{xen:helper threadPrefix, $content}{$content.title}</a>'}
 </xen:if>]]></template>
+    <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
+	'name={xen:helper username, $user, 'subject'}',
+	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
     <template title="tinhte_xentag.css" version_id="114" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
