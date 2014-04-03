@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.0.0" version_id="116" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.0.0b" version_id="117" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -721,6 +721,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_tags" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
     <phrase title="tinhte_xentag_tags_instruction" version_id="35" version_string="1.1.1"><![CDATA[Enter list of tags, separated by comma.]]></phrase>
     <phrase title="tinhte_xentag_tags_lowercase" version_id="6" version_string="0.9.5"><![CDATA[tags]]></phrase>
+    <phrase title="tinhte_xentag_tags_simple_list" version_id="116" version_string="2.0.0"><![CDATA[Tags]]></phrase>
     <phrase title="tinhte_xentag_tag_add" version_id="1" version_string="0.9"><![CDATA[Add New Tag]]></phrase>
     <phrase title="tinhte_xentag_tag_can_not_contain_comma" version_id="1" version_string="0.9"><![CDATA[Tag can not contain comma]]></phrase>
     <phrase title="tinhte_xentag_tag_can_not_longer_than_x" version_id="6" version_string="0.9.5"><![CDATA[Tag can not be longer than {maxLength} characters.]]></phrase>
@@ -1150,12 +1151,13 @@ a.Tinhte_XenTag_TagLink:focus {
 		</div>
 	</div>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tags_in_post" version_id="109" version_string="1.9.1-dev"><![CDATA[<xen:if is="{$post.post_id} == {$thread.first_post_id}">
+    <template title="tinhte_xentag_tags_in_post" version_id="116" version_string="2.0.0"><![CDATA[<xen:if is="{$post.post_id} == {$thread.first_post_id}">
 	<div class="Tinhte_XenTag_Tags_InPost">
 		<xen:if is="{$Tinhte_XenTag_canEdit}">
 			<xen:require js="js/Tinhte/XenTag/frontend.js" />
 		
 			<div class="Tinhte_XenTag_TagsInlineEditor" data-template="tags_in_post">
+				<label>{xen:phrase tinhte_xentag_tags_simple_list}</label>:
 				<xen:if hascontent="true">
                     <xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromThread, $thread, 1}</xen:contentcheck>
                 <xen:else />
@@ -1164,17 +1166,18 @@ a.Tinhte_XenTag_TagLink:focus {
 				(<a class="Tinhte_XenTag_Trigger" href="{xen:link 'threads/edit-tags', $thread}">{xen:phrase tinhte_xentag_edit_tags}</a>)
 			</div>
 		<xen:else />
+			<label>{xen:phrase tinhte_xentag_tags_simple_list}</label>:
 			{xen:helper Tinhte_XenTag_getImplodedTagsFromThread, $thread, 1}
 		</xen:if>
 	</div>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tags_thread_view" version_id="109" version_string="1.9.1-dev"><![CDATA[<xen:if is="{$Tinhte_XenTag_canEdit}">
+    <template title="tinhte_xentag_tags_thread_view" version_id="116" version_string="2.0.0"><![CDATA[<xen:if is="{$Tinhte_XenTag_canEdit}">
     <xen:require js="js/Tinhte/XenTag/frontend.js" />
 	<xen:require css="tinhte_xentag.css" />
 
     <div class="sectionMain Tinhte_XenTag_Tags_ThreadView">
         <div class="Tinhte_XenTag_TagsInlineEditor" data-template="tags_thread_view">
-            {xen:phrase tinhte_xentag_tags}:
+			<label>{xen:phrase tinhte_xentag_tags_simple_list}</label>:
             <xen:if hascontent="true">
 			    <xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromThread, $thread, 1}</xen:contentcheck>
             <xen:else />
@@ -1186,7 +1189,7 @@ a.Tinhte_XenTag_TagLink:focus {
 <xen:else />
     <xen:if hascontent="true">
         <div class="sectionMain Tinhte_XenTag_Tags_ThreadView">
-    		{xen:phrase tinhte_xentag_tags}:
+    		<label>{xen:phrase tinhte_xentag_tags_simple_list}</label>:
     		<xen:contentcheck>{xen:helper Tinhte_XenTag_getImplodedTagsFromThread, $thread, 1}</xen:contentcheck>
     	</div>
     </xen:if>
