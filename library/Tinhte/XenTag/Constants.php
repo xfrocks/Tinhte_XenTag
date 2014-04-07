@@ -21,7 +21,6 @@ class Tinhte_XenTag_Constants
 	const FORM_INCLUDED = 'tinhte_xentag_included';
 	// used in search bar form
 	const FORM_TAGS_TEXT_NO_INCLUDED = 'tinhte_xentag_tags_text_no_include';
-	
 
 	const FIELD_THREAD_TAGS = 'tinhte_xentag_tags';
 	const FIELD_THREAD_IS_TAGGED = 'tinhte_xentag_is_tagged';

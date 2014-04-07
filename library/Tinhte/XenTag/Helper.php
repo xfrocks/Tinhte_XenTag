@@ -176,11 +176,6 @@ class Tinhte_XenTag_Helper
 				{
 					if (!empty($tagOrText['is_staff']))
 					{
-						if (!XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
-						{
-							continue;
-						}
-
 						$isStaff = true;
 					}
 
@@ -197,10 +192,6 @@ class Tinhte_XenTag_Helper
 				}
 
 				$escapedText = htmlspecialchars($tagText);
-				if ($isStaff)
-				{
-					$escapedText .= '*';
-				}
 
 				if (!empty($altLink))
 				{
@@ -218,14 +209,6 @@ class Tinhte_XenTag_Helper
 		{
 			foreach ($tagsOrTexts as $tagOrText)
 			{
-				if (is_array($tagOrText))
-				{
-					if (!empty($tagOrText['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
-					{
-						continue;
-					}
-				}
-
 				$escapedText = htmlspecialchars(self::getTextFromTagOrText($tagOrText));
 
 				$result[] = htmlspecialchars($escapedText);

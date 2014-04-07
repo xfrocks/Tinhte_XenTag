@@ -104,6 +104,7 @@ class Tinhte_XenTag_Integration
 						{
 							throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_create_new_tag'), true);
 						}
+						continue;
 					}
 				}
 
@@ -115,7 +116,10 @@ class Tinhte_XenTag_Integration
 
 				if (!empty($newTag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
 				{
-					// no permission to add this tag
+					if (!empty($options['throwException']))
+					{
+						throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_use_tag_x', array('tag_text' => $newTag['tag_text'])), true);
+					}
 					continue;
 				}
 
@@ -145,7 +149,10 @@ class Tinhte_XenTag_Integration
 				{
 					if (!empty($removedTag['is_staff']) AND !XenForo_Visitor::getInstance()->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF))
 					{
-						// no permission to remove this tag
+						if (!empty($options['throwException']))
+						{
+							throw new XenForo_Exception(new XenForo_Phrase('tinhte_xentag_you_can_not_remove_tag_x', array('tag_text' => $removedTag['tag_text'])), true);
+						}
 						continue;
 					}
 
