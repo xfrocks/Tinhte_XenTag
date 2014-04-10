@@ -2,8 +2,31 @@
 {
 	var parent__initAutoComplete = XenForo.BbCodeWysiwygEditor.prototype.initAutoComplete;
 
+	var shouldWork = function()
+	{
+		if (window.Tinhte_XenTag_maximumHashtags === _undefined)
+		{
+			// not defined?
+			return false;
+		}
+
+		if (window.Tinhte_XenTag_maximumHashtags === 0)
+		{
+			// no permission
+			return false;
+		}
+
+		return true;
+	};
+
 	XenForo.BbCodeWysiwygEditor.prototype.initAutoComplete = function()
 	{
+		if (!shouldWork())
+		{
+			console.log('bye bye');
+			return parent__initAutoComplete.call(this);
+		}
+
 		var api = this.api;
 		var $ed = api.$editor;
 		var doc = $ed[0].ownerDocument;

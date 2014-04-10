@@ -107,6 +107,8 @@ class Tinhte_XenTag_Listener
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
+			case 'thread_reply':
+			case 'thread_view':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 			case 'tools_rebuild':
@@ -175,6 +177,8 @@ class Tinhte_XenTag_Listener
 			case 'search_form_post':
 			case 'thread_create':
 			case 'thread_edit':
+			case 'thread_reply':
+			case 'thread_view':
 			case 'thread_list_item_edit':
 			case 'thread_list_item_preview':
 			case 'tools_rebuild':

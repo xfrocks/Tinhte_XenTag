@@ -2,6 +2,14 @@
 
 class Tinhte_XenTag_XenForo_Model_Forum extends XFCP_Tinhte_XenTag_XenForo_Model_Forum
 {
+	public function prepareForum(array $forum)
+	{
+		$forum = parent::prepareForum($forum);
+
+		$forum['Tinhte_XenTag_maximumHashtags'] = $this->Tinhte_XenTag_getMaximumHashtags($forum);
+
+		return $forum;
+	}
 
 	public function Tinhte_XenTag_getForumIdsInRange($start, $limit)
 	{
@@ -32,14 +40,14 @@ class Tinhte_XenTag_XenForo_Model_Forum extends XFCP_Tinhte_XenTag_XenForo_Model
 
 		return $forums;
 	}
-	
+
 	public function Tinhte_XenTag_getMaximumTags(array $forum, array $nodePermissions = null, array $viewingUser = null)
 	{
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);
 
 		return XenForo_Permission::hasContentPermission($nodePermissions, 'Tinhte_XenTag_maximumTags');
 	}
-	
+
 	public function Tinhte_XenTag_getMaximumHashtags(array $forum, array $nodePermissions = null, array $viewingUser = null)
 	{
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.0.0e" version_id="120" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.0.0f" version_id="121" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -1449,11 +1449,13 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_thread_create" version_id="3" version_string="0.9.2"><![CDATA[<xen:if is="{$Tinhte_XenTag_canTag}">
+    <template title="tinhte_xentag_thread_create" version_id="120" version_string="2.0.0e"><![CDATA[<xen:if is="{$Tinhte_XenTag_canTag}">
 	<!-- [Tinhte] XenTag / Mark --><!-- slot: after_editor --><!-- [Tinhte] XenTag / Mark -->
 
 	<fieldset><xen:include template="tinhte_xentag_thread_edit_fields" /></fieldset>
-</xen:if>]]></template>
+</xen:if>
+
+<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
     <template title="tinhte_xentag_thread_edit" version_id="3" version_string="0.9.2"><![CDATA[<xen:if is="{$Tinhte_XenTag_canEdit}">
 	<xen:include template="tinhte_xentag_thread_edit_fields" />
 
@@ -1532,6 +1534,12 @@ a.Tinhte_XenTag_TagLink:focus {
     	</xen:include>
     </xen:if>
 </div>]]></template>
+    <template title="tinhte_xentag_thread_hashtag_js" version_id="120" version_string="2.0.0e"><![CDATA[<xen:if is="isset({$forum.Tinhte_XenTag_maximumHashtags})">
+	<xen:container
+		var="$head.Tinhte_XenTag_maximumHashtags"><script type="text/javascript">
+window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHashtags}');
+</script></xen:container>
+</xen:if>]]></template>
     <template title="tinhte_xentag_thread_list_item_edit" version_id="3" version_string="0.9.2"><![CDATA[<xen:comment>
 	<xen:require js="js/Tinhte/XenTag/frontend.js" />
 	<xen:require css="tinhte_xentag.css" />
@@ -1562,6 +1570,8 @@ a.Tinhte_XenTag_TagLink:focus {
 	<!-- [Tinhte] XenTag / Mark --></div><!-- [Tinhte] XenTag / Mark -->
 	<!-- [Tinhte] XenTag / Revert Mark --><xen:comment>We want to look for the last occurence of </div> for best effect!</xen:comment>
 </xen:if>]]></template>
+    <template title="tinhte_xentag_thread_reply" version_id="120" version_string="2.0.0e"><![CDATA[<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
+    <template title="tinhte_xentag_thread_view" version_id="120" version_string="2.0.0e"><![CDATA[<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
     <template title="tinhte_xentag_watch_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_watched_tags}</xen:title>
 <xen:description>{xen:phrase tinhte_xentag_this_is_list_of_all_tags_that_you_watching}</xen:description>
 
