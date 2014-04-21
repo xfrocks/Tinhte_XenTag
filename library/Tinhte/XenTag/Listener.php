@@ -20,6 +20,7 @@ class Tinhte_XenTag_Listener
 			'XenForo_ControllerPublic_Thread',
 			'XenForo_ControllerPublic_Watched',
 
+			'XenForo_DataWriter_AddOn',
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
 			'XenForo_DataWriter_Forum',

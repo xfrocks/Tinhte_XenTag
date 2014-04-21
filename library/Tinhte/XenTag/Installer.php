@@ -1,4 +1,5 @@
 <?php
+
 class Tinhte_XenTag_Installer
 {
 	/* Start auto-generated lines of code. Change made will be overwriten... */
@@ -194,7 +195,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-		
+
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
