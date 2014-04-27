@@ -689,6 +689,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_created_days_explain" version_id="113" version_string="1.9.1-dev"><![CDATA[If entered, only tags that was created recently will be included.]]></phrase>
     <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
     <phrase title="tinhte_xentag_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Delete Empty Tags]]></phrase>
+    <phrase title="tinhte_xentag_delete_tag_explain" version_id="123" version_string="2.1.0-dev"><![CDATA[Check this box to delete the tag. All tagged contents will be updated to remove reference to this tag. This action cannot be undone.]]></phrase>
     <phrase title="tinhte_xentag_disable_alert_notification" version_id="115" version_string="1.9.1-dev"><![CDATA[Disable alert notification]]></phrase>
     <phrase title="tinhte_xentag_display_position_post_below" version_id="89" version_string="1.7.2"><![CDATA[Below first post]]></phrase>
     <phrase title="tinhte_xentag_display_position_post_message_below" version_id="89" version_string="1.7.2"><![CDATA[Below first post message]]></phrase>
@@ -1213,7 +1214,7 @@ a.Tinhte_XenTag_TagLink:focus {
     	</div>
     </xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tag_edit" version_id="105" version_string="1.9-dev"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_edit}: {$tag.tag_text}</xen:title>
+    <template title="tinhte_xentag_tag_edit" version_id="123" version_string="2.1.0-dev"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_tag_edit}: {$tag.tag_text}</xen:title>
 
 <xen:navigation>
 	<xen:breadcrumb href="{xen:link tags}">{xen:phrase tinhte_xentag_tags}</xen:breadcrumb>
@@ -1233,6 +1234,17 @@ a.Tinhte_XenTag_TagLink:focus {
 		<dt><label for="ctrl_tag_description">{xen:phrase tinhte_xentag_tag_description}:</label></dt>
 		<dd>
 			<textarea name="tag_description" id="ctrl_tag_description" rows="5" class="textCtrl Elastic">{$tag.tag_description}</textarea>
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit">
+		<dt>&nbsp;</dt>
+		<dd>
+			<label>
+				<input type="checkbox" name="delete" value="1" />
+				{xen:phrase delete}
+			</label>
+			<p class="explain">{xen:phrase tinhte_xentag_delete_tag_explain}</p>
 		</dd>
 	</dl>
 

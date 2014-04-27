@@ -330,6 +330,13 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 
 			$dw = XenForo_DataWriter::create('Tinhte_XenTag_DataWriter_Tag');
 			$dw->setExistingData($tag['tag_id']);
+
+			if ($this->_input->filterSingle('delete', XenForo_Input::UINT))
+			{
+				$dw->delete();
+				return $this->responseRedirect(XenForo_ControllerResponse_Redirect::SUCCESS, XenForo_Link::buildPublicLink('tags'));
+			}
+
 			$dw->bulkSet($dwInput);
 			$dw->save();
 
