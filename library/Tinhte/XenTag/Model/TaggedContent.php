@@ -13,6 +13,7 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 		$this->_deleteTaggedContentsPages($tag, $taggeds);
 		$this->_deleteTaggedContentsForums($tag, $taggeds);
 		$this->_deleteTaggedContentsResources($tag, $taggeds);
+		$this->_deleteTaggedContentsPosts($tag, $taggeds);
 	}
 
 	protected function _deleteTaggedContentsThreads(array $tag, array $taggeds)
@@ -33,7 +34,8 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 
 		foreach ($threads as $thread)
 		{
-			$tagTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
+			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 			$filteredTagTexts = array();
 
 			foreach ($tagTexts as $tagText)
@@ -80,7 +82,8 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 
 		foreach ($pages as $page)
 		{
-			$tagTexts = Tinhte_XenTag_Helper::unserialize($page[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($page[Tinhte_XenTag_Constants::FIELD_PAGE_TAGS]);
+			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 			$filteredTagTexts = array();
 
 			foreach ($tagTexts as $tagText)
@@ -127,7 +130,8 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 
 		foreach ($forums as $forum)
 		{
-			$tagTexts = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 			$filteredTagTexts = array();
 
 			foreach ($tagTexts as $tagText)
@@ -180,7 +184,8 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 
 		foreach ($resources as $resource)
 		{
-			$tagTexts = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+			$tagsOrTexts = Tinhte_XenTag_Helper::unserialize($resource[Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS]);
+			$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 			$filteredTagTexts = array();
 
 			foreach ($tagTexts as $tagText)
@@ -204,6 +209,39 @@ class Tinhte_XenTag_Model_TaggedContent extends XenForo_Model
 				// save queries
 				$dw->Tinhte_XenTag_setTags($filteredTagTexts);
 				$dw->setExtraData(Tinhte_XenTag_XenResource_DataWriter_Resource::DATA_SKIP_UPDATE_TAGS_IN_DATABASE, true);
+				$dw->save();
+			}
+		}
+	}
+
+	protected function _deleteTaggedContentsPosts(array $tag, array $taggeds)
+	{
+		$tagModel = $this->getModelFromCache('Tinhte_XenTag_Model_Tag');
+		$postModel = $this->getModelFromCache('XenForo_Model_Post');
+
+		$postIds = array();
+		foreach ($taggeds as $tagged)
+		{
+			if ($tagged['content_type'] == 'post')
+			{
+				$postIds[] = $tagged['content_id'];
+			}
+		}
+
+		$posts = $postModel->getPostsByIds($postIds);
+
+		foreach ($posts as $post)
+		{
+			$pattern = '@\[HASHTAG\](#' . preg_quote($tag['tag_text'], '@') . ')\[/HASHTAG\]@i';
+			$message = preg_replace($pattern, '$1', $post['message']);
+
+			if ($message != $post['message'])
+			{
+				/* @var $dw XenForo_DataWriter_DiscussionMessage_Post */
+				$dw = XenForo_DataWriter::create('XenForo_DataWriter_DiscussionMessage_Post');
+
+				$dw->setExistingData($post, true);
+				$dw->set('message', $message);
 				$dw->save();
 			}
 		}
