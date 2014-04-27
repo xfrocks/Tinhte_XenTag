@@ -33,6 +33,15 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 
 	protected function _verifyText(&$text)
 	{
+		$text = Tinhte_XenTag_Helper::getNormalizedTagText($text);
+		
+		$censored = XenForo_Helper_String::censorString($text);
+		if ($censored !== $text)
+		{
+			$this->error(new XenForo_Phrase('tinhte_xentag_tag_no_contain_censored'), 'tag_text');
+			return false;
+		}
+
 		if (Tinhte_XenTag_Helper::isTagContainingSeparator($text))
 		{
 			$this->error(new XenForo_Phrase('tinhte_xentag_tag_can_not_contain_comma'), 'tag_text');
@@ -52,8 +61,6 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 			$this->error(new XenForo_Phrase('tinhte_xentag_tag_can_not_longer_than_x', array('maxLength' => Tinhte_XenTag_Option::get('tagMaxLength'))), 'tag_text');
 			return false;
 		}
-
-		$text = Tinhte_XenTag_Helper::getNormalizedTagText($text);
 
 		return true;
 	}

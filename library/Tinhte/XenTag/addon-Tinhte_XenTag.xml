@@ -751,6 +751,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_tag_edit" version_id="1" version_string="0.9"><![CDATA[Edit Tag]]></phrase>
     <phrase title="tinhte_xentag_tag_must_be_at_least_x_length" version_id="122" version_string="2.0.1"><![CDATA[Tag must be at least {minLength} characters in length.]]></phrase>
     <phrase title="tinhte_xentag_tag_not_found" version_id="1" version_string="0.9"><![CDATA[The requested Tag could not be found]]></phrase>
+    <phrase title="tinhte_xentag_tag_no_contain_censored" version_id="123" version_string="2.1.0-dev"><![CDATA[Tag must not contain censored texts.]]></phrase>
     <phrase title="tinhte_xentag_tag_no_results" version_id="1" version_string="0.9"><![CDATA[No clues of Tag at this moment...]]></phrase>
     <phrase title="tinhte_xentag_tag_please_confirm" version_id="68" version_string="1.3.4.1"><![CDATA[Please confirm that you want to delete the following tag]]></phrase>
     <phrase title="tinhte_xentag_tag_save" version_id="1" version_string="0.9"><![CDATA[Save Tag]]></phrase>
