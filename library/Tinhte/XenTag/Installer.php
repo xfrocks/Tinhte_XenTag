@@ -195,7 +195,7 @@ class Tinhte_XenTag_Installer
 				$db->query($patch['alterTableAddColumnQuery']);
 			}
 		}
-
+		
 		self::installCustomized($existingAddOn, $addOnData);
 	}
 
@@ -364,6 +364,16 @@ class Tinhte_XenTag_Installer
 				WHERE `tinhte_xentag_tags` IS NOT NULL
 					AND `tinhte_xentag_tags` <> 'a:0:{}'
 			");
+		}
+
+		if ($effectiveVersionId >= 96 AND $effectiveVersionId <= 122)
+		{
+			// automatically turn on `useHashtag` for sites which is running v1.9.0+
+			// and being upgraded to v2.1.0
+			$dw = XenForo_DataWriter::create('XenForo_DataWriter_Option');
+			$dw->setExistingData('Tinhte_XenTag_useHashtag');
+			$dw->set('option_value', 1);
+			$dw->save();
 		}
 	}
 

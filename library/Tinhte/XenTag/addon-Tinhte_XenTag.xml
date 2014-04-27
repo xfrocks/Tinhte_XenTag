@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.0.1" version_id="122" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="2.1.0-dev" version_id="123" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation>
     <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
   </admin_navigation>
@@ -587,6 +587,12 @@ step=7</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="5022"/>
     </option>
+    <option option_id="Tinhte_XenTag_useHashtag" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
   </optiongroups>
   <permissions>
     <permission_groups/>
@@ -654,6 +660,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_trendingMax_explain" version_id="107" version_string="1.9-dev"><![CDATA[]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingTtl" version_id="107" version_string="1.9-dev"><![CDATA[Trending TTL]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingTtl_explain" version_id="107" version_string="1.9-dev"><![CDATA[Enter how often (in days) the trending tags should be calculated.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_useHashtag" version_id="122" version_string="2.0.1"><![CDATA[Use #hashtag]]></phrase>
+    <phrase title="option_Tinhte_XenTag_useHashtag_explain" version_id="122" version_string="2.0.1"><![CDATA[Enable this option to allow user to use #hashtag in posts. With #hashtag feature enable, you can prohibit some users from using it by configuring the user group permission "[XenTag] Max #hashtags per post".]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumHts" version_id="96" version_string="1.9-dev"><![CDATA[[XenTag] Max #hashtags per post]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumTags" version_id="93" version_string="1.8.3"><![CDATA[[XenTag] Max tags per thread]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_tag" version_id="3" version_string="0.9.2"><![CDATA[[XenTag] Tag thread by self]]></phrase>

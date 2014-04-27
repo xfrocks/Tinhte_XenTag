@@ -50,6 +50,11 @@ class Tinhte_XenTag_XenForo_Model_Forum extends XFCP_Tinhte_XenTag_XenForo_Model
 
 	public function Tinhte_XenTag_getMaximumHashtags(array $forum, array $nodePermissions = null, array $viewingUser = null)
 	{
+		if (!Tinhte_XenTag_Option::get('useHashtag'))
+		{
+			return 0;
+		}
+
 		$this->standardizeViewingUserReferenceForNode($forum['node_id'], $viewingUser, $nodePermissions);
 
 		return XenForo_Permission::hasContentPermission($nodePermissions, 'Tinhte_XenTag_maximumHts');
