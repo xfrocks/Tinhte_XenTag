@@ -66,6 +66,7 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 				{
 					break;
 				}
+				$offset = $pos + 1;
 
 				if ($pos > 0)
 				{
@@ -74,7 +75,7 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 					{
 						// the before character of tag text is not a valid character, dismiss the found
 						// tag text
-						break;
+						continue;
 					}
 				}
 
@@ -91,6 +92,12 @@ class Tinhte_XenTag_BbCode_Formatter_AutoHashtag extends XFCP_Tinhte_XenTag_BbCo
 				$nonTagTextPos += $pos + 1;
 
 				$tagText = utf8_trim(utf8_substr($string, $pos + 1, $nonTagTextPos - 1 - $pos));
+
+				if (utf8_strlen($tagText) < Tinhte_XenTag_Option::get('tagMinLength'))
+				{
+					// too short
+					continue;
+				}
 
 				$afterTagText = utf8_substr($string, $nonTagTextPos, 1);
 				if (!empty($afterTagText))
