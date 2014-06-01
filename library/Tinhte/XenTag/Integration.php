@@ -185,6 +185,22 @@ class Tinhte_XenTag_Integration
 		if ($changed)
 		{
 			$tagModel->rebuildTagsCache();
+
+			// reorder updated tag to match the original tag texts order
+			$updatedTagsReordered = array();
+			foreach ($tagTexts as $tagText)
+			{
+				$updatedTag = $tagModel->getTagFromArrayByText($updatedTags, $tagText);
+				if (!empty($updatedTag))
+				{
+					$updatedTagsReordered[] = $updatedTag;
+				}
+			}
+			if (count($updatedTags) === count($updatedTagsReordered))
+			{
+				// do one extra check to make sure every works as expected
+				$updatedTags = $updatedTagsReordered;
+			}
 		}
 
 		$packedTags = $tagModel->packTags($updatedTags);
