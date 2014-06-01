@@ -55,7 +55,8 @@
 			switch (code) {
 			// sondh@2012-08-12
 			// commented this out due to feedback from dihuta
-			/*
+			// sondh@2014-06-01
+			// uncommented this out due to feedback from dihuta (?!)
 			case 8: // backspace
 				if (this.$input.val() == '') {
 					// input is empty and backspace is pressed
@@ -63,7 +64,6 @@
 					this.$ul.find('.Tinhte_XenTag_Tag:last').remove();
 				}
 				break;
-			*/
 			case 13: // enter
 			case 44: // comma
 				// creates tag with input value
