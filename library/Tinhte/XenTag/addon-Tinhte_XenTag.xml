@@ -702,10 +702,8 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
     <phrase title="tinhte_xentag_auto_tag_mode_thread_tags_first_post_only" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag the first post with thread tags only]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_resource_tags" version_id="77" version_string="1.6"><![CDATA[Auto tag resource tags only]]></phrase>
     <phrase title="tinhte_xentag_content_count" version_id="3" version_string="0.9.2"><![CDATA[Content Count]]></phrase>
-    <phrase title="tinhte_xentag_created_date" version_id="1" version_string="0.9"><![CDATA[Created Date]]></phrase>
     <phrase title="tinhte_xentag_created_days" version_id="113" version_string="1.9.1-dev"><![CDATA[Days since creation]]></phrase>
     <phrase title="tinhte_xentag_created_days_explain" version_id="113" version_string="1.9.1-dev"><![CDATA[If entered, only tags that was created recently will be included.]]></phrase>
-    <phrase title="tinhte_xentag_created_user_id" version_id="1" version_string="0.9"><![CDATA[Created User Id]]></phrase>
     <phrase title="tinhte_xentag_delete_empty_tags" version_id="33" version_string="1.0.6"><![CDATA[Delete Empty Tags]]></phrase>
     <phrase title="tinhte_xentag_delete_tag_explain" version_id="123" version_string="2.1.0-dev"><![CDATA[Check this box to delete the tag. All tagged contents will be updated to remove reference to this tag. This action cannot be undone.]]></phrase>
     <phrase title="tinhte_xentag_disable_alert_notification" version_id="115" version_string="1.9.1-dev"><![CDATA[Disable alert notification]]></phrase>
@@ -717,7 +715,6 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
     <phrase title="tinhte_xentag_edit_tags" version_id="1" version_string="0.9"><![CDATA[Edit Tags]]></phrase>
     <phrase title="tinhte_xentag_enable_alert_notification" version_id="115" version_string="1.9.1-dev"><![CDATA[Enable alert notification]]></phrase>
     <phrase title="tinhte_xentag_forum" version_id="69" version_string="1.4"><![CDATA[Forum (Tags)]]></phrase>
-    <phrase title="tinhte_xentag_forum_maximum_tags_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Set the maximum tags can be tagged in a thread. Set to 0 (zero) to have no limit.]]></phrase>
     <phrase title="tinhte_xentag_forum_requires_tag_explain" version_id="34" version_string="1.1"><![CDATA[You can override global setting for this forum here. Select Yes to requires at least one tag in a new thread.]]></phrase>
     <phrase title="tinhte_xentag_is_staff" version_id="89" version_string="1.7.2"><![CDATA[Is staff-only tag]]></phrase>
     <phrase title="tinhte_xentag_is_staff_explain" version_id="119" version_string="2.0.0d"><![CDATA[Only members of user groups with the permission "[XenTag] Use staff-only tags" can use staff tag in their contents. Everyone can view it.]]></phrase>
@@ -746,7 +743,6 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
     <phrase title="tinhte_xentag_search_index_md5_dashes" version_id="76" version_string="1.6-dev"><![CDATA[Hashed with dashes (recommended)]]></phrase>
     <phrase title="tinhte_xentag_search_index_plaintext" version_id="76" version_string="1.6-dev"><![CDATA[Plaintext]]></phrase>
     <phrase title="tinhte_xentag_search_threads_tagged_with_x_only" version_id="1" version_string="0.9"><![CDATA[Search threads tagged with {tag_text} only]]></phrase>
-    <phrase title="tinhte_xentag_sort" version_id="1" version_string="0.9"><![CDATA[Sort]]></phrase>
     <phrase title="tinhte_xentag_stop_watching_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Stop watching tags]]></phrase>
     <phrase title="tinhte_xentag_tag" version_id="1" version_string="0.9"><![CDATA[Tag]]></phrase>
     <phrase title="tinhte_xentag_tagged_contents" version_id="3" version_string="0.9.2"><![CDATA[Tagged Contents]]></phrase>
@@ -757,7 +753,6 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
     <phrase title="tinhte_xentag_tags_instruction" version_id="35" version_string="1.1.1"><![CDATA[Enter list of tags, separated by comma.]]></phrase>
     <phrase title="tinhte_xentag_tags_lowercase" version_id="6" version_string="0.9.5"><![CDATA[tags]]></phrase>
     <phrase title="tinhte_xentag_tags_simple_list" version_id="116" version_string="2.0.0"><![CDATA[Tags]]></phrase>
-    <phrase title="tinhte_xentag_tag_add" version_id="1" version_string="0.9"><![CDATA[Add New Tag]]></phrase>
     <phrase title="tinhte_xentag_tag_can_not_contain_comma" version_id="1" version_string="0.9"><![CDATA[Tag can not contain comma]]></phrase>
     <phrase title="tinhte_xentag_tag_can_not_longer_than_x" version_id="6" version_string="0.9.5"><![CDATA[Tag can not be longer than {maxLength} characters.]]></phrase>
     <phrase title="tinhte_xentag_tag_cloud" version_id="3" version_string="0.9.2"><![CDATA[Tag Cloud]]></phrase>
