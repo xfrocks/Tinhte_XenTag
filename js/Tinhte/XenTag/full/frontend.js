@@ -24,10 +24,7 @@
 			
 			$ul.click($.context(this, 'ulClick'));
 			
-			// changed to listen to keyup instead of keypress
-			// because some of our required keystroke is not sent to keypress (on some browser, namely Chrome)
-			// since 1.0.6
-			// this.$input.keypress($.context(this, 'inputKeystroke'));
+			this.$input.keydown($.context(this, 'inputKeyDown'));
 			this.$input.keyup($.context(this, 'inputKeystroke'));
 			
 			// process old tags automatically
@@ -49,14 +46,10 @@
 			}
 		},
 		
-		inputKeystroke: function(e) {
+		inputKeyDown: function(e) {
 			var code = e.which;
 			
 			switch (code) {
-			// sondh@2012-08-12
-			// commented this out due to feedback from dihuta
-			// sondh@2014-06-01
-			// uncommented this out due to feedback from dihuta (?!)
 			case 8: // backspace
 				if (this.$input.val() == '') {
 					// input is empty and backspace is pressed
@@ -64,6 +57,13 @@
 					this.$ul.find('.Tinhte_XenTag_Tag:last').remove();
 				}
 				break;
+			}
+		},
+		
+		inputKeystroke: function(e) {
+			var code = e.which;
+
+			switch (code) {
 			case 13: // enter
 			case 44: // comma
 				// creates tag with input value
