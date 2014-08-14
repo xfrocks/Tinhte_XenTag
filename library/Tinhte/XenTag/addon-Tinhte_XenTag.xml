@@ -171,9 +171,16 @@
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
-    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase tinhte_xentag_trending_days}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDays}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
 <xen:spinboxunit label="{xen:phrase tinhte_xentag_created_days}:" name="{$namePrefix}created_days" value="{$options.created_days}" min="0" step="7"
 				 explain="{xen:phrase tinhte_xentag_created_days_explain}" />
+
+<xen:if is="!{$hideTrendingType}">
+	<xen:radiounit label="{xen:phrase option_Tinhte_XenTag_trendingType}:" name="{$namePrefix}type" value="{xen:if '!empty({$options.type})', $options.type, $xenOptions.Tinhte_XenTag_trendingType}">
+		<xen:option value="content">{xen:phrase tinhte_xentag_trending_type_content}</xen:option>
+		<xen:option value="view">{xen:phrase tinhte_xentag_trending_type_view}</xen:option>
+	</xen:radiounit>
+</xen:if>
 
 <xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
@@ -182,7 +189,9 @@
 	<xen:options source="$forums" />
 </xen:selectunit>
 
-<xen:include template="tinhte_xentag_widget_trending_options" />]]></template>
+<xen:include template="tinhte_xentag_widget_trending_options">
+	<xen:set var="$hideTrendingType">1</xen:set>
+</xen:include>]]></template>
   </admin_templates>
   <admin_template_modifications/>
   <code_events/>
@@ -585,7 +594,14 @@ step=5</edit_format_params>
       <edit_format_params>min=1
 step=7</edit_format_params>
       <sub_options></sub_options>
-      <relation group_id="Tinhte_XenTag" display_order="5022"/>
+      <relation group_id="Tinhte_XenTag" display_order="5029"/>
+    </option>
+    <option option_id="Tinhte_XenTag_trendingType" edit_format="radio" data_type="string" can_backup="1">
+      <default_value>content</default_value>
+      <edit_format_params>content = {xen:phrase tinhte_xentag_trending_type_content}
+view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="5023"/>
     </option>
     <option option_id="Tinhte_XenTag_useHashtag" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>0</default_value>
@@ -660,6 +676,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_trendingMax_explain" version_id="107" version_string="1.9-dev"><![CDATA[]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingTtl" version_id="107" version_string="1.9-dev"><![CDATA[Trending TTL]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingTtl_explain" version_id="107" version_string="1.9-dev"><![CDATA[Enter how often (in days) the trending tags should be calculated.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingType" version_id="126" version_string="2.1.1"><![CDATA[Trending Type]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingType_explain" version_id="126" version_string="2.1.1"><![CDATA[]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag" version_id="122" version_string="2.0.1"><![CDATA[Use #hashtag]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag_explain" version_id="122" version_string="2.0.1"><![CDATA[Enable this option to allow user to use #hashtag in posts. With #hashtag feature enable, you can prohibit some users from using it by configuring the user group permission "[XenTag] Max #hashtags per post".]]></phrase>
     <phrase title="permission_forum_Tinhte_XenTag_maximumHts" version_id="96" version_string="1.9-dev"><![CDATA[[XenTag] Max #hashtags per post]]></phrase>
@@ -770,7 +788,8 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_to_view_this_resource_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this resource, click here]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
     <phrase title="tinhte_xentag_trending" version_id="107" version_string="1.9-dev"><![CDATA[Trending]]></phrase>
-    <phrase title="tinhte_xentag_trending_days" version_id="113" version_string="1.9.1-dev"><![CDATA[Days of recent usage]]></phrase>
+    <phrase title="tinhte_xentag_trending_type_content" version_id="126" version_string="2.1.1"><![CDATA[Sort by number of tagged contents]]></phrase>
+    <phrase title="tinhte_xentag_trending_type_view" version_id="126" version_string="2.1.1"><![CDATA[Sort by number of views]]></phrase>
     <phrase title="tinhte_xentag_unwatch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Unwatch Tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tag" version_id="55" version_string="1.2.16"><![CDATA[Viewing tag]]></phrase>
     <phrase title="tinhte_xentag_viewing_tags" version_id="55" version_string="1.2.16"><![CDATA[Viewing tags]]></phrase>

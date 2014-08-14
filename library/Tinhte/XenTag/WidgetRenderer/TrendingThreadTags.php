@@ -125,7 +125,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 				if (isset($tagsDb[$tagId]))
 				{
 					$tags[$tagId] = $tagsDb[$tagId];
-					$tags[$tagId]['tagged_count'] = $count;
+					$tags[$tagId]['trending_count'] = $count;
 				}
 			}
 		}

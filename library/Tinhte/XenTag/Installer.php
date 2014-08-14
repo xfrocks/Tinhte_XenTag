@@ -14,6 +14,7 @@ class Tinhte_XenTag_Installer
 				,`created_date` INT(10) UNSIGNED NOT NULL
 				,`created_user_id` INT(10) UNSIGNED NOT NULL
 				,`content_count` INT(10) UNSIGNED DEFAULT \'0\'
+				,`view_count` INT(10) UNSIGNED DEFAULT \'0\'
 				,`target_type` VARCHAR(25) NOT NULL DEFAULT \'\'
 				,`target_id` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
 				,`target_data` MEDIUMBLOB
@@ -129,6 +130,14 @@ class Tinhte_XenTag_Installer
 			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_options\'',
 			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_options` MEDIUMBLOB',
 			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_options`',
+		),
+		array(
+			'table' => 'xf_tinhte_xentag_tag',
+			'field' => 'view_count',
+			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
+			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'view_count\'',
+			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `view_count` INT(10) UNSIGNED DEFAULT \'0\'',
+			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `view_count`',
 		),
 		array(
 			'table' => 'xf_forum',
@@ -365,6 +374,22 @@ class Tinhte_XenTag_Installer
 					AND `tinhte_xentag_tags` <> 'a:0:{}'
 			");
 		}
+
+		$db->query('
+			CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_view` (
+				`tag_id` int(10) unsigned NOT NULL
+			) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+		');
+		
+		$db->query('
+			CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_day_view` (
+				`tag_id` int(10) unsigned NOT NULL,
+				`day_timestamp` int(10) unsigned NOT NULL,
+				`view_count` int(10) unsigned NOT NULL DEFAULT 0,
+				PRIMARY KEY (`tag_id`, `day_timestamp`),
+				KEY (`day_timestamp`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		');
 	}
 
 	private static function uninstallCustomized()
@@ -390,6 +415,9 @@ class Tinhte_XenTag_Installer
 		)) . ')');
 
 		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
+
+		$db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_view`;');
+		$db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_day_view`;');
 
 		$dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
 		$dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);

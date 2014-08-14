@@ -157,6 +157,8 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 			$linkParams[Tinhte_XenTag_Constants::SEARCH_SEARCH_ID] = $search['search_id'];
 		}
 
+		$tagModel->logTagView($tag['tag_id']);
+
 		$viewParams = array(
 			'tag' => $tag,
 			'search' => $search,

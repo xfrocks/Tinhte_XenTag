@@ -1,4 +1,5 @@
 <?php
+
 class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 {
 	protected $_dataClasses = array(
@@ -14,6 +15,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 				'created_date' => array('name' => 'created_date', 'type' => 'uint', 'required' => true),
 				'created_user_id' => array('name' => 'created_user_id', 'type' => 'uint', 'required' => true),
 				'content_count' => array('name' => 'content_count', 'type' => 'uint', 'default' => 0),
+				'view_count' => array('name' => 'view_count', 'type' => 'uint', 'default' => 0),
 				'target_type' => array('name' => 'target_type', 'type' => 'string', 'length' => 25, 'required' => true, 'default' => ''),
 				'target_id' => array('name' => 'target_id', 'type' => 'uint', 'required' => true, 'default' => 0),
 				'target_data' => array('name' => 'target_data', 'type' => 'serialized'),
@@ -94,6 +96,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 			'is_staff' => array('name' => 'is_staff', 'type' => 'uint', 'required' => true, 'default' => 0),
 			'tag_title' => array('name' => 'tag_title', 'type' => 'string'),
 			'tag_options' => array('name' => 'tag_options', 'type' => 'serialized'),
+			'view_count' => array('name' => 'view_count', 'type' => 'uint', 'default' => 0),
 		),
 		'xf_forum' => array(
 			'tinhte_xentag_options' => array('name' => 'tinhte_xentag_options', 'type' => 'serialized'),

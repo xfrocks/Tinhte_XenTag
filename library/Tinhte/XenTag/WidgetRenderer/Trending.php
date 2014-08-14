@@ -19,6 +19,7 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
 			'options' => array(
 				'days' => XenForo_Input::UINT,
 				'created_days' => XenForo_Input::UINT,
+				'type' => XenForo_Input::STRING,
 				'limit' => XenForo_Input::UINT
 			),
 			'useCache' => true,
@@ -45,6 +46,13 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
 			if (empty($optionValue))
 			{
 				$optionValue = Tinhte_XenTag_Option::get('trendingMax');
+			}
+		}
+		elseif ('type' == $optionKey)
+		{
+			if (empty($optionValue))
+			{
+				$optionValue = Tinhte_XenTag_Option::get('trendingType');
 			}
 		}
 
@@ -77,6 +85,15 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
 			$createdCutoff = XenForo_Application::$time - $widget['options']['created_days'] * 86400;
 		}
 
+		if (!empty($widget['options']['type']))
+		{
+			$type = $widget['options']['type'];
+		}
+		else
+		{
+			$type = Tinhte_XenTag_Option::get('trendingType');
+		}
+
 		if (!empty($widget['options']['limit']))
 		{
 			$limit = $widget['options']['limit'];
@@ -86,7 +103,7 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
 			$limit = Tinhte_XenTag_Option::get('trendingMax');
 		}
 
-		$tags = $tagModel->getTrendingTags($cutoff, $limit, $createdCutoff);
+		$tags = $tagModel->getTrendingTags($cutoff, $limit, $type, $createdCutoff);
 		$tagModel->calculateCloudLevel($tags);
 
 		$template->setParam('tags', $tags);

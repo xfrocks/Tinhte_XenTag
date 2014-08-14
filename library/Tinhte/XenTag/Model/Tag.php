@@ -5,31 +5,97 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 
 	const FETCH_TAGGED = 1;
 
-	public function getTrendingTags($cutoff, $limit, $createdCutoff = 0)
+	public function logTagView($tagView)
 	{
-		$taggedCount = $this->_getDb()->fetchPairs('
-			SELECT tagged.tag_id, count(*) AS tagged_count
-			FROM `xf_tinhte_xentag_tagged_content` AS tagged
-			' . ($createdCutoff > 0 ? 'INNER JOIN `xf_tinhte_xentag_tag` AS tag ON (tag.tag_id = tagged.tag_id AND tag.created_date > ' . $createdCutoff . ')' : '') . '
-			WHERE tagged.tagged_date > ?
-			GROUP BY tagged.tag_id
-			ORDER BY tagged_count DESC
-			LIMIT ?;
-		', array(
-			$cutoff,
-			$limit,
-		));
+		$this->_getDb()->query('
+			INSERT ' . (XenForo_Application::get('options')->enableInsertDelayed ? 'DELAYED' : '') . ' INTO xf_tinhte_xentag_tag_view
+				(tag_id)
+			VALUES
+				(?)
+		', $tagView);
+	}
+
+	public function updateTagViews()
+	{
+		$db = $this->_getDb();
+
+		$dayTimestamp = floor(XenForo_Application::$time / 86400) * 86400;
+
+		$db->query('
+			INSERT IGNORE INTO xf_tinhte_xentag_tag_day_view
+			(tag_id, day_timestamp)
+			SELECT DISTINCT tag_id, ?
+			FROM xf_tinhte_xentag_tag_view
+		', $dayTimestamp);
+
+		$db->query('
+			UPDATE xf_tinhte_xentag_tag
+			INNER JOIN xf_tinhte_xentag_tag_day_view
+				ON (xf_tinhte_xentag_tag_day_view.tag_id = xf_tinhte_xentag_tag.tag_id
+					AND xf_tinhte_xentag_tag_day_view.day_timestamp = ?)
+			INNER JOIN (
+				SELECT tag_id, COUNT(*) AS total
+				FROM xf_tinhte_xentag_tag_view
+				GROUP BY tag_id
+			) AS tv ON (tv.tag_id = xf_tinhte_xentag_tag.tag_id)
+			SET xf_tinhte_xentag_tag.view_count = xf_tinhte_xentag_tag.view_count + tv.total,
+				xf_tinhte_xentag_tag_day_view.view_count = xf_tinhte_xentag_tag_day_view.view_count + tv.total;
+		', $dayTimestamp);
+
+		$db->query('TRUNCATE TABLE xf_tinhte_xentag_tag_view');
+	}
+
+	public function getTrendingTags($cutoff, $limit, $type, $createdCutoff = 0)
+	{
+		if ($limit === 0)
+		{
+			return array();
+		}
+
+		switch ($type)
+		{
+			case 'view':
+				$counts = $this->_getDb()->fetchPairs('
+					SELECT tdv.tag_id, SUM(tdv.view_count) AS sum_view_count
+					FROM `xf_tinhte_xentag_tag_day_view` AS tdv
+					' . ($createdCutoff > 0 ? 'INNER JOIN `xf_tinhte_xentag_tag` AS tag
+						ON (tag.tag_id = tdv.tag_id AND tag.created_date > ' . $createdCutoff . ')' : '') . '
+					WHERE tdv.day_timestamp > ?
+					GROUP BY tdv.tag_id
+					ORDER BY sum_view_count DESC
+					LIMIT ?;
+				', array(
+					$cutoff,
+					$limit,
+				));
+				break;
+			case 'content':
+			default:
+				$counts = $this->_getDb()->fetchPairs('
+					SELECT tagged.tag_id, count(*) AS tagged_count
+					FROM `xf_tinhte_xentag_tagged_content` AS tagged
+					' . ($createdCutoff > 0 ? 'INNER JOIN `xf_tinhte_xentag_tag` AS tag
+						ON (tag.tag_id = tagged.tag_id AND tag.created_date > ' . $createdCutoff . ')' : '') . '
+					WHERE tagged.tagged_date > ?
+					GROUP BY tagged.tag_id
+					ORDER BY tagged_count DESC
+					LIMIT ?;
+				', array(
+					$cutoff,
+					$limit,
+				));
+		}
 
 		$tags = array();
-		if (!empty($taggedCount))
+		if (!empty($counts))
 		{
-			$tagsDb = $this->getAllTag(array('tag_id' => array_keys($taggedCount)));
-			foreach ($taggedCount as $tagId => $count)
+			$tagsDb = $this->getAllTag(array('tag_id' => array_keys($counts)));
+			foreach ($counts as $tagId => $count)
 			{
 				if (isset($tagsDb[$tagId]))
 				{
 					$tags[$tagId] = $tagsDb[$tagId];
-					$tags[$tagId]['tagged_count'] = $count;
+					$tags[$tagId]['trending_count'] = $count;
 				}
 			}
 		}
@@ -41,8 +107,9 @@ class Tinhte_XenTag_Model_Tag extends XenForo_Model
 	{
 		$cutoff = XenForo_Application::$time - Tinhte_XenTag_Option::get('trendingDays') * 86400;
 		$limit = Tinhte_XenTag_Option::get('trendingMax');
+		$type = Tinhte_XenTag_Option::get('trendingType');
 
-		$tags = $this->getTrendingTags($cutoff, $limit);
+		$tags = $this->getTrendingTags($cutoff, $limit, $type);
 
 		$this->getModelFromCache('XenForo_Model_DataRegistry')->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING, array(
 			'tags' => $tags,

@@ -24,6 +24,7 @@ class Tinhte_XenTag_Listener
 			'XenForo_DataWriter_Discussion_Thread',
 			'XenForo_DataWriter_DiscussionMessage_Post',
 			'XenForo_DataWriter_Forum',
+			'XenForo_DataWriter_Option',
 			'XenForo_DataWriter_Page',
 
 			'XenForo_Model_Forum',

@@ -52,4 +52,13 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
 		return $data;
 	}
 
+	public function updateThreadViews()
+	{
+		$result = parent::updateThreadViews();
+
+		$this->getModelFromCache('Tinhte_XenTag_Model_Tag')->updateTagViews();
+
+		return $result;
+	}
+
 }
