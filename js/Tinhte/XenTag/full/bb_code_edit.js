@@ -1,4 +1,4 @@
-/** @param {jQuery} $ jQuery Object */! function($, window, document, _undefined)
+! function($, window, document, _undefined)
 {
 	var parent__initAutoComplete = XenForo.BbCodeWysiwygEditor.prototype.initAutoComplete;
 
