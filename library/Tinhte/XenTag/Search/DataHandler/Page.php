@@ -27,7 +27,7 @@ class Tinhte_XenTag_Search_DataHandler_Page extends XenForo_Search_DataHandler_A
 		$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 		$metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearch($tagTexts);
 
-		$indexer->insertIntoIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $data['node_id'], $data['title'], $data['description'], $data['publish_date'], XenForo_Visitor::getUserId(), 0, $metadata);
+		$indexer->insertIntoIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_PAGE, $data['node_id'], $data['title'], $data['description'], $data['publish_date'], 0, 0, $metadata);
 	}
 
 	protected function _updateIndex(XenForo_Search_Indexer $indexer, array $data, array $fieldUpdates)
