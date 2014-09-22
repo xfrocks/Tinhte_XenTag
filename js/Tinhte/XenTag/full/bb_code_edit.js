@@ -23,7 +23,6 @@
 	{
 		if (!shouldWork())
 		{
-			console.log('bye bye');
 			return parent__initAutoComplete.call(this);
 		}
 
