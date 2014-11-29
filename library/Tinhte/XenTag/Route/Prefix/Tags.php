@@ -1,12 +1,18 @@
 <?php
+
 class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface
 {
+    public static $actions = array(
+        '',
+        'index',
+        'search',
+        'view',
+        'find',
+    );
+
 	public function match($routePath, Zend_Controller_Request_Http $request, XenForo_Router $router)
 	{
-		if (in_array($routePath, array(
-			'',
-			'index'
-		)))
+		if (in_array($routePath, self::$actions))
 		{
 			$action = $routePath;
 		}

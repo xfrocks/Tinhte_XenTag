@@ -36,7 +36,7 @@ class Tinhte_XenTag_DataWriter_Tag extends XenForo_DataWriter
 		$text = Tinhte_XenTag_Helper::getNormalizedTagText($text);
 		
 		$censored = XenForo_Helper_String::censorString($text);
-		if ($censored !== $text)
+		if ($censored !== $text OR in_array($text, Tinhte_XenTag_Route_Prefix_Tags::$actions))
 		{
 			$this->error(new XenForo_Phrase('tinhte_xentag_tag_no_contain_censored'), 'tag_text');
 			return false;
