@@ -12,7 +12,10 @@ class Tinhte_XenTag_Route_Prefix_Tags implements XenForo_Route_Interface
 		}
 		else
 		{
-			$action = $router->resolveActionWithStringParam($routePath, $request, Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT);
+            // switched to use `resolveActionWithIntegerOrStringParam instead of the old
+            // thingy `resolveActionWithStringParam` because it is more robust, specifically
+            // it can handle /tags/something while the old one couldn't
+			$action = $router->resolveActionWithIntegerOrStringParam($routePath, $request, 'hi', Tinhte_XenTag_Constants::URI_PARAM_TAG_TEXT);
 
 			if (preg_match('/^page-(\d+)$/', $action, $matches))
 			{

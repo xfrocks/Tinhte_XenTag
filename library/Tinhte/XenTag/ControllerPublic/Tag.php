@@ -122,13 +122,8 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 		$page = max(1, $this->_input->filterSingle('page', XenForo_Input::UINT));
 		$perPage = Tinhte_XenTag_Option::get('perPage');
 
-		if (Tinhte_XenTag_Option::get('searchForceUseCache') == true)
-		{
-			// force use cache, we can force redirect to correct link
-			$this->canonicalizePageNumber($page, $perPage, $search['result_count'], 'tags', $tag);
-
-			$this->canonicalizeRequestUrl(XenForo_Link::buildPublicLink('tags', $tag, array('page' => $page)));
-		}
+        $this->canonicalizePageNumber($page, $perPage, $search['result_count'], 'tags', $tag);
+        $this->canonicalizeRequestUrl(XenForo_Link::buildPublicLink('tags', $tag, array('page' => $page)));
 
 		$pageResultIds = $searchModel->sliceSearchResultsToPage($search, $page, $perPage);
 		$results = $searchModel->getSearchResultsForDisplay($pageResultIds);
