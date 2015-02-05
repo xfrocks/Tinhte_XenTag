@@ -8,7 +8,14 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 
 	public function Tinhte_XenTag_setTags(array $tags)
 	{
-		$this->set(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS, $tags);
+		$this->set(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS, $tags, '', array('setAfterPreSave' => true));
+
+		if ($this->_preSaveCalled)
+		{
+			$this->_db->update('xf_resource', array(
+				Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS => serialize($tags),
+			), array('resource_id = ?' => $this->get('resource_id')));
+		}
 	}
 
 	protected function _Tinhte_XenTag_updateTagsInDatabase()
@@ -26,9 +33,6 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 			if (is_array($updated))
 			{
 				$tagsCount = count($updated);
-
-				$this->set(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS, $updated, '', array('setAfterPreSave' => true));
-				$this->_db->update('xf_resource', array(Tinhte_XenTag_Constants::FIELD_RESOURCE_TAGS => serialize($updated)), array('resource_id = ?' => $this->get('resource_id')));
 			}
 			else
 			{
@@ -49,6 +53,11 @@ class Tinhte_XenTag_XenResource_DataWriter_Resource extends XFCP_Tinhte_XenTag_X
 					'maximum' => $maximumTags,
 					'count' => $tagsCount
 				)), true);
+			}
+
+			if (is_array($updated))
+			{
+				$this->Tinhte_XenTag_setTags($updated);
 			}
 		}
 	}
