@@ -15,6 +15,27 @@ class Tinhte_XenTag_bdApi_ControllerApi_Search extends XFCP_Tinhte_XenTag_bdApi_
         return $response;
     }
 
+    public function actionGetResults()
+    {
+        $response = parent::actionGetResults();
+
+        if ($response instanceof XenForo_ControllerResponse_View
+            && !empty($response->params['_search'])
+            && $response->params['_search']['search_type'] === Tinhte_XenTag_Constants::SEARCH_TYPE_TAG
+        ) {
+            $constraints = @json_decode($response->params['_search']['search_constraints'], true);
+            if (!empty($constraints[Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS])) {
+                $tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($constraints[Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS]);
+                $response->params['search_tags'] = Tinhte_XenTag_Helper::getSafeTagsTextArrayForSearchMapping($tagTexts);
+
+                // TODO: include tag data like content count / view count / etc.?
+            }
+        }
+
+        return $response;
+    }
+
+
     public function actionGetTagged()
     {
         return $this->responseError(new XenForo_Phrase('bdapi_slash_search_only_accepts_post_requests'), 400);
