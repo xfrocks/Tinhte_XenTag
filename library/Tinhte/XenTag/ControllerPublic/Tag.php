@@ -290,11 +290,13 @@ class Tinhte_XenTag_ControllerPublic_Tag extends XenForo_ControllerPublic_Abstra
 	protected function _getNoResultsResponse($tagText)
 	{
 		return $this->responseMessage(new XenForo_Phrase('tinhte_xentag_no_contents_has_been_found'), array(
-			'navigation' => array( array(
+			'navigation' => array(
+                array(
 					'href' => XenForo_Link::buildPublicLink('tags'),
 					'value' => new XenForo_Phrase('tinhte_xentag_tags'),
-				), ),
-			'title' => $tagText,
+				)
+            ),
+			'title' => htmlentities($tagText),
 		));
 	}
 
