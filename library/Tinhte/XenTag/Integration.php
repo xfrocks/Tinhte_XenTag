@@ -290,8 +290,9 @@ class Tinhte_XenTag_Integration
 	 * Inserts tag links into an HTML-formatted text.
 	 *
 	 * @param string $html
-	 * @param array $tags
+	 * @param array $tagsOrTexts
 	 * @param array $options
+	 * @return string
 	 */
 	public static function autoTag($html, array $tagsOrTexts, array &$options = array())
 	{
@@ -301,6 +302,10 @@ class Tinhte_XenTag_Integration
 		}
 
 		$html = strval($html);
+		$htmlNullified = utf8_strtolower($html);
+		$htmlNullified = preg_replace_callback('#<a[^>]+>.+?</a>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'), $htmlNullified);
+		$htmlNullified = preg_replace_callback('#<[^>]+>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'), $htmlNullified);
+
 		$tagTexts = Tinhte_XenTag_Helper::getTextsFromTagsOrTexts($tagsOrTexts);
 
 		// prepare the options
@@ -318,27 +323,35 @@ class Tinhte_XenTag_Integration
 		foreach ($tagTexts as $tagText)
 		{
 			$offset = 0;
+			$tagText = utf8_strtolower($tagText);
 			$tagLength = utf8_strlen($tagText);
 
 			while (true)
 			{
-				$pos = Tinhte_XenTag_Helper::utf8_stripos($html, $tagText, $offset);
+				$pos = utf8_strpos($htmlNullified, $tagText, $offset);
 
 				if ($pos !== false)
 				{
 					// the tag has been found
-					if (!self::_autoTag_isBetweenHtmlTags($html, $pos) AND self::_autoTag_hasValidCharacterAround($html, $pos, $tagText))
+					if (self::_autoTag_hasValidCharacterAround($html, $pos, $tagText))
 					{
 						// and it's not between HTML tags,
 						// with good surrounding characters
 						// start replacing
+						$displayText = utf8_substr($html, $pos, $tagLength);
 
 						$template = new XenForo_Template_Public('tinhte_xentag_bb_code_tag_tag');
 						$template->setParam('tag', $tagText);
-						$template->setParam('displayText', utf8_substr($html, $pos, $tagLength));
+						$template->setParam('displayText', $displayText);
 						$replacement = $template->render();
 
+						if (strlen($replacement) === 0) {
+							// in case template system hasn't been initialized
+							$replacement = sprintf('<a href="%s">%s</a>', XenForo_Link::buildPublicLink('tags', $tagText), $displayText);
+						}
+
 						$html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
+						$htmlNullified = utf8_substr_replace($htmlNullified, str_repeat('_', strlen($replacement)), $pos, $tagLength);
 
 						// sondh@2012-09-20
 						// keep track of the auto tagged tags
@@ -473,38 +486,9 @@ class Tinhte_XenTag_Integration
 		}
 	}
 
-	protected static function _autoTag_isBetweenHtmlTags($html, $position)
+	protected static function _autoTag_nullifyHtmlCallback($matches)
 	{
-		$htmlLength = utf8_strlen($html);
-
-		// look for <a> and </a>
-		$aBefore = Tinhte_XenTag_Helper::utf8_strripos($html, '<a', $position - $htmlLength);
-		if ($aBefore !== false)
-		{
-			$aAfter = Tinhte_XenTag_Helper::utf8_stripos($html, '</a>', $aBefore);
-
-			if ($aAfter > $position)
-			{
-				// too bad, this position is between <a> and </a>
-				return true;
-			}
-		}
-
-		// now that we are not inside <a />
-		// we have to make sure we are not in the middle of any tag
-		$symbolBefore = Tinhte_XenTag_Helper::utf8_strrpos($html, '<', $position - $htmlLength);
-		if ($symbolBefore !== false)
-		{
-			$symbolAfter = utf8_strpos($html, '>', $symbolBefore);
-
-			if ($symbolAfter > $position)
-			{
-				// now this is extremly bad, get out of here now!
-				return true;
-			}
-		}
-
-		return false;
+		return str_repeat(' ', strlen($matches[0]));
 	}
 
 	protected static function _autoTag_hasValidCharacterAround($html, $position, $tagText)
