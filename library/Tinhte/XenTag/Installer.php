@@ -2,426 +2,199 @@
 
 class Tinhte_XenTag_Installer
 {
-	/* Start auto-generated lines of code. Change made will be overwriten... */
+    /* Start auto-generated lines of code. Change made will be overwriten... */
 
-	protected static $_tables = array(
-		'tag' => array(
-			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag` (
-				`tag_id` INT(10) UNSIGNED AUTO_INCREMENT
-				,`tag_text` VARCHAR(100) NOT NULL
-				,`tag_title` TEXT
-				,`tag_description` TEXT
-				,`created_date` INT(10) UNSIGNED NOT NULL
-				,`created_user_id` INT(10) UNSIGNED NOT NULL
-				,`content_count` INT(10) UNSIGNED DEFAULT \'0\'
-				,`view_count` INT(10) UNSIGNED DEFAULT \'0\'
-				,`target_type` VARCHAR(25) NOT NULL DEFAULT \'\'
-				,`target_id` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
-				,`target_data` MEDIUMBLOB
-				,`is_staff` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
-				,`latest_tagged_contents` MEDIUMBLOB
-				,`tag_options` MEDIUMBLOB
-				, PRIMARY KEY (`tag_id`)
-				, INDEX `tag_text` (`tag_text`)
-			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
-			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tag`',
-		),
-		'tagged_content' => array(
-			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tagged_content` (
-				`tag_id` INT(10) UNSIGNED NOT NULL
-				,`content_type` VARCHAR(25) NOT NULL
-				,`content_id` INT(10) UNSIGNED NOT NULL
-				,`tagged_user_id` INT(10) UNSIGNED NOT NULL
-				,`tagged_date` INT(10) UNSIGNED NOT NULL
-				, PRIMARY KEY (`tag_id`,`content_type`,`content_id`)
-				
-			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
-			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tagged_content`',
-		),
-		'tag_watch' => array(
-			'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_watch` (
-				`user_id` INT(10) UNSIGNED NOT NULL
-				,`tag_id` INT(10) UNSIGNED NOT NULL
-				,`send_alert` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
-				,`send_email` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
-				, PRIMARY KEY (`tag_id`,`user_id`)
-				, INDEX `user_id` (`user_id`)
-			) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
-			'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_watch`',
-		),
-	);
-	protected static $_patches = array(
-		array(
-			'table' => 'xf_thread',
-			'field' => 'tinhte_xentag_tags',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_thread\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_thread` LIKE \'tinhte_xentag_tags\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_thread` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_tags`',
-		),
-		array(
-			'table' => 'xf_thread',
-			'field' => 'tinhte_xentag_is_tagged',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_thread\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_thread` LIKE \'tinhte_xentag_is_tagged\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_thread` ADD COLUMN `tinhte_xentag_is_tagged` INT(10) UNSIGNED DEFAULT \'0\'',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_thread` DROP COLUMN `tinhte_xentag_is_tagged`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'latest_tagged_contents',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'latest_tagged_contents\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `latest_tagged_contents` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `latest_tagged_contents`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'tag_description',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_description\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_description` TEXT',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_description`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'target_type',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'target_type\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `target_type` VARCHAR(25) NOT NULL DEFAULT \'\'',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `target_type`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'target_id',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'target_id\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `target_id` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `target_id`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'target_data',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'target_data\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `target_data` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `target_data`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'is_staff',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'is_staff\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `is_staff` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `is_staff`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'tag_title',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_title\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_title` TEXT',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_title`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'tag_options',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'tag_options\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `tag_options` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `tag_options`',
-		),
-		array(
-			'table' => 'xf_tinhte_xentag_tag',
-			'field' => 'view_count',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tinhte_xentag_tag\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tinhte_xentag_tag` LIKE \'view_count\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` ADD COLUMN `view_count` INT(10) UNSIGNED DEFAULT \'0\'',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tinhte_xentag_tag` DROP COLUMN `view_count`',
-		),
-		array(
-			'table' => 'xf_forum',
-			'field' => 'tinhte_xentag_options',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_options\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_options` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_options`',
-		),
-		array(
-			'table' => 'xf_forum',
-			'field' => 'tinhte_xentag_tags',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_tags\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_tags`',
-		),
-		array(
-			'table' => 'xf_page',
-			'field' => 'tinhte_xentag_tags',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_page\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_page` LIKE \'tinhte_xentag_tags\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_page` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_page` DROP COLUMN `tinhte_xentag_tags`',
-		),
-		array(
-			'table' => 'xf_resource',
-			'field' => 'tinhte_xentag_tags',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_resource\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_resource` LIKE \'tinhte_xentag_tags\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_resource` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_resource` DROP COLUMN `tinhte_xentag_tags`',
-		),
-		array(
-			'table' => 'xf_search',
-			'field' => 'tinhte_xentag_tags',
-			'showTablesQuery' => 'SHOW TABLES LIKE \'xf_search\'',
-			'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_search` LIKE \'tinhte_xentag_tags\'',
-			'alterTableAddColumnQuery' => 'ALTER TABLE `xf_search` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
-			'alterTableDropColumnQuery' => 'ALTER TABLE `xf_search` DROP COLUMN `tinhte_xentag_tags`',
-		),
-	);
+    protected static $_tables = array(
+        'tag_watch' => array(
+            'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_watch` (
+                `user_id` INT(10) UNSIGNED NOT NULL
+                ,`tag_id` INT(10) UNSIGNED NOT NULL
+                ,`send_alert` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+                ,`send_email` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'
+                , PRIMARY KEY (`tag_id`,`user_id`)
+                , INDEX `user_id` (`user_id`)
+            ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
+            'dropQuery' => 'DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_watch`',
+        ),
+    );
+    protected static $_patches = array(
+        array(
+            'table' => 'xf_forum',
+            'field' => 'tinhte_xentag_tags',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_forum\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_forum` LIKE \'tinhte_xentag_tags\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_forum` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_forum` DROP COLUMN `tinhte_xentag_tags`',
+        ),
+        array(
+            'table' => 'xf_page',
+            'field' => 'tinhte_xentag_tags',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_page\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_page` LIKE \'tinhte_xentag_tags\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_page` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_page` DROP COLUMN `tinhte_xentag_tags`',
+        ),
+    );
 
-	public static function install($existingAddOn, $addOnData)
-	{
-		$db = XenForo_Application::get('db');
+    public static function install($existingAddOn, $addOnData)
+    {
+        $db = XenForo_Application::get('db');
 
-		foreach (self::$_tables as $table)
-		{
-			$db->query($table['createQuery']);
-		}
+        foreach (self::$_tables as $table) {
+            $db->query($table['createQuery']);
+        }
 
-		foreach (self::$_patches as $patch)
-		{
-			$tableExisted = $db->fetchOne($patch['showTablesQuery']);
-			if (empty($tableExisted))
-			{
-				continue;
-			}
+        foreach (self::$_patches as $patch) {
+            $tableExisted = $db->fetchOne($patch['showTablesQuery']);
+            if (empty($tableExisted)) {
+                continue;
+            }
 
-			$existed = $db->fetchOne($patch['showColumnsQuery']);
-			if (empty($existed))
-			{
-				$db->query($patch['alterTableAddColumnQuery']);
-			}
-		}
-		
-		self::installCustomized($existingAddOn, $addOnData);
-	}
+            $existed = $db->fetchOne($patch['showColumnsQuery']);
+            if (empty($existed)) {
+                $db->query($patch['alterTableAddColumnQuery']);
+            }
+        }
 
-	public static function uninstall()
-	{
-		$db = XenForo_Application::get('db');
+        self::installCustomized($existingAddOn, $addOnData);
+    }
 
-		foreach (self::$_patches as $patch)
-		{
-			$tableExisted = $db->fetchOne($patch['showTablesQuery']);
-			if (empty($tableExisted))
-			{
-				continue;
-			}
+    public static function uninstall()
+    {
+        $db = XenForo_Application::get('db');
 
-			$existed = $db->fetchOne($patch['showColumnsQuery']);
-			if (!empty($existed))
-			{
-				$db->query($patch['alterTableDropColumnQuery']);
-			}
-		}
+        foreach (self::$_patches as $patch) {
+            $tableExisted = $db->fetchOne($patch['showTablesQuery']);
+            if (empty($tableExisted)) {
+                continue;
+            }
 
-		foreach (self::$_tables as $table)
-		{
-			$db->query($table['dropQuery']);
-		}
+            $existed = $db->fetchOne($patch['showColumnsQuery']);
+            if (!empty($existed)) {
+                $db->query($patch['alterTableDropColumnQuery']);
+            }
+        }
 
-		self::uninstallCustomized();
-	}
+        foreach (self::$_tables as $table) {
+            $db->query($table['dropQuery']);
+        }
 
-	/* End auto-generated lines of code. Feel free to make changes below */
+        self::uninstallCustomized();
+    }
 
-	private static function installCustomized($existingAddOn, $addOnData)
-	{
-		$db = XenForo_Application::get('db');
+    /* End auto-generated lines of code. Feel free to make changes below */
 
-		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_page\', \'Tinhte_XenTag\')');
-		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_page\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Page\')');
-		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_forum\', \'Tinhte_XenTag\')');
-		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
-		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_resource\', \'Tinhte_XenTag\')');
-		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_resource\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Resource\')');
-		$db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_tag\', \'Tinhte_XenTag\')');
-		$db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_tag\', \'report_handler_class\', \'Tinhte_XenTag_ReportHandler_Tag\')');
-		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
+    protected static function installCustomized($existingAddOn, $addOnData)
+    {
+        $db = XenForo_Application::getDb();
 
-		$effectiveVersionId = 0;
-		if (!empty($existingAddOn))
-		{
-			$effectiveVersionId = intval($existingAddOn['version_id']);
-		}
+        $db->query('INSERT IGNORE INTO xf_content_type (content_type, addon_id) VALUES (\'tinhte_xentag_forum\', \'Tinhte_XenTag\')');
+        $db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'search_handler_class\', \'Tinhte_XenTag_Search_DataHandler_Forum\')');
+        $db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'tinhte_xentag_forum\', \'tag_handler_class\', \'Tinhte_XenTag_TagHandler_Forum\')');
+        $db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'page\', \'tag_handler_class\', \'Tinhte_XenTag_TagHandler_Page\')');
+        $db->query('INSERT IGNORE INTO xf_content_type_field (content_type, field_name, field_value) VALUES (\'post\', \'tag_handler_class\', \'Tinhte_XenTag_TagHandler_Post\')');
+        /** @var XenForo_Model_ContentType $contentTypeModel */
+        $contentTypeModel = XenForo_Model::create('XenForo_Model_ContentType');
+        $contentTypeModel->rebuildContentTypeCache();
 
-		if ($effectiveVersionId < 1)
-		{
-			$db->query("
+        $effectiveVersionId = 0;
+        if (!empty($existingAddOn)) {
+            $effectiveVersionId = intval($existingAddOn['version_id']);
+        }
+
+        if ($effectiveVersionId < 135) {
+            self::upgradeFrom134();
+            self::uninstallVersion134();
+        }
+
+        if ($effectiveVersionId < 135) {
+            $db->query("
 				INSERT IGNORE INTO xf_permission_entry
 					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_tag', permission_value, 0
+				SELECT user_group_id, user_id, 'general', ?, permission_value, 0
 				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'postThread'
-			");
+				WHERE permission_group_id = 'general' AND permission_id = 'search'
+			", Tinhte_XenTag_Constants::PERM_USER_WATCH);
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_tagAll', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'editAnyPost'
-			");
+        }
+    }
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_createNew', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
-			");
+    protected static function uninstallCustomized()
+    {
+        self::uninstallVersion134();
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_edit', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'general' AND permission_id = 'Tinhte_XenTag_createNew'
-			");
+        $db = XenForo_Application::getDb();
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'resource', 'Tinhte_XenTag_resourceAll', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tagAll'
-			");
+        $db->query('DELETE FROM xf_content_type WHERE addon_id = ?', 'Tinhte_XenTag');
+        $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_Search_DataHandler_Forum');
+        $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_TagHandler_Forum');
+        $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_TagHandler_Page');
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'resource', 'Tinhte_XenTag_resourceTag', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
-			");
-		}
+        // it's safe to drop our tables completely now
+        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag`;');
+        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tagged_content`;');
 
-		if ($effectiveVersionId < 90)
-		{
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'general', 'Tinhte_XenTag_isStaff', permission_value, 0
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'general' AND permission_id = 'Tinhte_XenTag_createNew'
-			");
-		}
+        /** @var XenForo_Model_DataRegistry $dataRegistryModel */
+        $dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
+        $dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
+    }
 
-		if ($effectiveVersionId < 91)
-		{
-			if (!$db->fetchOne("SHOW INDEXES FROM `xf_tinhte_xentag_tag` WHERE `key_name` = 'target_type_target_id'"))
-			{
-				$db->query("ALTER TABLE `xf_tinhte_xentag_tag` ADD INDEX `target_type_target_id` (`target_type`, `target_id`)");
-			}
-		}
+    private static function upgradeFrom134()
+    {
+        if (XenForo_Application::$versionId > 1020000) {
+            XenForo_Application::defer('Tinhte_XenTag_Deferred_UpgradeFrom134', array());
+        }
+    }
 
-		if ($effectiveVersionId < 95)
-		{
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', 'use_int', 10
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tag'
-			");
+    private static function uninstallVersion134()
+    {
+        $db = XenForo_Application::getDb();
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumTags', 'use_int', -1
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_tagAll'
-			");
+        $db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
+                'Tinhte_XenTag_maximumHts',
+                'Tinhte_XenTag_maximumTags',
+                'Tinhte_XenTag_tag',
+                'Tinhte_XenTag_tagAll',
+                'Tinhte_XenTag_createNew',
+                'Tinhte_XenTag_edit',
+                'Tinhte_XenTag_isStaff',
+                'TXT_resourceMaximumTags',
+                'Tinhte_XenTag_resourceAll',
+                'Tinhte_XenTag_resourceTag',
+            )) . ')');
 
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'resource', 'TXT_resourceMaximumTags', 'use_int', permission_value_int
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_maximumTags'
-			");
-		}
+        // do not drop `tag` and `tagged_content` tables for now to avoid losing important data
+        // they will be dropped when the add-on is uninstalled
+        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_view`;');
+        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_day_view`;');
 
-		if ($effectiveVersionId < 96)
-		{
-			$db->query("
-				INSERT IGNORE INTO xf_permission_entry
-					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
-				SELECT user_group_id, user_id, 'forum', 'Tinhte_XenTag_maximumHts', permission_value, permission_value_int
-				FROM xf_permission_entry
-				WHERE permission_group_id = 'forum' AND permission_id = 'Tinhte_XenTag_maximumTags'
-			");
-		}
+        foreach (array(
+                     'xf_thread' => array('tinhte_xentag_tags', 'tinhte_xentag_is_tagged'),
+                     'xf_forum' => array('tinhte_xentag_options'),
+                     'xf_resource' => array('tinhte_xentag_tags'),
+                     'xf_search' => array('tinhte_xentag_tags'),
+                 ) as $table => $fields) {
+            if ($db->fetchOne('SHOW TABLES LIKE ' . $db->quote($table))) {
+                foreach ($fields as $field) {
+                    if ($db->fetchOne('SHOW COLUMNS FROM `' . $table . '` LIKE ' . $db->quote($field))) {
+                        $db->query('ALTER TABLE `' . $table . '` DROP COLUMN `' . $field . '`');
+                    }
+                }
+            }
+        }
 
-		if ($effectiveVersionId < 105)
-		{
-			$db->query("
-				UPDATE `xf_thread`
-				SET `tinhte_xentag_is_tagged` = 1
-				WHERE `tinhte_xentag_tags` IS NOT NULL
-					AND `tinhte_xentag_tags` <> 'a:0:{}'
-			");
-		}
+        $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_page');
+        $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_forum');
+        $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_resource');
+        $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_tag');
+        $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_page');
+        $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_forum');
+        $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_resource');
+        $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_tag');
 
-		$db->query('
-			CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_view` (
-				`tag_id` int(10) unsigned NOT NULL
-			) ENGINE=MEMORY DEFAULT CHARSET=utf8;
-		');
-		
-		$db->query('
-			CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_day_view` (
-				`tag_id` int(10) unsigned NOT NULL,
-				`day_timestamp` int(10) unsigned NOT NULL,
-				`view_count` int(10) unsigned NOT NULL DEFAULT 0,
-				PRIMARY KEY (`tag_id`, `day_timestamp`),
-				KEY (`day_timestamp`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-		');
-	}
-
-	private static function uninstallCustomized()
-	{
-		$db = XenForo_Application::get('db');
-
-		$db->query('DELETE FROM xf_content_type WHERE addon_id = ?', array('Tinhte_XenTag'));
-		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_page'));
-		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_forum'));
-		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_resource'));
-		$db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', array('tinhte_xentag_tag'));
-
-		$db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
-			'Tinhte_XenTag_tag',
-			'Tinhte_XenTag_tagAll',
-			'Tinhte_XenTag_createNew',
-			'Tinhte_XenTag_edit',
-			'Tinhte_XenTag_resourceAll',
-			'Tinhte_XenTag_resourceTag',
-			'Tinhte_XenTag_isStaff',
-			'Tinhte_XenTag_maximumTags',
-			'TXT_resourceMaximumTags',
-		)) . ')');
-
-		XenForo_Model::create('XenForo_Model_ContentType')->rebuildContentTypeCache();
-
-		$db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_view`;');
-		$db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_day_view`;');
-
-		$dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
-		$dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
-		$dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
-	}
+        /** @var XenForo_Model_DataRegistry $dataRegistryModel */
+        $dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
+        $dataRegistryModel->delete('Tinhte_XenTag_trending');
+    }
 
 }

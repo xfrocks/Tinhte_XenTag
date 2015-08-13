@@ -4,18 +4,6 @@
 
 	var shouldWork = function()
 	{
-		if (window.Tinhte_XenTag_maximumHashtags === _undefined)
-		{
-			// not defined?
-			return false;
-		}
-
-		if (window.Tinhte_XenTag_maximumHashtags === 0)
-		{
-			// no permission
-			return false;
-		}
-
 		return true;
 	};
 
@@ -61,7 +49,6 @@
 			api.focus();
 		};
 
-		var hashtagVisible = false;
 		var hashtagResults = new XenForo.AutoCompleteResults(
 		{
 			onInsert: hashtagInsert
@@ -125,7 +112,7 @@
 				hashtagXhr.abort();
 			}
 
-			hashtagXhr = XenForo.ajax('index.php?tags/find',
+			hashtagXhr = XenForo.ajax('index.php?misc/tag-auto-complete',
 			{
 				q: hashtagLastLookup
 			}, hashtagShowResults,
