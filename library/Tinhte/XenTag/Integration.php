@@ -90,7 +90,7 @@ class Tinhte_XenTag_Integration
                         }
 
                         $html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
-                        $htmlNullified = utf8_substr_replace($htmlNullified, str_repeat('_', strlen($replacement)), $pos, $tagLength);
+                        $htmlNullified = utf8_substr_replace($htmlNullified, str_repeat('_', utf8_strlen($replacement)), $pos, $tagLength);
 
                         // sondh@2012-09-20
                         // keep track of the auto tagged tags
