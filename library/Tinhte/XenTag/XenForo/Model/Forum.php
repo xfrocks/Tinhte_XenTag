@@ -7,7 +7,7 @@ class Tinhte_XenTag_XenForo_Model_Forum extends XFCP_Tinhte_XenTag_XenForo_Model
         $prepared = parent::prepareForum($forum);
 
         $prepared['Tinhte_XenTag_tagsList'] = $forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]
-            ? @unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS])
+            ? Tinhte_XenTag_Helper::unserialize($forum[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS])
             : array();
 
         return $prepared;

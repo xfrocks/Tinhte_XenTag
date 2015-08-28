@@ -8,26 +8,24 @@
   </admin_permissions>
   <admin_style_properties/>
   <admin_templates>
-    <template title="tinhte_xentag_admin_forum_edit_panes"><![CDATA[<dl class="ctrlUnit">
-	<dt><label>{xen:phrase tags}:</label></dt>
-	<dd>
-		<input type="text" name="tinhte_xentag_tags" value="{xen:if '{$Tinhte_XenTag_tags}', {xen:helper implode, ', ', $Tinhte_XenTag_tags.editable}}" class="textCtrl TagInput" data-extra-class="verticalShift" />
-		<p class="explain">
-			{xen:phrase multiple_tags_may_be_separated_by_commas}
-		</p>
-	</dd>
-</dl>
+    <template title="tinhte_xentag_admin_forum_edit_panes"><![CDATA[<xen:require js="js/xenforo/tag.js" />
+<xen:textboxunit label="{xen:phrase tags}:"
+				 name="tinhte_xentag_tags"
+				 value="{xen:if '{$Tinhte_XenTag_tags}', {xen:helper implode, ', ', $Tinhte_XenTag_tags.editable}}"
+				 inputclass="TagInput"
+				 data-extra-class="verticalShift">
+	<xen:explain>{xen:phrase multiple_tags_may_be_separated_by_commas}</xen:explain>
+</xen:textboxunit>
 
 <input type="hidden" name="tinhte_xentag_included" value="1" />]]></template>
-    <template title="tinhte_xentag_admin_page_edit_basic_information"><![CDATA[<dl class="ctrlUnit">
-	<dt><label>{xen:phrase tags}:</label></dt>
-	<dd>
-		<input type="text" name="tinhte_xentag_tags" value="{xen:if '{$Tinhte_XenTag_tags}', {xen:helper implode, ', ', $Tinhte_XenTag_tags.editable}}" class="textCtrl TagInput" data-extra-class="verticalShift" />
-		<p class="explain">
-			{xen:phrase multiple_tags_may_be_separated_by_commas}
-		</p>
-	</dd>
-</dl>
+    <template title="tinhte_xentag_admin_page_edit_basic_information"><![CDATA[<xen:require js="js/xenforo/tag.js" />
+<xen:textboxunit label="{xen:phrase tags}:"
+				 name="tinhte_xentag_tags"
+				 value="{xen:if '{$Tinhte_XenTag_tags}', {xen:helper implode, ', ', $Tinhte_XenTag_tags.editable}}"
+				 inputclass="TagInput"
+				 data-extra-class="verticalShift">
+	<xen:explain>{xen:phrase multiple_tags_may_be_separated_by_commas}</xen:explain>
+</xen:textboxunit>
 
 <input type="hidden" name="tinhte_xentag_included" value="1" />]]></template>
     <template title="tinhte_xentag_tools_rebuild"><![CDATA[<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
@@ -614,24 +612,16 @@ a.Tinhte_XenTag_TagLink:focus {
 <div class="Tinhte_XenTag_Copyright">
 	XenTag by <a href="http://www.tinhte.vn" target="_blank">Tinhte.vn</a>
 </div>]]></template>
-    <template title="tinhte_xentag_forum_view" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if hascontent="true">
-	<xen:contentcheck>
-		<xen:if is="{$xenOptions.enableTagging}">
-			<xen:include template="helper_tag_list">
-				<xen:map from="$forum.Tinhte_XenTag_tagsList" to="$tags" />
-			</xen:include>
-		</xen:if>
-	</xen:contentcheck>
+    <template title="tinhte_xentag_forum_view" version_id="135" version_string="3.0.0"><![CDATA[<xen:if is="{$xenOptions.enableTagging} && {$forum.Tinhte_XenTag_tagsList}">
+	<xen:include template="helper_tag_list">
+		<xen:map from="$forum.Tinhte_XenTag_tagsList" to="$tags" />
+	</xen:include>
 </xen:if>]]></template>
     <template title="tinhte_xentag_navigation_tabs_forums" version_id="135" version_string="3.0.0"><![CDATA[<li><a href="{xen:link 'watched/tags'}">{xen:phrase tinhte_xentag_watched_tags}</a></li>]]></template>
-    <template title="tinhte_xentag_pagenode_container_article" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if hascontent="true">
-	<xen:contentcheck>
-		<xen:if is="{$xenOptions.enableTagging}">
-			<xen:include template="helper_tag_list">
-				<xen:map from="$page.Tinhte_XenTag_tagsList" to="$tags" />
-			</xen:include>
-		</xen:if>
-	</xen:contentcheck>
+    <template title="tinhte_xentag_pagenode_container_article" version_id="135" version_string="3.0.0"><![CDATA[<xen:if is="{$xenOptions.enableTagging} && {$Tinhte_XenTag_tagsList}">
+	<xen:include template="helper_tag_list">
+		<xen:map from="$Tinhte_XenTag_tagsList" to="$tags" />
+	</xen:include>
 </xen:if>]]></template>
     <template title="tinhte_xentag_search_result_forum" version_id="134" version_string="2.1.4b"><![CDATA[<li id="tinhte_xentag_forum-{$forum.node_id}" class="searchResult tinhte_xentag_forum primaryContent">
 
