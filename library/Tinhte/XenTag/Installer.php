@@ -34,6 +34,14 @@ class Tinhte_XenTag_Installer
             'alterTableAddColumnQuery' => 'ALTER TABLE `xf_page` ADD COLUMN `tinhte_xentag_tags` MEDIUMBLOB',
             'alterTableDropColumnQuery' => 'ALTER TABLE `xf_page` DROP COLUMN `tinhte_xentag_tags`',
         ),
+        array(
+            'table' => 'xf_tag',
+            'field' => 'tinhte_xentag_staff',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_staff\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_staff` TINYINT(4) UNSIGNED DEFAULT \'0\'',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_staff`',
+        ),
     );
 
     public static function install($existingAddOn, $addOnData)
@@ -115,7 +123,18 @@ class Tinhte_XenTag_Installer
 				FROM xf_permission_entry
 				WHERE permission_group_id = 'general' AND permission_id = 'search'
 			", Tinhte_XenTag_Constants::PERM_USER_WATCH);
+        }
 
+        if ($effectiveVersionId < 90
+            || in_array($effectiveVersionId, array(135, 136), true)
+        ) {
+            $db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'general', ?, permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
+			", Tinhte_XenTag_Constants::PERM_USER_IS_STAFF);
         }
     }
 
@@ -124,6 +143,11 @@ class Tinhte_XenTag_Installer
         self::uninstallVersion134();
 
         $db = XenForo_Application::getDb();
+
+        $db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
+                Tinhte_XenTag_Constants::PERM_USER_WATCH,
+                Tinhte_XenTag_Constants::PERM_USER_IS_STAFF,
+            )) . ')');
 
         $db->query('DELETE FROM xf_content_type WHERE addon_id = ?', 'Tinhte_XenTag');
         $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_Search_DataHandler_Forum');
@@ -157,7 +181,6 @@ class Tinhte_XenTag_Installer
                 'Tinhte_XenTag_tagAll',
                 'Tinhte_XenTag_createNew',
                 'Tinhte_XenTag_edit',
-                'Tinhte_XenTag_isStaff',
                 'TXT_resourceMaximumTags',
                 'Tinhte_XenTag_resourceAll',
                 'Tinhte_XenTag_resourceTag',

@@ -2,6 +2,68 @@
 
 class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo_TagHandler_Tagger
 {
+    protected $_Tinhte_XenTag_unauthorizedStaffTags = array();
+
+    public function setTags(array $tags, $ignoreNonRemovable = true)
+    {
+        /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
+        $tagModel = $this->_tagModel;
+        $tagModel->Tinhte_XenTag_cacheQueriedTags(true);
+        $result = parent::setTags($tags, $ignoreNonRemovable);
+        $queriedTags = $tagModel->Tinhte_XenTag_getQueriedTags();
+        $tagModel->Tinhte_XenTag_cacheQueriedTags(false);
+
+        $staffTagsBeingAdded = array();
+        foreach ($this->_addTags as $tagId => $tagText) {
+            if (isset($queriedTags[$tagId])) {
+                $tagRef =& $queriedTags[$tagId];
+                if (!empty($tagRef['tinhte_xentag_staff'])) {
+                    $staffTagsBeingAdded[$tagId] = $tagText;
+                }
+            }
+        }
+
+        $staffTagsBeingRemoved = array();
+        foreach ($this->_removeTags as $tagId => $tagText) {
+            if (isset($this->_existingTags[$tagId])) {
+                $tagRef =& $this->_existingTags[$tagId];
+                if (!empty($tagRef['tinhte_xentag_staff'])) {
+                    $staffTagsBeingRemoved[$tagId] = $tagText;
+                }
+            }
+        }
+
+        if (count($staffTagsBeingAdded) > 0) {
+            $visitor = XenForo_Visitor::getInstance();
+            if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
+                $this->_Tinhte_XenTag_unauthorizedStaffTags = $staffTagsBeingAdded;
+            }
+        }
+
+        if (count($staffTagsBeingRemoved) > 0) {
+            // silently ignore it, regardless of $ignoreNonRemovable
+            foreach($staffTagsBeingRemoved as $tagId => $tagText) {
+                if (isset($this->_removeTags[$tagId])) {
+                    unset($this->_removeTags[$tagId]);
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function getErrors()
+    {
+        $errors = parent::getErrors();
+
+        if (count($this->_Tinhte_XenTag_unauthorizedStaffTags) > 0) {
+            $errors['tinhte_xentag_staff'] = new XenForo_Phrase('tinhte_xentag_unauthorized_tags_x',
+                array('tags' => implode(', ', $this->_Tinhte_XenTag_unauthorizedStaffTags)));
+        }
+
+        return $errors;
+    }
+
     public function save()
     {
         $cache = parent::save();

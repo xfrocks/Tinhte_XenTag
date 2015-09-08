@@ -2,6 +2,80 @@
 
 class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_Tag
 {
+    protected $_Tinhte_XenTag_queriedTags = null;
+
+    public function getTagListForEdit($contentType, $contentId, $editOthers, $userId = null)
+    {
+        $this->Tinhte_XenTag_cacheQueriedTags(true);
+        $result = parent::getTagListForEdit($contentType, $contentId, $editOthers, $userId);
+
+        $visitor = XenForo_Visitor::getInstance();
+        if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
+            $queriedTags = $this->Tinhte_XenTag_getQueriedTags();
+
+            foreach (array_keys($result['editable']) as $i) {
+                $isStaffTag = false;
+
+                foreach ($queriedTags as $tag) {
+                    if ($result['editable'][$i] === $tag['tag']
+                        && !empty($tag['tinhte_xentag_staff'])
+                    ) {
+                        $isStaffTag = true;
+                    }
+                }
+
+                if ($isStaffTag) {
+                    $result['uneditable'][] = $result['editable'][$i];
+                    unset($result['editable'][$i]);
+                }
+            }
+        }
+
+        $this->Tinhte_XenTag_cacheQueriedTags(false);
+
+        return $result;
+    }
+
+    public function getTags(array $tags, &$notFound = array())
+    {
+        $result = parent::getTags($tags, $notFound);
+
+        if (is_array($this->_Tinhte_XenTag_queriedTags)) {
+            $this->_Tinhte_XenTag_queriedTags += $result;
+        }
+
+        return $result;
+    }
+
+    public function getTagsForContent($contentType, $contentId)
+    {
+        $result = parent::getTagsForContent($contentType, $contentId);
+
+        if (is_array($this->_Tinhte_XenTag_queriedTags)) {
+            $this->_Tinhte_XenTag_queriedTags += $result;
+        }
+
+        return $result;
+    }
+
+    public function Tinhte_XenTag_cacheQueriedTags($enabled)
+    {
+        if ($enabled) {
+            $this->_Tinhte_XenTag_queriedTags = array();
+        } else {
+            $this->_Tinhte_XenTag_queriedTags = null;
+        }
+    }
+
+    public function Tinhte_XenTag_getQueriedTags()
+    {
+        if (is_array($this->_Tinhte_XenTag_queriedTags)) {
+            return $this->_Tinhte_XenTag_queriedTags;
+        } else {
+            return array();
+        }
+    }
+
     public function Tinhte_XenTag_canWatchTag(/** @noinspection PhpUnusedParameterInspection */
         array $tag, &$errorPhraseKey = '', array $viewingUser = null)
     {
@@ -113,6 +187,22 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         if (count($contentIds) > $limit) {
             $contentIds = array_slice($contentIds, 0, $limit);
         }
+    }
+
+    public function autoCompleteTag($tag, $limit = 10)
+    {
+        $tags = parent::autoCompleteTag($tag, $limit);
+
+        $visitor = XenForo_Visitor::getInstance();
+        if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
+            foreach (array_keys($tags) as $tagId) {
+                if (!empty($tags[$tagId]['tinhte_xentag_staff'])) {
+                    unset($tags[$tagId]);
+                }
+            }
+        }
+
+        return $tags;
     }
 
 

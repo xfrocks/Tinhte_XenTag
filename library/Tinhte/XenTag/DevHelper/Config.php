@@ -19,12 +19,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
             'indeces' => array(
                 'user_id' => array('name' => 'user_id', 'fields' => array('user_id'), 'type' => 'NORMAL'),
             ),
-            'files' => array(
-                'data_writer' => false,
-                'model' => false,
-                'route_prefix_admin' => false,
-                'controller_admin' => false,
-            ),
+            'files' => array('data_writer' => false, 'model' => false, 'route_prefix_admin' => false, 'controller_admin' => false),
         ),
     );
     protected $_dataPatches = array(
@@ -34,16 +29,19 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
         'xf_page' => array(
             'tinhte_xentag_tags' => array('name' => 'tinhte_xentag_tags', 'type' => 'serialized'),
         ),
+        'xf_tag' => array(
+            'tinhte_xentag_staff' => array('name' => 'tinhte_xentag_staff', 'type' => 'boolean', 'default' => 0),
+        ),
     );
     protected $_exportPath = '/Users/sondh/XenForo/Tinhte/XenTag';
     protected $_exportIncludes = array();
+    protected $_exportExcludes = array();
+    protected $_exportAddOns = array();
+    protected $_exportStyles = array();
+    protected $_options = array();
 
     /**
      * Return false to trigger the upgrade!
-     * common use methods:
-     *    public function addDataClass($name, $fields = array(), $primaryKey = false, $indeces = array())
-     *    public function addDataPatch($table, array $field)
-     *    public function setExportPath($path)
      **/
     protected function _upgrade()
     {
@@ -51,25 +49,25 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
 
         /*
         $this->addDataClass(
-                'name_here',
-                array( // fields
-                        'field_here' => array(
-                                'type' => 'type_here',
-                                // 'length' => 'length_here',
-                                // 'required' => true,
-                                // 'allowedValues' => array('value_1', 'value_2'),
-                                // 'default' => 0,
-                                // 'autoIncrement' => true,
-                        ),
-                        // other fields go here
+            'name_here',
+            array( // fields
+                'field_here' => array(
+                    'type' => 'type_here',
+                    // 'length' => 'length_here',
+                    // 'required' => true,
+                    // 'allowedValues' => array('value_1', 'value_2'),
+                    // 'default' => 0,
+                    // 'autoIncrement' => true,
                 ),
-                'primary_key_field_here',
-                array( // indeces
-                        array(
-                                'fields' => array('field_1', 'field_2'),
-                                'type' => 'NORMAL', // UNIQUE or FULLTEXT
-                        ),
+                // other fields go here
+            ),
+            array('primary_key_1', 'primary_key_2'), // or 'primary_key', both are okie
+            array( // indeces
+                array(
+                    'fields' => array('field_1', 'field_2'),
+                    'type' => 'NORMAL', // UNIQUE or FULLTEXT
                 ),
+            ),
         );
         */
     }

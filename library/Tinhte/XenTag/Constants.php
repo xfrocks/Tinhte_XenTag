@@ -14,8 +14,10 @@ class Tinhte_XenTag_Constants
 
     const GLOBALS_CONTROLLERADMIN_FORUM_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Forum::actionSave';
     const GLOBALS_CONTROLLERADMIN_PAGE_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Page::actionSave';
+    const GLOBALS_CONTROLLERADMIN_TAG_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Tag::actionSave';
 
     const PERM_USER_WATCH = 'Tinhte_XenTag_watch';
+    const PERM_USER_IS_STAFF = 'Tinhte_XenTag_isStaff';
 
     const SEARCH_CONSTRAINT_TAGS = 'tag';
     const SEARCH_METADATA_TAGS = 'tag';

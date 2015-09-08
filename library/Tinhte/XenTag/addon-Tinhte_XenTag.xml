@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.0.1" version_id="136" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
-  <admin_navigation>
-    <navigation navigation_id="Tinhte_XenTag_Tag" parent_navigation_id="threadsPosts" display_order="9999" link="xentag-tags" admin_permission_id="Tinhte_XenTag" debug_only="0" hide_no_children="0"/>
-  </admin_navigation>
+  <admin_navigation/>
   <admin_permissions>
     <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
   </admin_permissions>
@@ -72,6 +70,14 @@
       <replace><![CDATA[$0
 
 <xen:include template="tinhte_xentag_admin_page_edit_basic_information" />]]></replace>
+    </modification>
+    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit" description="Insert fields in tag edit form." execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:checkboxunit label="">]]></find>
+      <replace><![CDATA[$0
+
+<xen:option name="tinhte_xentag_staff" value="1" selected="{$tag.tinhte_xentag_staff}"
+			label="{xen:phrase tinhte_xentag_staff}"
+			hint="{xen:phrase tinhte_xentag_staff_explain}" />]]></replace>
     </modification>
     <modification template="tools_rebuild" modification_key="tinhte_xentag_tools_rebuild" description="Insert rebuild forms." execution_order="10" enabled="1" action="preg_replace">
       <find><![CDATA[#^.+$#s]]></find>
@@ -387,12 +393,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
   <permissions>
     <permission_groups/>
     <permissions>
+      <permission permission_group_id="general" permission_id="Tinhte_XenTag_isStaff" permission_type="flag" default_value="unset" interface_group_id="generalModeratorPermissions" display_order="9999"/>
       <permission permission_group_id="general" permission_id="Tinhte_XenTag_watch" permission_type="flag" default_value="unset" interface_group_id="generalPermissions" display_order="9999"/>
     </permissions>
     <interface_groups/>
   </permissions>
   <phrases>
-    <phrase title="admin_navigation_Tinhte_XenTag_Tag" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
     <phrase title="admin_permission_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[[XenTag] Manage tags]]></phrase>
     <phrase title="option_group_Tinhte_XenTag" version_id="5" version_string="0.9.4"><![CDATA[[Tinhte] XenTag]]></phrase>
     <phrase title="option_group_Tinhte_XenTag_description" version_id="74" version_string="1.5.3b"><![CDATA[Options for contents tagging.]]></phrase>
@@ -412,6 +418,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag" version_id="134" version_string="2.1.4b"><![CDATA[Enable #hashtag]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to allow user to use #hashtag in posts.]]></phrase>
+    <phrase title="permission_general_Tinhte_XenTag_isStaff" version_id="136" version_string="3.0.1"><![CDATA[Use staff-only tags]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_watch" version_id="134" version_string="2.1.4b"><![CDATA[Watch content tag]]></phrase>
     <phrase title="style_property_group_Tinhte_XenTag_master" version_id="74" version_string="1.5.3b"><![CDATA[[Tinhte] XenTag]]></phrase>
     <phrase title="style_property_group_Tinhte_XenTag_master_desc" version_id="74" version_string="1.5.3b"><![CDATA[Styling properties for contents tagging.]]></phrase>
@@ -428,6 +435,8 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
+    <phrase title="tinhte_xentag_staff" version_id="136" version_string="3.0.1"><![CDATA[Staff Only]]></phrase>
+    <phrase title="tinhte_xentag_staff_explain" version_id="136" version_string="3.0.1"><![CDATA[Making a tag staff only prevents it from being used by unauthorized users. User must be a member of a user group with "Use staff-only tags" permission.]]></phrase>
     <phrase title="tinhte_xentag_stop_watching_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Stop watching tags]]></phrase>
     <phrase title="tinhte_xentag_tagged_threads" version_id="89" version_string="1.7.2"><![CDATA[Tagged Threads]]></phrase>
     <phrase title="tinhte_xentag_tagged_threads_limit_explain" version_id="21" version_string="0.10"><![CDATA[Please note that there is a hard limit for each tag: only {limit} latest tagged contents is saved. In order to maintain good performance, this widget will only use that information (instead of querying the xf_tinhte_xentag_tagged_content table directly).]]></phrase>
@@ -440,6 +449,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="tinhte_xentag_this_is_the_resource_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the resource they posted]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_resource_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this resource, click here]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
+    <phrase title="tinhte_xentag_unauthorized_tags_x" version_id="136" version_string="3.0.1"><![CDATA[You must not use these tags: {tags}]]></phrase>
     <phrase title="tinhte_xentag_unwatch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Unwatch Tag]]></phrase>
     <phrase title="tinhte_xentag_upgrade_from_134" version_id="134" version_string="2.1.4b"><![CDATA[Upgrade Tags for XenForo 1.5+]]></phrase>
     <phrase title="tinhte_xentag_watched_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Watched Tags]]></phrase>
