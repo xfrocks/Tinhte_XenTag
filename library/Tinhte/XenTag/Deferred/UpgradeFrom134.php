@@ -55,6 +55,8 @@ class Tinhte_XenTag_Deferred_UpgradeFrom134 extends XenForo_Deferred_Abstract
                 ));
             }
             $coreDw->set('tinhte_xentag_staff', !empty($ourTag['is_staff']));
+            $coreDw->set('tinhte_xentag_title', $ourTag['tag_title']);
+            $coreDw->set('tinhte_xentag_description', $ourTag['tag_description']);
 
             if ($coreDw->hasChanges()) {
                 $coreDw->save();

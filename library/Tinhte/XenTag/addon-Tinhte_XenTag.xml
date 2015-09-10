@@ -71,13 +71,27 @@
 
 <xen:include template="tinhte_xentag_admin_page_edit_basic_information" />]]></replace>
     </modification>
-    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit" description="Insert fields in tag edit form." execution_order="10" enabled="1" action="str_replace">
+    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit_staff" description="Insert staff field in tag edit form." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<xen:checkboxunit label="">]]></find>
       <replace><![CDATA[$0
 
 <xen:option name="tinhte_xentag_staff" value="1" selected="{$tag.tinhte_xentag_staff}"
 			label="{xen:phrase tinhte_xentag_staff}"
 			hint="{xen:phrase tinhte_xentag_staff_explain}" />]]></replace>
+    </modification>
+    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit_title_description" description="Insert title &amp; description fields in tag edit form." execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:checkboxunit label="">]]></find>
+      <replace><![CDATA[<xen:textboxunit name="tinhte_xentag_title"
+				 value="{$tag.tinhte_xentag_title}"
+				 label="{xen:phrase title}:"
+				 maxlength="255" />
+
+<xen:textboxunit name="tinhte_xentag_description"
+				 value="{$tag.tinhte_xentag_description}"
+				 label="{xen:phrase description}:"
+				 rows="3" inputclass="Elastic" />
+
+$0]]></replace>
     </modification>
     <modification template="tools_rebuild" modification_key="tinhte_xentag_tools_rebuild" description="Insert rebuild forms." execution_order="10" enabled="1" action="preg_replace">
       <find><![CDATA[#^.+$#s]]></find>
@@ -667,11 +681,21 @@ a.Tinhte_XenTag_TagLink:focus {
 		</div>
 	</div>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="134" version_string="2.1.4b"><![CDATA[<div class="linkGroup">
+    <template title="tinhte_xentag_tag_view" version_id="136" version_string="3.0.1"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
+	<xen:title>{$tag.tinhte_xentag_title}</xen:title>
+</xen:if>
+
+<xen:if is="{$tag.tinhte_xentag_description}">
+	<xen:description>{$tag.tinhte_xentag_description}</xen:description>
+</xen:if>
+
+<div class="linkGroup">
 	<xen:if is="{$Tinhte_XenTag_canWatch}">
 		<a href="{xen:link 'tags/watch-confirm', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $Tinhte_XenTag_tagIsWatched, '{xen:phrase tinhte_xentag_unwatch_tag}', '{xen:phrase tinhte_xentag_watch_tag}'}</a>
 	</xen:if>
-</div>]]></template>
+</div>
+
+]]></template>
     <template title="tinhte_xentag_tag_watch" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tagWatch}">
 	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tag_title}', $tag.tag_title, $tag.tag_text}</xen:title>
 	<xen:h1>{xen:phrase tinhte_xentag_unwatch_tag}</xen:h1>

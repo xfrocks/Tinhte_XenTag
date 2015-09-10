@@ -11,6 +11,17 @@ class Tinhte_XenTag_XenForo_DataWriter_Tag extends XFCP_Tinhte_XenTag_XenForo_Da
             'default' => 0,
         );
 
+        $fields['xf_tag']['tinhte_xentag_title'] = array(
+            'type' => XenForo_DataWriter::TYPE_STRING,
+            'maxLength' => 255,
+            'default' => '',
+        );
+
+        $fields['xf_tag']['tinhte_xentag_description'] = array(
+            'type' => XenForo_DataWriter::TYPE_STRING,
+            'default' => '',
+        );
+
         return $fields;
     }
 

@@ -42,6 +42,22 @@ class Tinhte_XenTag_Installer
             'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_staff` TINYINT(4) UNSIGNED DEFAULT \'0\'',
             'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_staff`',
         ),
+        array(
+            'table' => 'xf_tag',
+            'field' => 'tinhte_xentag_title',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_title\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_title` VARCHAR(255) DEFAULT \'\'',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_title`',
+        ),
+        array(
+            'table' => 'xf_tag',
+            'field' => 'tinhte_xentag_description',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_description\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_description` TEXT',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_description`',
+        ),
     );
 
     public static function install($existingAddOn, $addOnData)
