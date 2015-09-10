@@ -42,15 +42,19 @@ class Tinhte_XenTag_Deferred_UpgradeFrom134 extends XenForo_Deferred_Abstract
             $data['position'] = $xenTagId;
 
             $ourTag = $db->fetchRow('SELECT * FROM `xf_tinhte_xentag_tag` WHERE tag_id = ?', $xenTagId);
+            $tagText = $tagModel->normalizeTag($ourTag['tag_text']);
+            if (empty($tagText)) {
+                continue;
+            }
 
-            $coreTag = $tagModel->getTag($ourTag['tag_text']);
+            $coreTag = $tagModel->getTag($tagText);
 
             /** @var Tinhte_XenTag_XenForo_DataWriter_Tag $coreDw */
             $coreDw = XenForo_DataWriter::create('XenForo_DataWriter_Tag');
             if (!empty($coreTag)) {
                 $coreDw->setExistingData($coreTag, true);
             } else {
-                $coreDw->set('tag', $tagModel->normalizeTag($ourTag['tag_text']), array(
+                $coreDw->set('tag', $tagText, '', array(
                     'runVerificationCallback' => false,
                 ));
             }
