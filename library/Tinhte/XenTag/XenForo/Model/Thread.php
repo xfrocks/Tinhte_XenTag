@@ -27,17 +27,4 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
         }
     }
 
-    public function prepareApiDataForThread(array $thread, array $forum, array $firstPosts)
-    {
-        $data = parent::prepareApiDataForThread($thread, $forum, $firstPosts);
-
-        $tags = Tinhte_XenTag_Helper::unserialize($thread[Tinhte_XenTag_Constants::FIELD_THREAD_TAGS]);
-
-        /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
-        $tagModel = $this->getModelFromCache('XenForo_Model_Tag');
-        $data['thread_tags'] = $tagModel->Tinhte_XenTag_prepareApiDataForTags($tags);
-
-        return $data;
-    }
-
 }

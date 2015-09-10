@@ -6,8 +6,6 @@ class Tinhte_XenTag_Listener
     public static function load_class($class, array &$extend)
     {
         static $classes = array(
-            'bdApi_ControllerApi_Search',
-
             'XenForo_BbCode_Formatter_Base',
             'XenForo_BbCode_Formatter_HtmlEmail',
             'XenForo_BbCode_Formatter_Text',

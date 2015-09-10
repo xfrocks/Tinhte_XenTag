@@ -132,19 +132,6 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return $tags;
     }
 
-    public function Tinhte_XenTag_prepareApiDataForTags(array $tags)
-    {
-        $data = array();
-
-        foreach ($tags as $tagId => $tag) {
-            $data[$tagId] = $tag['tag'];
-        }
-
-        // TODO: include tag data like content count / view count / etc.?
-
-        return $data;
-    }
-
     public function getContentIdsByTagId($tagId, $limit, $visibleOnly = true)
     {
         $contentIds = parent::getContentIdsByTagId($tagId, $limit, $visibleOnly);
