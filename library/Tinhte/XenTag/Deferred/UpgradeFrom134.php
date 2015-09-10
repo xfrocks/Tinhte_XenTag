@@ -41,10 +41,26 @@ class Tinhte_XenTag_Deferred_UpgradeFrom134 extends XenForo_Deferred_Abstract
         foreach ($xenTagIds AS $xenTagId) {
             $data['position'] = $xenTagId;
 
-            $xenTag = $db->fetchRow('SELECT * FROM `xf_tinhte_xentag_tag` WHERE tag_id = ?', $xenTagId);
+            $ourTag = $db->fetchRow('SELECT * FROM `xf_tinhte_xentag_tag` WHERE tag_id = ?', $xenTagId);
 
-            // XenForo_Model_Tag::createTag try to create and automatically fallback if existing tag is found
-            $tagId = $tagModel->createTag($xenTag['tag_text']);
+            $coreTag = $tagModel->getTag($ourTag['tag_text']);
+
+            /** @var Tinhte_XenTag_XenForo_DataWriter_Tag $coreDw */
+            $coreDw = XenForo_DataWriter::create('XenForo_DataWriter_Tag');
+            if (!empty($coreTag)) {
+                $coreDw->setExistingData($coreTag, true);
+            } else {
+                $coreDw->set('tag', $tagModel->normalizeTag($ourTag['tag_text']), array(
+                    'runVerificationCallback' => false,
+                ));
+            }
+            $coreDw->set('tinhte_xentag_staff', !empty($ourTag['is_staff']));
+
+            if ($coreDw->hasChanges()) {
+                $coreDw->save();
+            }
+
+            $tagId = $coreDw->get('tag_id');
 
             // bring all tagged mapping to XenForo, regardless of content types
             $db->query('
