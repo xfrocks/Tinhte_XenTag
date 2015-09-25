@@ -378,6 +378,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1000"/>
     </option>
+    <option option_id="Tinhte_XenTag_keepOrder" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
     <option option_id="Tinhte_XenTag_prioritizeForums" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>100</default_value>
       <edit_format_params></edit_format_params>
@@ -424,6 +430,8 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to create link for each tag only once in a piece of content.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource" version_id="134" version_string="2.1.4b"><![CDATA[Resource Tag Linking]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to automatically convert resource update contents to hyperlink to tags where possible.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_keepOrder" version_id="137" version_string="3.1.0"><![CDATA[Keep Tag Order]]></phrase>
+    <phrase title="option_Tinhte_XenTag_keepOrder_explain" version_id="137" version_string="3.1.0"><![CDATA[Enable this option to maintain tag order as entered in the list. By default, XenForo discards this ordering and shows them in alphabetical order.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums" version_id="70" version_string="1.5"><![CDATA[Prioritize Forums]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize forums in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizePages" version_id="70" version_string="1.5"><![CDATA[Prioritize Pages]]></phrase>

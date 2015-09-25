@@ -2,7 +2,9 @@
 
 class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo_TagHandler_Tagger
 {
+    protected $_Tinhte_XenTag_queriedTags = array();
     protected $_Tinhte_XenTag_unauthorizedStaffTags = array();
+    protected $_Tinhte_XenTag_orderedTags = array();
 
     public function setTags(array $tags, $ignoreNonRemovable = true)
     {
@@ -10,13 +12,13 @@ class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo
         $tagModel = $this->_tagModel;
         $tagModel->Tinhte_XenTag_cacheQueriedTags(true);
         $result = parent::setTags($tags, $ignoreNonRemovable);
-        $queriedTags = $tagModel->Tinhte_XenTag_getQueriedTags();
+        $this->_Tinhte_XenTag_queriedTags += $tagModel->Tinhte_XenTag_getQueriedTags();
         $tagModel->Tinhte_XenTag_cacheQueriedTags(false);
 
         $staffTagsBeingAdded = array();
         foreach ($this->_addTags as $tagId => $tagText) {
-            if (isset($queriedTags[$tagId])) {
-                $tagRef =& $queriedTags[$tagId];
+            if (isset($this->_Tinhte_XenTag_queriedTags[$tagId])) {
+                $tagRef =& $this->_Tinhte_XenTag_queriedTags[$tagId];
                 if (!empty($tagRef['tinhte_xentag_staff'])) {
                     $staffTagsBeingAdded[$tagId] = $tagText;
                 }
@@ -42,12 +44,14 @@ class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo
 
         if (count($staffTagsBeingRemoved) > 0) {
             // silently ignore it, regardless of $ignoreNonRemovable
-            foreach($staffTagsBeingRemoved as $tagId => $tagText) {
+            foreach ($staffTagsBeingRemoved as $tagId => $tagText) {
                 if (isset($this->_removeTags[$tagId])) {
                     unset($this->_removeTags[$tagId]);
                 }
             }
         }
+
+        $this->_Tinhte_XenTag_orderedTags = $tags;
 
         return $result;
     }
@@ -66,7 +70,9 @@ class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo
 
     public function save()
     {
+        $GLOBALS[Tinhte_XenTag_Constants::GLOBALS_TAGGER_SAVE] = $this;
         $cache = parent::save();
+        unset($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_TAGGER_SAVE]);
 
         if (!empty($cache)
             && !empty($this->_addTags)
@@ -122,6 +128,25 @@ class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo
         }
 
         return $cache;
+    }
+
+    public function Tinhte_XenTag_getContentTagCacheOnSave(XenForo_Model_Tag $model, array $cache)
+    {
+        if (!Tinhte_XenTag_Option::get('keepOrder')
+            || empty($this->_Tinhte_XenTag_orderedTags)
+        ) {
+            return $cache;
+        }
+
+        $cacheOrdered = $model->getFoundTagsInList($this->_Tinhte_XenTag_orderedTags, $cache);
+
+        foreach ($cache as $tagId => $tag) {
+            if (!isset($cacheOrdered[$tagId])) {
+                $cacheOrdered[$tagId] = $tag;
+            }
+        }
+
+        return $cacheOrdered;
     }
 
 }
