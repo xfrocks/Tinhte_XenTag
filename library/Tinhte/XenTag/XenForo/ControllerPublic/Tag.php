@@ -18,6 +18,20 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             }
         }
 
+        if ($tagUrl = $this->_input->filterSingle('tag_url', XenForo_Input::STRING)) {
+            if (strpos($tagUrl, ' ') !== false) {
+                // older versions support spaces in the tag url (e.g. /tags/foo+bar)
+                // we have to check for them here and make a 301 redirect to avoid SEO impact
+                $tag = $this->_getTagModel()->getTag($tagUrl);
+                if (!empty($tag)) {
+                    return $this->responseRedirect(
+                        XenForo_ControllerResponse_Redirect::RESOURCE_CANONICAL_PERMANENT,
+                        XenForo_Link::buildPublicLink('tags', $tag)
+                    );
+                }
+            }
+        }
+
         return parent::actionIndex();
     }
 
