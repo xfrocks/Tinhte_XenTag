@@ -19,6 +19,7 @@ class Tinhte_XenTag_Constants
 
     const PERM_USER_WATCH = 'Tinhte_XenTag_watch';
     const PERM_USER_IS_STAFF = 'Tinhte_XenTag_isStaff';
+    const PERM_USER_EDIT = 'Tinhte_XenTag_edit';
 
     const SEARCH_CONSTRAINT_TAGS = 'tag';
     const SEARCH_METADATA_TAGS = 'tag';

@@ -45,6 +45,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
             $tagModel = $this->_getTagModel();
             $response->params['Tinhte_XenTag_canWatch'] = $tagModel->Tinhte_XenTag_canWatchTag($response->params['tag']);
+            $response->params['Tinhte_XenTag_canEdit'] = $tagModel->Tinhte_XenTag_canEditTag($response->params['tag']);
 
             if ($response->params['Tinhte_XenTag_canWatch']) {
                 /** @var Tinhte_XenTag_Model_TagWatch $tagWatchModel */
@@ -124,4 +125,44 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             array('linkPhrase' => $linkPhrase)
         );
     }
+
+    public function actionEdit()
+    {
+        /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
+        $tagModel = $this->_getTagModel();
+
+        $tagUrl = $this->_input->filterSingle('tag_url', XenForo_Input::STRING);
+        $tag = $tagModel->getTagByUrl($tagUrl);
+        if (!$tag) {
+            return $this->responseError(new XenForo_Phrase('requested_tag_not_found'), 404);
+        }
+
+        if (!$tagModel->Tinhte_XenTag_canEditTag($tag, $errorPhraseKey)) {
+            throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
+        }
+
+        if ($this->isConfirmedPost()) {
+            $dwData = $this->_input->filter(array(
+                'tinhte_xentag_title' => XenForo_Input::STRING,
+                'tinhte_xentag_description' => XenForo_Input::STRING,
+            ));
+
+            $dw = XenForo_DataWriter::create('XenForo_DataWriter_Tag');
+            $dw->setExistingData($tag, true);
+            $dw->bulkSet($dwData);
+            $dw->save();
+
+            return $this->responseRedirect(
+                XenForo_ControllerResponse_Redirect::SUCCESS,
+                XenForo_Link::buildPublicLink('tags', $tag)
+            );
+        }
+
+        $viewParams = array(
+            'tag' => $tag,
+        );
+
+        return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
+    }
+
 }

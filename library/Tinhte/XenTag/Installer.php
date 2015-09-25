@@ -152,6 +152,18 @@ class Tinhte_XenTag_Installer
 				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
 			", Tinhte_XenTag_Constants::PERM_USER_IS_STAFF);
         }
+
+        if ($effectiveVersionId < 1
+            || in_array($effectiveVersionId, array(135, 136, 137), true)
+        ) {
+            $db->query("
+				INSERT IGNORE INTO xf_permission_entry
+					(user_group_id, user_id, permission_group_id, permission_id, permission_value, permission_value_int)
+				SELECT user_group_id, user_id, 'general', ?, permission_value, 0
+				FROM xf_permission_entry
+				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
+			", Tinhte_XenTag_Constants::PERM_USER_EDIT);
+        }
     }
 
     protected static function uninstallCustomized()
@@ -163,6 +175,7 @@ class Tinhte_XenTag_Installer
         $db->query('DELETE FROM xf_permission_entry WHERE permission_id IN (' . $db->quote(array(
                 Tinhte_XenTag_Constants::PERM_USER_WATCH,
                 Tinhte_XenTag_Constants::PERM_USER_IS_STAFF,
+                Tinhte_XenTag_Constants::PERM_USER_EDIT,
             )) . ')');
 
         $db->query('DELETE FROM xf_content_type WHERE addon_id = ?', 'Tinhte_XenTag');
@@ -196,7 +209,6 @@ class Tinhte_XenTag_Installer
                 'Tinhte_XenTag_tag',
                 'Tinhte_XenTag_tagAll',
                 'Tinhte_XenTag_createNew',
-                'Tinhte_XenTag_edit',
                 'TXT_resourceMaximumTags',
                 'Tinhte_XenTag_resourceAll',
                 'Tinhte_XenTag_resourceTag',

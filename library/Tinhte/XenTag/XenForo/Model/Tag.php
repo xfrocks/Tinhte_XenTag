@@ -111,6 +111,18 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_WATCH);
     }
 
+    public function Tinhte_XenTag_canEditTag(/** @noinspection PhpUnusedParameterInspection */
+        array $tag, &$errorPhraseKey = '', array $viewingUser = null)
+    {
+        $this->standardizeViewingUserReference($viewingUser);
+
+        if (empty($viewingUser['user_id'])) {
+            return false;
+        }
+
+        return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_EDIT);
+    }
+
     public function Tinhte_XenTag_getTagsByIds(array $ids)
     {
         if (count($ids) === 1) {

@@ -84,6 +84,7 @@
       <replace><![CDATA[<xen:textboxunit name="tinhte_xentag_title"
 				 value="{$tag.tinhte_xentag_title}"
 				 label="{xen:phrase title}:"
+				 placeholder="{$tag.tag}"
 				 maxlength="255" />
 
 <xen:textboxunit name="tinhte_xentag_description"
@@ -413,6 +414,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
   <permissions>
     <permission_groups/>
     <permissions>
+      <permission permission_group_id="general" permission_id="Tinhte_XenTag_edit" permission_type="flag" default_value="unset" interface_group_id="generalModeratorPermissions" display_order="9999"/>
       <permission permission_group_id="general" permission_id="Tinhte_XenTag_isStaff" permission_type="flag" default_value="unset" interface_group_id="generalModeratorPermissions" display_order="9999"/>
       <permission permission_group_id="general" permission_id="Tinhte_XenTag_watch" permission_type="flag" default_value="unset" interface_group_id="generalPermissions" display_order="9999"/>
     </permissions>
@@ -440,6 +442,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag" version_id="134" version_string="2.1.4b"><![CDATA[Enable #hashtag]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to allow user to use #hashtag in posts.]]></phrase>
+    <phrase title="permission_general_Tinhte_XenTag_edit" version_id="137" version_string="3.1.0"><![CDATA[Edit tags (front-end)]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_isStaff" version_id="136" version_string="3.0.1"><![CDATA[Use staff-only tags]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_watch" version_id="134" version_string="2.1.4b"><![CDATA[Watch content tag]]></phrase>
     <phrase title="style_property_group_Tinhte_XenTag_master" version_id="74" version_string="1.5.3b"><![CDATA[[Tinhte] XenTag]]></phrase>
@@ -689,7 +692,45 @@ a.Tinhte_XenTag_TagLink:focus {
 		</div>
 	</div>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="136" version_string="3.0.1"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
+    <template title="tinhte_xentag_tag_edit" version_id="137" version_string="3.1.0"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
+<xen:h1>{xen:phrase edit}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb href="{xen:link tags}">{xen:phrase tags}</xen:breadcrumb>
+	<xen:breadcrumb href="{xen:link tags, $tag}">{xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:breadcrumb>
+</xen:navigation>
+
+<form method="post" class="xenForm formOverlay" action="{xen:link 'tags/edit', $tag}">
+
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_tinhte_xentag_title">{xen:phrase title}:</label></dt>
+		<dd>
+			<input id="ctrl_tinhte_xentag_title"
+				   type="text"
+				   name="tinhte_xentag_title"
+				   value="{$tag.tinhte_xentag_title}"
+				   placeholder="{$tag.tag}" class="textCtrl" />
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_tinhte_xentag_description">{xen:phrase description}:</label></dt>
+		<dd>
+			<textarea id="ctrl_tinhte_xentag_description"
+					  name="tinhte_xentag_description"
+					  rows="5" class="textCtrl Elastic">{$tag.tinhte_xentag_description}</textarea>
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd><input type="submit" name="save" value="{xen:phrase save}" accesskey="s" class="button primary" /></dd>
+	</dl>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+</form>]]></template>
+    <template title="tinhte_xentag_tag_view" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
 	<xen:title>{$tag.tinhte_xentag_title}</xen:title>
 </xen:if>
 
@@ -698,23 +739,27 @@ a.Tinhte_XenTag_TagLink:focus {
 </xen:if>
 
 <div class="linkGroup">
+	<xen:if is="{$Tinhte_XenTag_canEdit}">
+		<a href="{xen:link 'tags/edit', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:phrase edit}</a>
+	</xen:if>
+
 	<xen:if is="{$Tinhte_XenTag_canWatch}">
 		<a href="{xen:link 'tags/watch-confirm', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $Tinhte_XenTag_tagIsWatched, '{xen:phrase tinhte_xentag_unwatch_tag}', '{xen:phrase tinhte_xentag_watch_tag}'}</a>
 	</xen:if>
 </div>
 
 ]]></template>
-    <template title="tinhte_xentag_tag_watch" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tagWatch}">
-	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tag_title}', $tag.tag_title, $tag.tag_text}</xen:title>
+    <template title="tinhte_xentag_tag_watch" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tagWatch}">
+	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 	<xen:h1>{xen:phrase tinhte_xentag_unwatch_tag}</xen:h1>
 <xen:else />
-	<xen:title>{xen:phrase tinhte_xentag_watch_tag} - {xen:if '{$tag.tag_title}', $tag.tag_title, $tag.tag_text}</xen:title>
+	<xen:title>{xen:phrase tinhte_xentag_watch_tag} - {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 	<xen:h1>{xen:phrase tinhte_xentag_watch_tag}</xen:h1>
 </xen:if>
 
 <xen:navigation>
 	<xen:breadcrumb href="{xen:link tags}">{xen:phrase tags}</xen:breadcrumb>
-	<xen:breadcrumb href="{xen:link tags, $tag}">{$tag.tag}</xen:breadcrumb>
+	<xen:breadcrumb href="{xen:link tags, $tag}">{xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:breadcrumb>
 </xen:navigation>
 
 <form action="{xen:link 'tags/watch', $tag}" method="post" class="xenForm formOverlay AutoValidator">
