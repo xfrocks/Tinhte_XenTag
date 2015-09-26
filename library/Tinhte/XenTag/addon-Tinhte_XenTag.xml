@@ -538,7 +538,7 @@ To disable all emails:
   </phrases>
   <route_prefixes/>
   <style_properties>
-    <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[0]]></property>
+    <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[1]]></property>
     <group group_name="Tinhte_XenTag" display_order="9999">
       <title>[Tinhte] XenTag</title>
       <description>Styling properties for contents tagging.</description>
@@ -557,108 +557,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="114" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
-	overflow: auto;
-}
-	.ctrlUnit dd .Tinhte_XenTag_TagsEditor li,
-	.Tinhte_XenTag_TagsEditor li {
-		float: left;
-		display: block;
-		border-radius: 5px;
-		margin: 2px 5px 2px 0;
-	}
-	
-	.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag {
-		{xen:property secondaryContent.background}
-		
-		color: {xen:property textCtrlText};
-		padding: 3px;
-		border: 1px solid {xen:property primaryLight};
-	}
-		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag:hover {
-			background-color: {xen:property primaryLighterStill};
-		}
-		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_Tag a.delete {
-			color: #777777;
-			cursor: pointer;
-			font-size: 12px;
-			font-weight: bold;
-			outline: medium none;
-			text-decoration: none;
-			padding: 2px 0 2px 3px;
-		}
-		
-	.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew {
-		padding: 2px 4px 1px 0;
-	}
-		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew .textCtrl.Tinhte_XenTag_TagNewInput {
-			margin: 0 !important;
-			padding: 3px !important;
-			border: none !important;
-			width: inherit !important;
-			background: transparent !important;
-		}
-		.Tinhte_XenTag_TagsEditor .Tinhte_XenTag_TagNew .textCtrl.Tinhte_XenTag_TagNewInput:focus {
-			border: none !important;
-			background: transparent !important;
-		}
-
-.Tinhte_XenTag_TagsInlineEditorForm {
-	/* this class is added to the form by javascript */
-}
-	.xenForm.Tinhte_XenTag_TagsInlineEditorForm {
-		margin: 0;
-		width: auto;
-	}
-	.Tinhte_XenTag_TagsInlineEditorForm .Tinhte_XenTag_TagsEditor.textCtrl {
-		border: 0;
-		background: transparent;
-	}
-
-/* Tag cloud */
-
-.Tinhte_XenTag_TagCloud {
-}
-{xen:helper clearfix, '.Tinhte_XenTag_TagCloud'}
-
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag {
-		background: {xen:property primaryMedium};
-		color: {xen:property primaryLightest};
-		display: inline;
-		float: left;
-		margin: 0.2em;
-		padding: 0;
-	}
-
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag:hover {
-		background: {xen:property secondaryLighter};
-		color: {xen:property primaryDark};
-	}
-	
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloudTag a {
-		color: inherit;
-		display: block;
-		font-size: 1em;
-		font-weight: bold;
-		margin: 0.5em;
-		text-decoration: none;
-		white-space: nowrap;
-	}
-
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level1 { background-color: {xen:property primaryLighterStill}; color: {xen:property primaryMedium}; }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level2 { background-color: {xen:property primaryLighter}; }
-	.Tinhte_XenTag_TagCloud .Tinhte_XenTag_TagCloud_Level3 { background-color: {xen:property primaryLight}; }
-	
-.tinhte_xentag_tag_list .xenForm fieldset {
-	/* disable the separating line for fieldset */
-	border: 0;
-}
-
-.Tinhte_XenTag_Copyright {
-	float: right;
-}
-
-<xen:if is="{xen:property tinhte_xentag_showIconInTagLink}">
+    <template title="tinhte_xentag.css" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{xen:property tinhte_xentag_showIconInTagLink}">
 a.Tinhte_XenTag_TagLink:link,
 a.Tinhte_XenTag_TagLink:visited,
 a.Tinhte_XenTag_TagLink:hover,
@@ -666,13 +565,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
 	padding-right: 12px !important;
 }
-</xen:if>
-
-.Tinhte_XenTag_TagResult {
-}
-	.Tinhte_XenTag_TagResult_ContentCount {
-		float: right;
-	}]]></template>
+</xen:if>]]></template>
     <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:link tags, '', 't={$tagText}'}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}><span class="hash">#</span><span class="text">{$displayText}</span></a>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tag}">
@@ -681,13 +574,6 @@ a.Tinhte_XenTag_TagLink:focus {
 	<xen:set var="$href">{xen:link tags, '', 't={$tagText}'}</xen:set>
 </xen:if><xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:raw $href}" class="Tinhte_XenTag_TagLink"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
-    <template title="tinhte_xentag_copyright" version_id="0" version_string=""><![CDATA[<xen:comment>Please do not remove this copyright notice. Thank you.</xen:comment>
-
-<xen:require css="tinhte_xentag.css" />
-
-<div class="Tinhte_XenTag_Copyright">
-	XenTag by <a href="http://www.tinhte.vn" target="_blank">Tinhte.vn</a>
-</div>]]></template>
     <template title="tinhte_xentag_forum_view" version_id="135" version_string="3.0.0"><![CDATA[<xen:if is="{$xenOptions.enableTagging} && {$forum.Tinhte_XenTag_tagsList}">
 	<xen:include template="helper_tag_list">
 		<xen:map from="$forum.Tinhte_XenTag_tagsList" to="$tags" />
