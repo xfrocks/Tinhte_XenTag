@@ -44,9 +44,10 @@
 
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
-	<xen:option name="{$namePrefix}use_live_cache" value="1" selected="{$options.use_live_cache}">{xen:phrase wf_use_live_cache}</xen:option>
 </xen:checkboxunit>]]></template>
-    <template title="tinhte_xentag_widget_tagged_threads_options"><![CDATA[<xen:textboxunit label="{xen:phrase tags}:" name="{$namePrefix}tags" value="{$options.tags}">
+    <template title="tinhte_xentag_widget_tagged_threads_options"><![CDATA[<xen:require js="js/xenforo/tag.js" />
+
+<xen:textboxunit label="{xen:phrase tags}:" name="{$namePrefix}tags" value="{$options.tags}" inputclass="TagInput">
 	<xen:explain>{xen:phrase tinhte_xentag_tagged_threads_tags_explain}</xen:explain>
 </xen:textboxunit>
 
