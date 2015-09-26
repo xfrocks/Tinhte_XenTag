@@ -45,46 +45,6 @@ class Tinhte_XenTag_Listener
         }
     }
 
-    public static function template_hook($hookName, &$contents, array $hookParams, XenForo_Template_Abstract $template)
-    {
-
-        if ($hookName == 'tinhte_xentag_tag_cloud_item') {
-            // our special hook to populate data to the sidebar
-            // doing this will make it super-easy to use the sidebar template
-            // just put the include statement in the target page and you are done!
-            // <xen:include template="tinhte_xentag_sidebar_cloud" />
-            // supported parameters:
-            // - max: maximum number of links
-            /** @var XenForo_Model_Tag $tagModel */
-            $tagModel = XenForo_Model::create('XenForo_Model_Tag');
-
-            $tagCloud = $tagModel->getTagsForCloud(
-                isset($hookParams['max']) ? $hookParams['max'] : XenForo_Application::getOptions()->get('tagCloud', 'count'),
-                XenForo_Application::getOptions()->get('tagCloudMinUses')
-            );
-            $tagCloudLevels = $tagModel->getTagCloudLevels($tagCloud);
-            $results = '';
-
-            foreach ($tagCloud as $tag) {
-                $search = array(
-                    '{TAG_TEXT}',
-                    '{TAG_LINK}',
-                    '{TAG_CONTENT_COUNT}',
-                    '{TAG_LEVEL}'
-                );
-                $replace = array(
-                    htmlspecialchars($tag['tag']),
-                    XenForo_Link::buildPublicLink('tags', $tag),
-                    XenForo_Template_Helper_Core::numberFormat($tag['use_count']),
-                    $tagCloudLevels[$tag['tag_id']],
-                );
-                $results .= str_replace($search, $replace, $contents);
-            }
-
-            $contents = $results;
-        }
-    }
-
     public static function file_health_check(XenForo_ControllerAdmin_Abstract $controller, array &$hashes)
     {
         $hashes += Tinhte_XenTag_FileSums::getHashes();

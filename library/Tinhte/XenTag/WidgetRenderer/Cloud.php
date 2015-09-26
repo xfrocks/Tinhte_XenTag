@@ -46,6 +46,23 @@ class Tinhte_XenTag_WidgetRenderer_Cloud extends WidgetFramework_WidgetRenderer
 
     protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template)
     {
+
+        $core = WidgetFramework_Core::getInstance();
+        /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
+        $tagModel = $core->getModelFromCache('XenForo_Model_Tag');
+
+        if (!empty($widget['options']['limit'])) {
+            $limit = $widget['options']['limit'];
+        } else {
+            $limit = XenForo_Application::getOptions()->get('tagCloud', 'count');
+        }
+
+        $tags = $tagModel->getTagsForCloud($limit);
+        $tagsLevels = $tagModel->getTagCloudLevels($tags);
+
+        $template->setParam('tags', $tags);
+        $template->setParam('tagsLevels', $tagsLevels);
+
         return $template->render();
     }
 

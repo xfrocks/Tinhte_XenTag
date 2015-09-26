@@ -116,14 +116,13 @@ $0]]></replace>
   <code_event_listeners>
     <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
     <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_Html_Renderer_BbCode" description="XenForo_Html_Renderer_BbCode"/>
-    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_TagHandler_Tagger" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_TagHandler_Tagger" description="XenForo_TagHandler_Tagger"/>
     <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="template_hook" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="template_hook" active="1" hint="" description=""/>
     <listener event_id="widget_framework_ready" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="widget_framework_ready" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
@@ -718,22 +717,6 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
-    <template title="tinhte_xentag_sidebar_cloud" version_id="40" version_string="1.2"><![CDATA[<xen:if hascontent="true">
-	<xen:require css="tinhte_xentag.css" />
-
-	<div class="section Tinhte_XenTag_SidebarCloud Tinhte_XenTag_TagCloud">
-		<div class="secondaryContent">
-			<h3><a href="{xen:link tags}">{xen:phrase tinhte_xentag_tag_cloud}</a></h3>
-			<ul>
-				<xen:contentcheck>
-					<xen:hook name="tinhte_xentag_tag_cloud_item" params="{xen:array 'max={xen:helper Tinhte_XenTag_getOption, cloudMax}'}">
-						<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{TAG_LEVEL}"><a href="{TAG_LINK}">{TAG_TEXT}</a></li>
-					</xen:hook>
-				</xen:contentcheck>
-			</ul>
-		</div>
-	</div>
-</xen:if>]]></template>
     <template title="tinhte_xentag_tag_edit" version_id="137" version_string="3.1.0"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 <xen:h1>{xen:phrase edit}</xen:h1>
 
@@ -917,16 +900,14 @@ a.Tinhte_XenTag_TagLink:focus {
 </form>
 
 ]]></template>
-    <template title="tinhte_xentag_widget_cloud" version_id="112" version_string="1.9.1-dev"><![CDATA[<xen:if hascontent="true">
-    <xen:require css="tinhte_xentag.css" />
-    
-    <ul class="Tinhte_XenTag_TagCloud cloud">
-        <xen:contentcheck>
-            <xen:hook name="tinhte_xentag_tag_cloud_item" params="{xen:array 'max={$widget.options.limit}'}">
-            	<li class="Tinhte_XenTag_TagCloudTag Tinhte_XenTag_TagCloud_Level{TAG_LEVEL}"><a href="{TAG_LINK}">{TAG_TEXT}</a></li>
-            </xen:hook>
-        </xen:contentcheck>
-    </ul>
+    <template title="tinhte_xentag_widget_cloud" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tags}">
+    <xen:require css="tag.css" />
+	
+	<ul class="tagCloud">
+	<xen:foreach loop="$tags" key="$tagId" value="$tag">
+		<li><a href="{xen:link tags, $tag}" class="tagCloudTag tagCloudTag{$tagsLevels.{$tagId}}">{$tag.tag}</a></li>
+	</xen:foreach>
+	</ul>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_related_threads" version_id="88" version_string="1.7.1"><![CDATA[<xen:if hascontent="true">
     <div class="avatarList">
