@@ -58,6 +58,11 @@
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
+    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDays}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+
+<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
+	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
+</xen:spinboxunit>]]></template>
   </admin_templates>
   <admin_template_modifications>
     <modification template="forum_edit" modification_key="tinhte_xentag_admin_forum_edit_panes" description="Insert tag edit fields for forum." execution_order="10" enabled="1" action="str_replace">
@@ -951,6 +956,15 @@ a.Tinhte_XenTag_TagLink:focus {
     </div>
 </xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
+    <template title="tinhte_xentag_widget_trending" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tags}">
+	<xen:require css="tag.css" />
+
+	<ul class="tagCloud">
+	<xen:foreach loop="$tags" key="$tagId" value="$tag">
+		<li><a href="{xen:link tags, $tag}" class="tagCloudTag tagCloudTag{$tagsLevels.{$tagId}}">{$tag.tag}</a></li>
+	</xen:foreach>
+	</ul>
+</xen:if>]]></template>
   </templates>
   <public_template_modifications>
     <modification template="editor" modification_key="tinhte_xentag_editor" description="Insert bb code js." execution_order="10" enabled="1" action="preg_replace">
