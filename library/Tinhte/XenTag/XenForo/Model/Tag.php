@@ -158,10 +158,17 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 
     public function Tinhte_XenTag_getTagsFromCache()
     {
-        $tags = $this->_getDataRegistryModel()->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
+        $cache = $this->_getDataRegistryModel()->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
 
-        if ($tags === null) {
+        if (!isset($cache['version'])
+            || $cache['version'] < Tinhte_XenTag_Constants::DATA_REGISTRY_TAGS_VERSION
+            || !isset($cache['time'])
+            || XenForo_Application::$time - $cache['time'] > 3600
+        ) {
+            // cache not found or expired
             $tags = $this->Tinhte_XenTag_rebuildTagsCache();
+        } else {
+            $tags = $cache['tags'];
         }
 
         return $tags;
@@ -176,7 +183,11 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         }
 
         $tags = $this->getTagsForCloud($limit);
-        $this->_getDataRegistryModel()->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS, $tags);
+        $this->_getDataRegistryModel()->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS, array(
+            'tags' => $tags,
+            'time' => XenForo_Application::$time,
+            'version' => Tinhte_XenTag_Constants::DATA_REGISTRY_TAGS_VERSION,
+        ));
 
         return $tags;
     }
@@ -314,7 +325,7 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 
         if (!isset($cache['version'])
             || $cache['version'] < Tinhte_XenTag_Constants::DATA_REGISTRY_TRENDING_VERSION
-            || empty($cache['time'])
+            || !isset($cache['time'])
             || XenForo_Application::$time - $cache['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400
         ) {
             // cache not found or expired

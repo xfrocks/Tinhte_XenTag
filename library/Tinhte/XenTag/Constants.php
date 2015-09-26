@@ -5,6 +5,7 @@ class Tinhte_XenTag_Constants
     const CONTENT_TYPE_FORUM = 'tinhte_xentag_forum';
 
     const DATA_REGISTRY_KEY_TAGS = 'Tinhte_XenTag_tags';
+    const DATA_REGISTRY_TAGS_VERSION = 2;
     const DATA_REGISTRY_KEY_TRENDING = 'Tinhte_XenTag_trending';
     const DATA_REGISTRY_TRENDING_VERSION = 2;
 
