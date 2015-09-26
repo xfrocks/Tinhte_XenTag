@@ -194,7 +194,6 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return $cache;
     }
 
-
     public function getContentIdsByTagId($tagId, $limit, $visibleOnly = true)
     {
         $contentIds = parent::getContentIdsByTagId($tagId, $limit, $visibleOnly);
@@ -255,5 +254,76 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return $tags;
     }
 
+    public function Tinhte_XenTag_getTrendingTags($cutoff, $limit)
+    {
+        if ($limit === 0) {
+            return array();
+        }
+
+        $counts = $this->_getDb()->fetchPairs('
+            SELECT tag_id, COUNT(*) AS tagged_count
+            FROM `xf_tag_content`
+            WHERE add_date > ?
+            GROUP BY tag_id
+            ORDER BY tagged_count DESC
+            LIMIT ?;
+        ', array(
+            $cutoff,
+            $limit,
+        ));
+
+        $tags = array();
+        if (!empty($counts)) {
+            $tagsDb = $this->fetchAllKeyed('
+                SELECT *
+                FROM `xf_tag`
+                WHERE tag_id IN (' . $this->_getDb()->quote(array_keys($counts)) . ')
+            ', 'tag_id');
+
+            foreach ($counts as $tagId => $count) {
+                if (isset($tagsDb[$tagId])) {
+                    $tags[$tagId] = $tagsDb[$tagId];
+                    $tags[$tagId]['use_count'] = $count;
+                }
+            }
+        }
+
+        return $tags;
+    }
+
+
+    public function Tinhte_XenTag_rebuildTrendingCache()
+    {
+        $cutoff = XenForo_Application::$time - Tinhte_XenTag_Option::get('trendingDays') * 86400;
+        $limit = Tinhte_XenTag_Option::get('trendingMax');
+
+        $tags = $this->Tinhte_XenTag_getTrendingTags($cutoff, $limit);
+
+        $this->_getDataRegistryModel()->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING, array(
+            'tags' => $tags,
+            'time' => XenForo_Application::$time,
+            'version' => Tinhte_XenTag_Constants::DATA_REGISTRY_TRENDING_VERSION,
+        ));
+
+        return $tags;
+    }
+
+    public function Tinhte_XenTag_getTrendingFromCache()
+    {
+        $cache = $this->_getDataRegistryModel()->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
+
+        if (!isset($cache['version'])
+            || $cache['version'] < Tinhte_XenTag_Constants::DATA_REGISTRY_TRENDING_VERSION
+            || empty($cache['time'])
+            || XenForo_Application::$time - $cache['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400
+        ) {
+            // cache not found or expired
+            $tags = $this->Tinhte_XenTag_rebuildTrendingCache();
+        } else {
+            $tags = $cache['tags'];
+        }
+
+        return $tags;
+    }
 
 }

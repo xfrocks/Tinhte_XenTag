@@ -32,7 +32,19 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             }
         }
 
-        return parent::actionIndex();
+        $response = parent::actionIndex();
+
+        if ($response instanceof XenForo_ControllerResponse_View) {
+            /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
+            $tagModel = $this->_getTagModel();
+            $trendingTags = $tagModel->Tinhte_XenTag_getTrendingFromCache();
+            $trendingTagsLevels = $tagModel->getTagCloudLevels($trendingTags);
+
+            $response->params['Tinhte_XenTag_trendingTags'] = $trendingTags;
+            $response->params['Tinhte_XenTag_trendingTagsLevels'] = $trendingTagsLevels;
+        }
+
+        return $response;
     }
 
     public function actionTag()

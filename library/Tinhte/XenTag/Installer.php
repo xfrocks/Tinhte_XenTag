@@ -198,6 +198,7 @@ class Tinhte_XenTag_Installer
         /** @var XenForo_Model_DataRegistry $dataRegistryModel */
         $dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
         $dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TAGS);
+        $dataRegistryModel->delete(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
     }
 
     private static function upgradeFrom134()
@@ -250,10 +251,6 @@ class Tinhte_XenTag_Installer
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_forum');
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_resource');
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_tag');
-
-        /** @var XenForo_Model_DataRegistry $dataRegistryModel */
-        $dataRegistryModel = XenForo_Model::create('XenForo_Model_DataRegistry');
-        $dataRegistryModel->delete('Tinhte_XenTag_trending');
     }
 
 }

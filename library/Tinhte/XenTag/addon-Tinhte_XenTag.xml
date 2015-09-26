@@ -409,6 +409,27 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="2030"/>
     </option>
+    <option option_id="Tinhte_XenTag_trendingDays" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>14</default_value>
+      <edit_format_params>min=1
+step=7</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="100"/>
+    </option>
+    <option option_id="Tinhte_XenTag_trendingMax" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>10</default_value>
+      <edit_format_params>min=0
+step=5</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="110"/>
+    </option>
+    <option option_id="Tinhte_XenTag_trendingTtl" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>min=1
+step=7</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="120"/>
+    </option>
     <option option_id="Tinhte_XenTag_useHashtag" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>0</default_value>
       <edit_format_params></edit_format_params>
@@ -446,6 +467,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="option_Tinhte_XenTag_prioritizePages_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize pages in tagged content listing. The higher the value, the higher pages will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources" version_id="75" version_string="1.6-dev"><![CDATA[Prioritize Resources]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDays" version_id="137" version_string="3.1.0"><![CDATA[Trending: Days for calculation]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDays_explain" version_id="137" version_string="3.1.0"><![CDATA[Only content tagged within specified number of days will be taken into account when Trending is calculated.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingMax" version_id="137" version_string="3.1.0"><![CDATA[Trending: Maximum Tags]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingMax_explain" version_id="137" version_string="3.1.0"><![CDATA[]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingTtl" version_id="137" version_string="3.1.0"><![CDATA[Trending: TTL]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingTtl_explain" version_id="137" version_string="3.1.0"><![CDATA[Enter how often (in days) the trending tags should be recalculated.]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag" version_id="134" version_string="2.1.4b"><![CDATA[Enable #hashtag]]></phrase>
     <phrase title="option_Tinhte_XenTag_useHashtag_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to allow user to use #hashtag in posts.]]></phrase>
     <phrase title="permission_general_Tinhte_XenTag_edit" version_id="137" version_string="3.1.0"><![CDATA[Edit tags (front-end)]]></phrase>
@@ -480,6 +507,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="tinhte_xentag_this_is_the_resource_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the resource they posted]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_resource_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this resource, click here]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
+    <phrase title="tinhte_xentag_trending" version_id="137" version_string="3.1.0"><![CDATA[Trending]]></phrase>
     <phrase title="tinhte_xentag_unauthorized_tags_x" version_id="136" version_string="3.0.1"><![CDATA[You must not use these tags: {tags}]]></phrase>
     <phrase title="tinhte_xentag_unwatch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Unwatch Tag]]></phrase>
     <phrase title="tinhte_xentag_upgrade_from_134" version_id="134" version_string="2.1.4b"><![CDATA[Upgrade Tags for XenForo 1.5+]]></phrase>
@@ -953,6 +981,12 @@ a.Tinhte_XenTag_TagLink:focus {
 <xen:include template="tinhte_xentag_pagenode_container_article" />
 
 $2]]></replace>
+    </modification>
+    <modification template="tag_search" modification_key="tinhte_xentag_tag_search" description="Insert trending tags." execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[</form>]]></find>
+      <replace><![CDATA[<xen:include template="tinhte_xentag_tag_search" />
+
+$0]]></replace>
     </modification>
     <modification template="tag_view" modification_key="tinhte_xentag_tag_view" description="Insert watch tag link." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<div class="pageNavLinkGroup">
