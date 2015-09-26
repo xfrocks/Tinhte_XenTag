@@ -70,6 +70,20 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return $result;
     }
 
+    public function getTagByUrl($tagUrl)
+    {
+        $tag = parent::getTagByUrl($tagUrl);
+
+        if (isset($GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_TAG_TAG])) {
+            /** @var Tinhte_XenTag_XenForo_ControllerPublic_Tag $controller */
+            $controller = $GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_TAG_TAG];
+            $controller->Tinhte_XenTag_actionTag($tagUrl, $tag);
+        }
+
+        return $tag;
+    }
+
+
     public function getTagsForContent($contentType, $contentId)
     {
         $result = parent::getTagsForContent($contentType, $contentId);

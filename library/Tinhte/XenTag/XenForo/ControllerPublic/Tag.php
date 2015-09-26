@@ -37,6 +37,8 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
 
     public function actionTag()
     {
+        $GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_TAG_TAG] = $this;
+
         $response = parent::actionTag();
 
         if ($response instanceof XenForo_ControllerResponse_View
@@ -58,6 +60,26 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
         }
 
         return $response;
+    }
+
+    public function Tinhte_XenTag_actionTag($tagUrl, $tag)
+    {
+        if (empty($tag)) {
+            return;
+        }
+
+        if ($this->_input->filterSingle('tag_url', XenForo_Input::STRING) !== $tagUrl
+            || $this->_noRedirect()
+        ) {
+            return;
+        }
+
+        if (!empty($tag['tinhte_xentag_url'])) {
+            throw $this->responseException($this->responseRedirect(
+                XenForo_ControllerResponse_Redirect::RESOURCE_CANONICAL_PERMANENT,
+                $tag['tinhte_xentag_url']
+            ));
+        }
     }
 
     public function actionWatchConfirm()

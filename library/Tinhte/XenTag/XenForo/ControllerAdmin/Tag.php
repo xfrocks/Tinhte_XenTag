@@ -15,6 +15,7 @@ class Tinhte_XenTag_XenForo_ControllerAdmin_Tag extends XFCP_Tinhte_XenTag_XenFo
             'tinhte_xentag_staff' => XenForo_Input::BOOLEAN,
             'tinhte_xentag_title' => XenForo_Input::STRING,
             'tinhte_xentag_description' => XenForo_Input::STRING,
+            'tinhte_xentag_url' => XenForo_Input::STRING,
         )));
     }
 

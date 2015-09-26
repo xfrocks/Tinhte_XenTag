@@ -58,6 +58,14 @@ class Tinhte_XenTag_Installer
             'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_description` TEXT',
             'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_description`',
         ),
+        array(
+            'table' => 'xf_tag',
+            'field' => 'tinhte_xentag_url',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_url\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_url` TEXT',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_url`',
+        ),
     );
 
     public static function install($existingAddOn, $addOnData)

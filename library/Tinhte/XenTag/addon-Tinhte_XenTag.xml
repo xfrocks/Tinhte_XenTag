@@ -79,7 +79,7 @@
 			label="{xen:phrase tinhte_xentag_staff}"
 			hint="{xen:phrase tinhte_xentag_staff_explain}" />]]></replace>
     </modification>
-    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit_title_description" description="Insert title &amp; description fields in tag edit form." execution_order="10" enabled="1" action="str_replace">
+    <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit_title_description" description="Insert our fields in tag edit form." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<xen:checkboxunit label="">]]></find>
       <replace><![CDATA[<xen:textboxunit name="tinhte_xentag_title"
 				 value="{$tag.tinhte_xentag_title}"
@@ -91,6 +91,11 @@
 				 value="{$tag.tinhte_xentag_description}"
 				 label="{xen:phrase description}:"
 				 rows="3" inputclass="Elastic" />
+
+<xen:textboxunit name="tinhte_xentag_url"
+				 value="{$tag.tinhte_xentag_url}"
+				 label="{xen:phrase tinhte_xentag_url}:"
+				 explain="{xen:phrase tinhte_xentag_url_explain}" />
 
 $0]]></replace>
     </modification>
@@ -477,6 +482,9 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <phrase title="tinhte_xentag_unauthorized_tags_x" version_id="136" version_string="3.0.1"><![CDATA[You must not use these tags: {tags}]]></phrase>
     <phrase title="tinhte_xentag_unwatch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Unwatch Tag]]></phrase>
     <phrase title="tinhte_xentag_upgrade_from_134" version_id="134" version_string="2.1.4b"><![CDATA[Upgrade Tags for XenForo 1.5+]]></phrase>
+    <phrase title="tinhte_xentag_url" version_id="137" version_string="3.1.0"><![CDATA[External URL]]></phrase>
+    <phrase title="tinhte_xentag_url_explain" version_id="137" version_string="3.1.0"><![CDATA[If provided, user will be redirected to the specified address upon visiting the tag view page.
+]]></phrase>
     <phrase title="tinhte_xentag_watched_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Watched Tags]]></phrase>
     <phrase title="tinhte_xentag_watch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Watch Tag]]></phrase>
     <phrase title="tinhte_xentag_watch_tag_email_footer_1" version_id="115" version_string="1.9.1-dev"><![CDATA[This message was sent to you because you opted to watch the tag "{tag_text}" at {board_title} with email notification of new contents.]]></phrase>
