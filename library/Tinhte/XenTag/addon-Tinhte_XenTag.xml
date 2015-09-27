@@ -63,6 +63,13 @@
 <xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
 </xen:spinboxunit>]]></template>
+    <template title="tinhte_xentag_widget_trending_thread_tags_options"><![CDATA[<xen:selectunit label="{xen:phrase forums}:"
+				name="{$namePrefix}forums"
+				value="" size="5" multiple="true" inputclass="textCtrl">
+	<xen:options source="$forums" />
+</xen:selectunit>
+
+<xen:include template="tinhte_xentag_widget_trending_options" />]]></template>
   </admin_templates>
   <admin_template_modifications>
     <modification template="forum_edit" modification_key="tinhte_xentag_admin_forum_edit_panes" description="Insert tag edit fields for forum." execution_order="10" enabled="1" action="str_replace">
