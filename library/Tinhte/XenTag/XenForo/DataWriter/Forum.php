@@ -27,7 +27,12 @@ class Tinhte_XenTag_XenForo_DataWriter_Forum extends XFCP_Tinhte_XenTag_XenForo_
 
     protected function _postSave()
     {
-        $this->_Tinhte_XenTag_indexForSearch();
+        if ($this->isChanged('title')
+            || $this->isChanged('description')
+            || $this->isChanged(Tinhte_XenTag_Constants::FIELD_FORUM_TAGS)
+        ) {
+            $this->_Tinhte_XenTag_indexForSearch();
+        }
 
         parent::_postSave();
     }

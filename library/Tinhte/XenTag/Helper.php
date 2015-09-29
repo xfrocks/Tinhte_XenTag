@@ -9,8 +9,12 @@ class Tinhte_XenTag_Helper
             if ($tags) {
                 $tagIds = array();
                 foreach ($tags AS $tagId => $tag) {
-                    $title .= " $tag[tag]";
-                    $tagIds[] = $tagId;
+                    if (is_array($tag)
+                        && isset($tag['tag'])
+                    ) {
+                        $title .= " $tag[tag]";
+                        $tagIds[] = $tagId;
+                    }
                 }
 
                 $metadata[Tinhte_XenTag_Constants::SEARCH_METADATA_TAGS] = $tagIds;
