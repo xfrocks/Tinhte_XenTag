@@ -32,6 +32,7 @@ class Tinhte_XenTag_Listener
 
             'XenForo_ViewPublic_Page_View',
             'XenForo_ViewPublic_Thread_View',
+            'XenForo_ViewPublic_Thread_ViewNewPosts',
 
             // XenForo 1.2+
             'XenForo_Html_Renderer_BbCode',
@@ -42,6 +43,15 @@ class Tinhte_XenTag_Listener
 
         if (in_array($class, $classes)) {
             $extend[] = 'Tinhte_XenTag_' . $class;
+        }
+    }
+
+    public static function template_create(&$templateName, array &$params, XenForo_Template_Abstract $template)
+    {
+        switch ($templateName) {
+            case 'post':
+                Tinhte_XenTag_ContentWrapper_Post::wrap($params);
+                break;
         }
     }
 
