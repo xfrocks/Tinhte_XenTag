@@ -74,8 +74,7 @@ class Tinhte_XenTag_Integration
                 if ($pos !== false) {
                     // the tag has been found
                     if (self::_autoTag_hasValidCharacterAround($html, $pos, $tagText)) {
-                        // and it's not between HTML tags,
-                        // with good surrounding characters
+                        // and it has good surrounding characters
                         // start replacing
                         $displayText = utf8_substr($html, $pos, $tagLength);
 
@@ -148,12 +147,12 @@ class Tinhte_XenTag_Integration
 
     protected static function _autoTag_nullifyHtmlCallback($matches)
     {
-        return str_repeat(' ', strlen($matches[0]));
+        return str_repeat(' ', utf8_strlen($matches[0]));
     }
 
     protected static function _autoTag_sortTagsByLength(array $tag1, array $tag2)
     {
-        return utf8_strlen($tag1['tag']) < utf8_strlen($tag2['tag]']);
+        return utf8_strlen($tag1['tag']) < utf8_strlen($tag2['tag']);
     }
 
     /**************************************************
