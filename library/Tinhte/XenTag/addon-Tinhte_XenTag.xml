@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.1.3b" version_id="141" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.1.4" version_id="3010400" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions>
     <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
@@ -370,8 +370,7 @@ $0]]></replace>
     <option option_id="Tinhte_XenTag_autoTagGlobalMax" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>1000</default_value>
       <edit_format_params></edit_format_params>
-      <sub_options>min=0
-step=100</sub_options>
+      <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1020"/>
     </option>
     <option option_id="Tinhte_XenTag_autoTagMode" edit_format="select" data_type="string" can_backup="1">
