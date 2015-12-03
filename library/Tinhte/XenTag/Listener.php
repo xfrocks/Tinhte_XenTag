@@ -15,8 +15,10 @@ class Tinhte_XenTag_Listener
             'XenForo_ControllerAdmin_Page',
             'XenForo_ControllerAdmin_Tag',
             'XenForo_ControllerPublic_Tag',
+            'XenForo_ControllerPublic_Thread',
             'XenForo_ControllerPublic_Watched',
 
+            'XenForo_DataWriter_Discussion_Thread',
             'XenForo_DataWriter_DiscussionMessage_Post',
             'XenForo_DataWriter_Forum',
             'XenForo_DataWriter_Page',
