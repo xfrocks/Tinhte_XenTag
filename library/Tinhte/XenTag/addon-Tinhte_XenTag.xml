@@ -396,6 +396,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1000"/>
     </option>
+    <option option_id="Tinhte_XenTag_defaultDescription" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
     <option option_id="Tinhte_XenTag_keepOrder" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>0</default_value>
       <edit_format_params></edit_format_params>
@@ -476,6 +482,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to create link for each tag only once in a piece of content.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource" version_id="134" version_string="2.1.4b"><![CDATA[Resource Tag Linking]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to automatically convert resource update contents to hyperlink to tags where possible.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_defaultDescription" version_id="3010500" version_string="3.1.5"><![CDATA[Use Default Description]]></phrase>
+    <phrase title="option_Tinhte_XenTag_defaultDescription_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to use a default description for tags that do not have one set. As of XenForo 1.5.4, XenForo does not render anything.]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder" version_id="137" version_string="3.1.0"><![CDATA[Keep Tag Order]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder_explain" version_id="137" version_string="3.1.0"><![CDATA[Enable this option to maintain tag order as entered in the list. By default, XenForo discards this ordering and shows them in alphabetical order.]]></phrase>
     <phrase title="option_Tinhte_XenTag_modLog" version_id="3010401" version_string="3.1.4"><![CDATA[Keep Moderator Log for Tag Edit]]></phrase>
@@ -501,6 +509,7 @@ step=7</edit_format_params>
     <phrase title="style_property_group_Tinhte_XenTag_master_desc" version_id="74" version_string="1.5.3b"><![CDATA[Styling properties for contents tagging.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showIconInTagLink_description_master" version_id="74" version_string="1.5.3b"><![CDATA[Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showIconInTagLink_master" version_id="74" version_string="1.5.3b"><![CDATA[Show Icon in Tag Link]]></phrase>
+    <phrase title="tinhte_xentag_all_contents_tagged_x" version_id="3010500" version_string="3.1.5"><![CDATA[These are all contents from {board_title} tagged {tag_text}.]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_all_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag all tags (with limitation)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_disabled" version_id="15" version_string="0.9.8.5"><![CDATA[Disabled]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_thread_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag thread tags only]]></phrase>
@@ -511,6 +520,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_new_tagged_reply_in_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New reply with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
+    <phrase title="tinhte_xentag_page_x" version_id="3010500" version_string="3.1.5"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
     <phrase title="tinhte_xentag_staff" version_id="136" version_string="3.0.1"><![CDATA[Staff Only]]></phrase>
     <phrase title="tinhte_xentag_staff_explain" version_id="136" version_string="3.0.1"><![CDATA[Making a tag staff only prevents it from being used by unauthorized users. User must be a member of a user group with "Use staff-only tags" permission.]]></phrase>
@@ -667,12 +677,19 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
-	<xen:title>{$tag.tinhte_xentag_title}</xen:title>
+    <template title="tinhte_xentag_tag_view" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
+	<xen:title>{$tag.tinhte_xentag_title}{xen:helper pagenumber, $page}</xen:title>
+<xen:else />
+	<xen:title>{$tag.tag}{xen:helper pagenumber, $page}</xen:title>
 </xen:if>
 
+<xen:set var="$descriptionPage"> {xen:if '{$page} > 1', '{xen:phrase tinhte_xentag_page_x, 'page={$page}'}'}</xen:set>
 <xen:if is="{$tag.tinhte_xentag_description}">
-	<xen:description>{$tag.tinhte_xentag_description}</xen:description>
+	<xen:description>{$tag.tinhte_xentag_description}{$descriptionPage}</xen:description>
+<xen:elseif is="{$xenOptions.Tinhte_XenTag_defaultDescription}" />
+	<xen:description>{xen:phrase tinhte_xentag_all_contents_tagged_x,
+		'board_title={$xenOptions.boardTitle}',
+		'tag_text={$tag.tag}'}{$descriptionPage}</xen:description>
 </xen:if>
 
 <div class="linkGroup">
@@ -683,9 +700,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<xen:if is="{$Tinhte_XenTag_canWatch}">
 		<a href="{xen:link 'tags/watch-confirm', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $Tinhte_XenTag_tagIsWatched, '{xen:phrase tinhte_xentag_unwatch_tag}', '{xen:phrase tinhte_xentag_watch_tag}'}</a>
 	</xen:if>
-</div>
-
-]]></template>
+</div>]]></template>
     <template title="tinhte_xentag_tag_watch" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tagWatch}">
 	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 	<xen:h1>{xen:phrase tinhte_xentag_unwatch_tag}</xen:h1>
