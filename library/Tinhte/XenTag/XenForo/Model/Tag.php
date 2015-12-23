@@ -253,6 +253,16 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
     {
         $tags = parent::autoCompleteTag($tag, $limit);
 
+        if (Tinhte_XenTag_Option::get('inwordAc')) {
+            $tags = array_merge($tags, $this->fetchAllKeyed($this->limitQueryResults('
+                SELECT *
+                FROM xf_tag
+                WHERE tag LIKE ' . XenForo_Db::quoteLike(' ' . $tag, 'lr') . '
+                    AND (use_count > 0 OR permanent = 1)
+                ORDER BY tag
+            ', $limit), 'tag_id'));
+        }
+
         $visitor = XenForo_Visitor::getInstance();
         if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
             foreach (array_keys($tags) as $tagId) {
