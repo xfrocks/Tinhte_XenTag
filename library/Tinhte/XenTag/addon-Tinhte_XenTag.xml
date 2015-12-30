@@ -445,6 +445,7 @@
   <email_template_modifications/>
   <optiongroups>
     <group group_id="Tinhte_XenTag" display_order="9999" debug_only="0"/>
+    <group group_id="tinhte_xentag_display_tag_in_first_post" display_order="1" debug_only="0"/>
     <option option_id="Tinhte_XenTag_autoTagGlobalMax" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>1000</default_value>
       <edit_format_params></edit_format_params>
@@ -609,6 +610,12 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1"/>
     </option>
+    <option option_id="display_tag_in_first_post" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>true</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="tinhte_xentag_display_tag_in_first_post" display_order="1"/>
+    </option>
   </optiongroups>
   <permissions>
     <permission_groups/>
@@ -630,8 +637,12 @@ view = {xen:phrase tinhte_xentag_trending_type_view}</edit_format_params>
   <phrases>
     <phrase title="admin_navigation_Tinhte_XenTag_Tag" version_id="1" version_string="0.9"><![CDATA[Tags]]></phrase>
     <phrase title="admin_permission_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[[XenTag] Manage tags]]></phrase>
+    <phrase title="option_display_tag_in_first_post" version_id="133" version_string="2.1.4"><![CDATA[Display tag bar below FIRST POST of Thread]]></phrase>
+    <phrase title="option_display_tag_in_first_post_explain" version_id="133" version_string="2.1.4"><![CDATA[Display tag bar below FIRST POST of Thread]]></phrase>
     <phrase title="option_group_Tinhte_XenTag" version_id="5" version_string="0.9.4"><![CDATA[[Tinhte] XenTag]]></phrase>
     <phrase title="option_group_Tinhte_XenTag_description" version_id="74" version_string="1.5.3b"><![CDATA[Options for contents tagging.]]></phrase>
+    <phrase title="option_group_tinhte_xentag_display_tag_in_first_post" version_id="133" version_string="2.1.4"><![CDATA[tinhte_xentag_display_tag_FIRST_POST]]></phrase>
+    <phrase title="option_group_tinhte_xentag_display_tag_in_first_post_description" version_id="133" version_string="2.1.4"><![CDATA[Show the tag bar below FIRST POST of Thread]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax" version_id="15" version_string="0.9.8.5"><![CDATA[Auto Tag Global Limitation]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax_explain" version_id="15" version_string="0.9.8.5"><![CDATA[Enter the maximum number of tags should be process when the mode is set to use all tags. To remove limitation, enter 0 (zero) in this option.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagMode" version_id="77" version_string="1.6"><![CDATA[Thread Auto Tag]]></phrase>
@@ -839,6 +850,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
+    <template title="display_tag_new_thread" version_id="133" version_string="2.1.4"><![CDATA[]]></template>
     <template title="tinhte_xentag.css" version_id="114" version_string="1.9.1-dev"><![CDATA[.Tinhte_XenTag_TagsEditor {
 	overflow: auto;
 }
@@ -964,6 +976,7 @@ a.Tinhte_XenTag_TagLink:focus {
 <div class="Tinhte_XenTag_Copyright">
 	XenTag by <a href="http://www.tinhte.vn" target="_blank">Tinhte.vn</a>
 </div>]]></template>
+    <template title="tinhte_xentag_display_tag_in_first_post" version_id="133" version_string="2.1.4"><![CDATA[<xen:hook name="thread_view_qr_after" params="{xen:array 'thread={$thread}'}" />]]></template>
     <template title="tinhte_xentag_editor" version_id="95" version_string="1.8.4b"><![CDATA[<xen:if is="{$showWysiwyg}">
 	<xen:require css="tinhte_xentag.css" />
 	<xen:require js="js/Tinhte/XenTag/bb_code_edit.js" />
@@ -1039,7 +1052,7 @@ a.Tinhte_XenTag_TagLink:focus {
 		<!-- [Tinhte] XenTag / Mark --><dl class="resourceCategory"><!-- [Tinhte] XenTag / Mark -->
 	</xen:if>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_hook_thread_view_form_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_messages_above'">
+    <template title="tinhte_xentag_hook_thread_view_form_before" version_id="133" version_string="2.1.4"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_messages_above'">
 	<xen:include template="tinhte_xentag_tags_thread_view" />
 </xen:if>]]></template>
     <template title="tinhte_xentag_hook_thread_view_pagenav_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_pagenav_above'">
@@ -1368,7 +1381,7 @@ a.Tinhte_XenTag_TagLink:focus {
 
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="127" version_string="2.1.2"><![CDATA[<xen:title>{xen:if '{$tag.tag_title}', '{$tag.tag_title} - {$tag.tag_text}', $tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
+    <template title="tinhte_xentag_tag_view" version_id="133" version_string="2.1.4"><![CDATA[<xen:title>{xen:if '{$tag.tag_title}', '{$tag.tag_title} - {$tag.tag_text}', $tag.tag_text}{xen:helper pagenumber, $page}</xen:title>
 <xen:h1>{xen:if '{$tag.tag_title}', $tag.tag_title, $tag.tag_text}</xen:h1>
 <xen:description>
 	{$tag.tag_description}
@@ -1498,7 +1511,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_thread_create" version_id="120" version_string="2.0.0e"><![CDATA[<xen:if is="{$Tinhte_XenTag_canTag}">
+    <template title="tinhte_xentag_thread_create" version_id="133" version_string="2.1.4"><![CDATA[<xen:if is="{$Tinhte_XenTag_canTag}">
 	<!-- [Tinhte] XenTag / Mark --><!-- slot: after_editor --><!-- [Tinhte] XenTag / Mark -->
 
 	<fieldset><xen:include template="tinhte_xentag_thread_edit_fields" /></fieldset>
@@ -1583,7 +1596,7 @@ a.Tinhte_XenTag_TagLink:focus {
     	</xen:include>
     </xen:if>
 </div>]]></template>
-    <template title="tinhte_xentag_thread_hashtag_js" version_id="120" version_string="2.0.0e"><![CDATA[<xen:if is="isset({$forum.Tinhte_XenTag_maximumHashtags})">
+    <template title="tinhte_xentag_thread_hashtag_js" version_id="133" version_string="2.1.4"><![CDATA[<xen:if is="isset({$forum.Tinhte_XenTag_maximumHashtags})">
 	<xen:container
 		var="$head.Tinhte_XenTag_maximumHashtags"><script type="text/javascript">
 window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHashtags}');
@@ -1620,7 +1633,7 @@ window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHa
 	<!-- [Tinhte] XenTag / Revert Mark --><xen:comment>We want to look for the last occurence of </div> for best effect!</xen:comment>
 </xen:if>]]></template>
     <template title="tinhte_xentag_thread_reply" version_id="120" version_string="2.0.0e"><![CDATA[<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
-    <template title="tinhte_xentag_thread_view" version_id="120" version_string="2.0.0e"><![CDATA[<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
+    <template title="tinhte_xentag_thread_view" version_id="133" version_string="2.1.4"><![CDATA[<xen:include template="tinhte_xentag_thread_hashtag_js" />]]></template>
     <template title="tinhte_xentag_watch_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_watched_tags}</xen:title>
 <xen:description>{xen:phrase tinhte_xentag_this_is_list_of_all_tags_that_you_watching}</xen:description>
 
@@ -1751,7 +1764,49 @@ window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHa
 	</ul>
 </xen:if>]]></template>
   </templates>
-  <public_template_modifications/>
+  <public_template_modifications>
+    <modification template="post" modification_key="tinhte_xentag_display_tag_in_first_post" description="Display tags bar below FIRST POST of a thread" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:if is="{$canReply}">
+					<xen:if is="{$xenOptions.multiQuote}"><a href="{xen:link threads/reply, $thread, 'quote={$post.post_id}'}"
+						data-messageid="{$post.post_id}"
+						class="MultiQuoteControl JsOnly item control"
+						title="{xen:phrase toggle_multi_quote_tooltip}"><span></span><span class="symbol">{xen:phrase multiquote_add}</span></a></xen:if>
+					<a href="{xen:link threads/reply, $thread, 'quote={$post.post_id}'}"
+						data-postUrl="{xen:link posts/quote, $post}"
+						data-tip="#MQ-{$post.post_id}"
+						class="ReplyQuote item control reply"
+						title="{xen:phrase reply_quoting_this_message}"><span></span>{xen:phrase reply}</a>
+				</xen:if>
+				</xen:hook>
+			</div>
+		</div>
+	</xen:set>
+	
+</xen:include>]]></find>
+      <replace><![CDATA[<xen:if is="{$canReply}">
+					<xen:if is="{$xenOptions.multiQuote}"><a href="{xen:link threads/reply, $thread, 'quote={$post.post_id}'}"
+						data-messageid="{$post.post_id}"
+						class="MultiQuoteControl JsOnly item control"
+						title="{xen:phrase toggle_multi_quote_tooltip}"><span></span><span class="symbol">{xen:phrase multiquote_add}</span></a></xen:if>
+					<a href="{xen:link threads/reply, $thread, 'quote={$post.post_id}'}"
+						data-postUrl="{xen:link posts/quote, $post}"
+						data-tip="#MQ-{$post.post_id}"
+						class="ReplyQuote item control reply"
+						title="{xen:phrase reply_quoting_this_message}"><span></span>{xen:phrase reply}</a>
+				</xen:if>
+				</xen:hook>
+			</div>
+		</div>
+<xen:if is="{$xenOptions.display_tag_in_first_post}==true">
+<xen:if is="{$post.post_id} === {$thread.first_post_id}">
+			<xen:hook name="thread_view_qr_after" params="{xen:array 'thread={$thread}'}" />
+		</xen:if>
+</xen:if>
+	</xen:set>
+	
+</xen:include>]]></replace>
+    </modification>
+  </public_template_modifications>
   <bb_code_media_sites/>
   <bb_codes/>
 </addon>
