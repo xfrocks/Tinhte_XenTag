@@ -1766,10 +1766,10 @@ window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHa
 	
 </xen:include>]]></find>
       <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_displayTagBelowFirstPost}==true">
-<xen:if is="{$post.post_id} === {$thread.first_post_id}">
-			<xen:hook name="thread_view_qr_after" params="{xen:array 'thread={$thread}'}" />
+			<xen:if is="{$post.post_id} === {$thread.first_post_id}">
+				<xen:hook name="thread_view_qr_after" params="{xen:array 'thread={$thread}'}" />
+			</xen:if>
 		</xen:if>
-</xen:if>
 $0]]></replace>
     </modification>
   </public_template_modifications>
