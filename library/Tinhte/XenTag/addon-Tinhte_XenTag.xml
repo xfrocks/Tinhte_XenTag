@@ -396,7 +396,6 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1000"/>
     </option>
-<<<<<<< HEAD
     <option option_id="Tinhte_XenTag_displayTagBelowFirstPost" edit_format="onoff" data_type="boolean" can_backup="1">
       <default_value>true</default_value>
       <edit_format_params></edit_format_params>
@@ -475,8 +474,6 @@ step=7</edit_format_params>
     <phrase title="admin_permission_Tinhte_XenTag" version_id="1" version_string="0.9"><![CDATA[[XenTag] Manage tags]]></phrase>
     <phrase title="option_group_Tinhte_XenTag" version_id="5" version_string="0.9.4"><![CDATA[[Tinhte] XenTag]]></phrase>
     <phrase title="option_group_Tinhte_XenTag_description" version_id="74" version_string="1.5.3b"><![CDATA[Options for contents tagging.]]></phrase>
-    <phrase title="option_Tinhte_XenTag_displayTagBelowFirstPost" version_id="133" version_string="2.1.4"><![CDATA[Display tag bar below first post of thread]]></phrase>
-    <phrase title="option_Tinhte_XenTag_displayTagBelowFirstPost_explain" version_id="133" version_string="2.1.4"><![CDATA[Display tag bar below first post of thread]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax" version_id="134" version_string="2.1.4b"><![CDATA[Tag Linking Global Limitation]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagGlobalMax_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enter the maximum number of tags should be used when the linking is set to use all tags. To remove limitation (use all tags) enter 0 (zero) for this option. It's not recommended to use all tags since it may take a long time to process.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagMode" version_id="134" version_string="2.1.4b"><![CDATA[Post Tag Linking]]></phrase>
@@ -485,6 +482,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_autoTagOnceOnly_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to create link for each tag only once in a piece of content.]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource" version_id="134" version_string="2.1.4b"><![CDATA[Resource Tag Linking]]></phrase>
     <phrase title="option_Tinhte_XenTag_autoTagResource_explain" version_id="134" version_string="2.1.4b"><![CDATA[Enable this option to automatically convert resource update contents to hyperlink to tags where possible.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayTagBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display tag bar below first post of thread]]></phrase>
+    <phrase title="option_Tinhte_XenTag_displayTagBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Display tag bar below first post of thread]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder" version_id="137" version_string="3.1.0"><![CDATA[Keep Tag Order]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder_explain" version_id="137" version_string="3.1.0"><![CDATA[Enable this option to maintain tag order as entered in the list. By default, XenForo discards this ordering and shows them in alphabetical order.]]></phrase>
     <phrase title="option_Tinhte_XenTag_modLog" version_id="3010401" version_string="3.1.4"><![CDATA[Keep Moderator Log for Tag Edit]]></phrase>
@@ -751,7 +750,6 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
     <template title="tinhte_xentag_watched_tags" version_id="134" version_string="2.1.4b"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_watched_tags}</xen:title>
-
 <xen:description>{xen:phrase tinhte_xentag_this_is_list_of_all_tags_that_you_watching}</xen:description>
 
 <xen:navigation>
@@ -870,15 +868,18 @@ a.Tinhte_XenTag_TagLink:focus {
 </xen:if>]]></template>
   </templates>
   <public_template_modifications>
-    <modification template="post" modification_key="tinhte_xentag_display_tag_in_first_post" description="Display tags bar below first post of thread" execution_order="10" enabled="1" action="str_replace">
+    <modification template="post" modification_key="tinhte_xentag_display_tag_in_first_post" description="Display tags bar below first post of a thread" execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[</xen:set>
 	
 </xen:include>]]></find>
       <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_displayTagBelowFirstPost}==true">
-			<xen:if is="{$post.post_id} === {$thread.first_post_id}">
-				<xen:include template="tinhte_xentag_tags_thread_view" />
-			</xen:if>
-		</xen:if>
+    <xen:if is="{$post.post_id} === {$thread.first_post_id}">
+        <xen:include template="helper_tag_list">
+		<xen:map from="$thread.tagsList" to="$tags" />
+		<xen:set var="$editUrl">{xen:if $canEditTags, {xen:link threads/tags, $thread}}</xen:set>
+	</xen:include>
+    </xen:if>
+</xen:if>
 $0]]></replace>
     </modification>
     <modification template="editor" modification_key="tinhte_xentag_editor" description="Insert bb code js." execution_order="10" enabled="1" action="preg_replace">
