@@ -20,6 +20,7 @@ class Tinhte_XenTag_Constants
     const GLOBALS_CONTROLLERADMIN_TAG_SAVE = 'Tinhte_XenTag_XenForo_ControllerAdmin_Tag::actionSave';
     const GLOBALS_CONTROLLERPUBLIC_TAG_TAG = 'Tinhte_XenTag_XenForo_ControllerPublic_Tag::actionTag';
     const GLOBALS_CONTROLLERPUBLIC_THREAD_TAGS = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionTags';
+    const GLOBALS_DEFERRED_THREAD_ACTION = 'Tinhte_XenTag_XenForo_Deferred_ThreadAction::execute';
     const GLOBALS_TAGGER_SAVE = 'Tinhte_XenTag_XenForo_TagHandler_Tagger::save';
 
     const PERM_USER_WATCH = 'Tinhte_XenTag_watch';
@@ -29,5 +30,7 @@ class Tinhte_XenTag_Constants
     const SEARCH_CONSTRAINT_TAGS = 'tag';
     const SEARCH_METADATA_TAGS = 'tag';
     const SEARCH_TYPE = 'tag';
+
+    const THREAD_SEARCH_TAG = 'tinhte_xentag_tag';
 
 }

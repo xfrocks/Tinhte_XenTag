@@ -26,6 +26,21 @@
 </xen:textboxunit>
 
 <input type="hidden" name="tinhte_xentag_included" value="1" />]]></template>
+    <template title="tinhte_xentag_helper_thread_search_criteria"><![CDATA[<xen:textboxunit label="{xen:phrase tag}:" name="criteria[tinhte_xentag_tag]" value="{$criteria.tinhte_xentag_tag}"
+				 inputclass="AutoComplete AcSingle" data-acurl="{xen:link misc/tag-auto-complete}" />
+
+<xen:edithint template="helper_thread_search_criteria" />]]></template>
+    <template title="tinhte_xentag_thread_batch_update_confirm"><![CDATA[<xen:textboxunit label="{xen:phrase tinhte_xentag_untag}:" name="actions[tinhte_xentag][remove]"
+				 inputclass="AutoComplete" data-acurl="{xen:link misc/tag-auto-complete}" />
+<xen:textboxunit label="{xen:phrase tinhte_xentag_new_tags}:" name="actions[tinhte_xentag][add]"
+				 inputclass="AutoComplete" data-acurl="{xen:link misc/tag-auto-complete}" />
+<xen:textboxunit label="{xen:phrase tinhte_xentag_replace_tags}:" name="actions[tinhte_xentag][replace]"
+				 inputclass="AutoComplete" data-acurl="{xen:link misc/tag-auto-complete}" />
+<xen:checkboxunit label="">
+	<xen:option name="actions[tinhte_xentag][remove_all]" value="1">{xen:phrase tinhte_xentag_untag_all}</xen:option>
+</xen:checkboxunit>
+
+<xen:edithint template="thread_batch_update_confirm" />]]></template>
     <template title="tinhte_xentag_tools_rebuild"><![CDATA[<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
 	<h2 class="subHeading">{xen:phrase tinhte_xentag_upgrade_from_134}</h2>
 	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
@@ -84,6 +99,12 @@
 
 <xen:include template="tinhte_xentag_admin_page_edit_basic_information" />]]></replace>
     </modification>
+    <modification template="helper_thread_search_criteria" modification_key="tinhte_xentag_helper_thread_search_criteria" description="Insert our criteria for thread search." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#\A.+\z#s]]></find>
+      <replace><![CDATA[$0
+
+<xen:include template="tinhte_xentag_helper_thread_search_criteria" />]]></replace>
+    </modification>
     <modification template="tag_edit" modification_key="tinhte_xentag_tag_edit_staff" description="Insert staff field in tag edit form." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<xen:checkboxunit label="">]]></find>
       <replace><![CDATA[$0
@@ -112,6 +133,12 @@
 
 $0]]></replace>
     </modification>
+    <modification template="thread_batch_update_confirm" modification_key="tinhte_xentag_thread_batch_update_confirm" description="Insert our action for batch thread update." execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:submitunit save="{xen:phrase update_threads}" />]]></find>
+      <replace><![CDATA[<xen:include template="tinhte_xentag_thread_batch_update_confirm" />
+
+$0]]></replace>
+    </modification>
     <modification template="tools_rebuild" modification_key="tinhte_xentag_tools_rebuild" description="Insert rebuild forms." execution_order="10" enabled="1" action="preg_replace">
       <find><![CDATA[#^.+$#s]]></find>
       <replace><![CDATA[$0
@@ -124,6 +151,7 @@ $0]]></replace>
     <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
     <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_Html_Renderer_BbCode" description="XenForo_Html_Renderer_BbCode"/>
     <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_TagHandler_Tagger" description="XenForo_TagHandler_Tagger"/>
+    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_Deferred_ThreadAction" description="XenForo_Deferred_ThreadAction"/>
     <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
@@ -530,8 +558,10 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_new_tagged_reply_in_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New reply with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
+    <phrase title="tinhte_xentag_new_tags" version_id="3010500" version_string="3.1.5"><![CDATA[New Tags]]></phrase>
     <phrase title="tinhte_xentag_page_x" version_id="3010500" version_string="3.1.5"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
+    <phrase title="tinhte_xentag_replace_tags" version_id="3010500" version_string="3.1.5"><![CDATA[Replace Tags]]></phrase>
     <phrase title="tinhte_xentag_staff" version_id="136" version_string="3.0.1"><![CDATA[Staff Only]]></phrase>
     <phrase title="tinhte_xentag_staff_explain" version_id="136" version_string="3.0.1"><![CDATA[Making a tag staff only prevents it from being used by unauthorized users. User must be a member of a user group with "Use staff-only tags" permission.]]></phrase>
     <phrase title="tinhte_xentag_stop_watching_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Stop watching tags]]></phrase>
@@ -548,6 +578,8 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
     <phrase title="tinhte_xentag_trending" version_id="137" version_string="3.1.0"><![CDATA[Trending]]></phrase>
     <phrase title="tinhte_xentag_unauthorized_tags_x" version_id="136" version_string="3.0.1"><![CDATA[You must not use these tags: {tags}]]></phrase>
+    <phrase title="tinhte_xentag_untag" version_id="3010500" version_string="3.1.5"><![CDATA[Remove Existing Tags]]></phrase>
+    <phrase title="tinhte_xentag_untag_all" version_id="3010500" version_string="3.1.5"><![CDATA[Remove All Tags]]></phrase>
     <phrase title="tinhte_xentag_unwatch_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Unwatch Tag]]></phrase>
     <phrase title="tinhte_xentag_upgrade_from_134" version_id="134" version_string="2.1.4b"><![CDATA[Upgrade Tags for XenForo 1.5+]]></phrase>
     <phrase title="tinhte_xentag_url" version_id="137" version_string="3.1.0"><![CDATA[External URL]]></phrase>

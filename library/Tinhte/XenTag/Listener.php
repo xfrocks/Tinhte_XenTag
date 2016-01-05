@@ -14,6 +14,7 @@ class Tinhte_XenTag_Listener
             'XenForo_ControllerAdmin_Forum',
             'XenForo_ControllerAdmin_Page',
             'XenForo_ControllerAdmin_Tag',
+            'XenForo_ControllerAdmin_Thread',
             'XenForo_ControllerPublic_Tag',
             'XenForo_ControllerPublic_Thread',
             'XenForo_ControllerPublic_Watched',
@@ -23,6 +24,8 @@ class Tinhte_XenTag_Listener
             'XenForo_DataWriter_Forum',
             'XenForo_DataWriter_Page',
             'XenForo_DataWriter_Tag',
+
+            'XenForo_Deferred_ThreadAction',
 
             'XenForo_Model_Forum',
             'XenForo_Model_ForumWatch',
