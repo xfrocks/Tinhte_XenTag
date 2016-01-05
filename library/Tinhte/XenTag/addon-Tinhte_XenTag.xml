@@ -647,7 +647,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
-    <template title="tinhte_xentag_tag_edit" version_id="137" version_string="3.1.0"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
+    <template title="tinhte_xentag_tag_edit" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 <xen:h1>{xen:phrase edit}</xen:h1>
 
 <xen:navigation>
@@ -674,6 +674,17 @@ a.Tinhte_XenTag_TagLink:focus {
 			<textarea id="ctrl_tinhte_xentag_description"
 					  name="tinhte_xentag_description"
 					  rows="5" class="textCtrl Elastic">{$tag.tinhte_xentag_description}</textarea>
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_tinhte_xentag_url">{xen:phrase tinhte_xentag_url}:</label></dt>
+		<dd>
+			<input id="ctrl_tinhte_xentag_url"
+				   type="text"
+				   name="tinhte_xentag_url"
+				   value="{$tag.tinhte_xentag_url}" class="textCtrl" />
+			<p class="explain">{xen:phrase tinhte_xentag_url_explain}</p>
 		</dd>
 	</dl>
 

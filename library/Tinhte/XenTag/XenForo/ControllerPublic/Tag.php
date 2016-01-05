@@ -179,6 +179,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             $dwData = $this->_input->filter(array(
                 'tinhte_xentag_title' => XenForo_Input::STRING,
                 'tinhte_xentag_description' => XenForo_Input::STRING,
+                'tinhte_xentag_url' => XenForo_Input::STRING,
             ));
 
             $dw = XenForo_DataWriter::create('XenForo_DataWriter_Tag');
@@ -186,9 +187,14 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             $dw->bulkSet($dwData);
             $dw->save();
 
+            $extraParams = array();
+            if (!!$dw->get('tinhte_xentag_url')) {
+                $extraParams['_xfNoRedirect'] = 1;
+            }
+
             return $this->responseRedirect(
                 XenForo_ControllerResponse_Redirect::SUCCESS,
-                XenForo_Link::buildPublicLink('tags', $tag)
+                XenForo_Link::buildPublicLink('tags', $tag, $extraParams)
             );
         }
 
