@@ -1,6 +1,6 @@
 <?php
 
-class Tinhte_XenTag_XenForo_ViewPublic_Thread_View extends XFCP_Tinhte_XenTag_XenForo_ViewPublic_Thread_View
+class Tinhte_XenTag_XenForo_ViewPublic_Thread_ViewNewPosts extends XFCP_Tinhte_XenTag_XenForo_ViewPublic_Thread_ViewNewPosts
 {
     public function renderHtml()
     {

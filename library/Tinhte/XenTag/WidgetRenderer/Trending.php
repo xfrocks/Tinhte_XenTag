@@ -2,113 +2,79 @@
 
 class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRenderer
 {
-	public function extraPrepareTitle(array $widget)
-	{
-		if (empty($widget['title']))
-		{
-			return new XenForo_Phrase('tinhte_xentag_trending');
-		}
+    public function extraPrepareTitle(array $widget)
+    {
+        if (empty($widget['title'])) {
+            return new XenForo_Phrase('tinhte_xentag_trending');
+        }
 
-		return parent::extraPrepareTitle($widget);
-	}
+        return parent::extraPrepareTitle($widget);
+    }
 
-	protected function _getConfiguration()
-	{
-		return array(
-			'name' => '[Tinhte] XenTag - Trending',
-			'options' => array(
-				'days' => XenForo_Input::UINT,
-				'created_days' => XenForo_Input::UINT,
-				'type' => XenForo_Input::STRING,
-				'limit' => XenForo_Input::UINT
-			),
-			'useCache' => true,
-			'cacheSeconds' => 3600, // cache for 1 hour
-		);
-	}
+    protected function _getConfiguration()
+    {
+        return array(
+            'name' => '[Tinhte] XenTag - Trending',
+            'options' => array(
+                'days' => XenForo_Input::UINT,
+                'limit' => XenForo_Input::UINT
+            ),
+            'useCache' => true,
+            'cacheSeconds' => 3600, // cache for 1 hour
+        );
+    }
 
-	protected function _getOptionsTemplate()
-	{
-		return 'tinhte_xentag_widget_trending_options';
-	}
+    protected function _getOptionsTemplate()
+    {
+        return 'tinhte_xentag_widget_trending_options';
+    }
 
-	protected function _validateOptionValue($optionKey, &$optionValue)
-	{
-		if ('days' == $optionKey)
-		{
-			if (empty($optionValue))
-			{
-				$optionValue = Tinhte_XenTag_Option::get('trendingDays');
-			}
-		}
-		elseif ('limit' == $optionKey)
-		{
-			if (empty($optionValue))
-			{
-				$optionValue = Tinhte_XenTag_Option::get('trendingMax');
-			}
-		}
-		elseif ('type' == $optionKey)
-		{
-			if (empty($optionValue))
-			{
-				$optionValue = Tinhte_XenTag_Option::get('trendingType');
-			}
-		}
+    protected function _validateOptionValue($optionKey, &$optionValue)
+    {
+        if ('days' == $optionKey) {
+            if (empty($optionValue)) {
+                $optionValue = Tinhte_XenTag_Option::get('trendingDays');
+            }
+        } elseif ('limit' == $optionKey) {
+            if (empty($optionValue)) {
+                $optionValue = Tinhte_XenTag_Option::get('trendingMax');
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	protected function _getRenderTemplate(array $widget, $positionCode, array $params)
-	{
-		return 'tinhte_xentag_widget_trending';
-	}
+    protected function _getRenderTemplate(array $widget, $positionCode, array $params)
+    {
+        return 'tinhte_xentag_widget_trending';
+    }
 
-	protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template)
-	{
-		$core = WidgetFramework_Core::getInstance();
-		$tagModel = $core->getModelFromCache('Tinhte_XenTag_Model_Tag');
+    protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template)
+    {
+        $core = WidgetFramework_Core::getInstance();
+        /** @var Tinhte_XenTag_XenForo_Model_Tag $tagModel */
+        $tagModel = $core->getModelFromCache('XenForo_Model_Tag');
 
-		if (!empty($widget['options']['days']))
-		{
-			$days = $widget['options']['days'];
-		}
-		else
-		{
-			$days = Tinhte_XenTag_Option::get('trendingDays');
-		}
-		$cutoff = XenForo_Application::$time - $days * 86400;
+        if (!empty($widget['options']['days'])) {
+            $days = $widget['options']['days'];
+        } else {
+            $days = Tinhte_XenTag_Option::get('trendingDays');
+        }
+        $cutoff = XenForo_Application::$time - $days * 86400;
 
-		$createdCutoff = 0;
-		if (!empty($widget['options']['created_days']))
-		{
-			$createdCutoff = XenForo_Application::$time - $widget['options']['created_days'] * 86400;
-		}
+        if (!empty($widget['options']['limit'])) {
+            $limit = $widget['options']['limit'];
+        } else {
+            $limit = Tinhte_XenTag_Option::get('trendingMax');
+        }
 
-		if (!empty($widget['options']['type']))
-		{
-			$type = $widget['options']['type'];
-		}
-		else
-		{
-			$type = Tinhte_XenTag_Option::get('trendingType');
-		}
+        $tags = $tagModel->Tinhte_XenTag_getTrendingTags($cutoff, $limit);
+        $tagsLevels = $tagModel->getTagCloudLevels($tags);
 
-		if (!empty($widget['options']['limit']))
-		{
-			$limit = $widget['options']['limit'];
-		}
-		else
-		{
-			$limit = Tinhte_XenTag_Option::get('trendingMax');
-		}
+        $template->setParam('tags', $tags);
+        $template->setParam('tagsLevels', $tagsLevels);
 
-		$tags = $tagModel->getTrendingTags($cutoff, $limit, $type, $createdCutoff);
-		$tagModel->calculateCloudLevel($tags);
-
-		$template->setParam('tags', $tags);
-
-		return $template->render();
-	}
+        return $template->render();
+    }
 
 }

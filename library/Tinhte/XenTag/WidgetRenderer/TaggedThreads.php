@@ -2,145 +2,122 @@
 
 class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetRenderer
 {
-	public function extraPrepareTitle(array $widget)
-	{
-		if (empty($widget['title']))
-		{
-			return new XenForo_Phrase('tinhte_xentag_tagged_threads');
-		}
+    public function extraPrepareTitle(array $widget)
+    {
+        if (empty($widget['title'])) {
+            return new XenForo_Phrase('tinhte_xentag_tagged_threads');
+        }
 
-		return parent::extraPrepareTitle($widget);
-	}
+        return parent::extraPrepareTitle($widget);
+    }
 
-	protected function _getConfiguration()
-	{
-		return array(
-			'name' => '[Tinhte] XenTag - Tagged Threads',
-			'options' => array(
-				'tags' => XenForo_Input::STRING,
-				'limit' => XenForo_Input::UINT,
-				'as_guest' => XenForo_Input::UINT,
-			),
-			'useCache' => true,
-			'useUserCache' => true,
-			'cacheSeconds' => 3600, // cache for 1 hour
-		);
-	}
+    public function useUserCache(array $widget)
+    {
+        if (!empty($widget['options']['as_guest'])) {
+            // using guest permission
+            // there is no reason to use the user cache
+            return false;
+        }
 
-	protected function _getOptionsTemplate()
-	{
-		return 'tinhte_xentag_widget_tagged_threads_options';
-	}
+        return parent::useUserCache($widget);
+    }
 
-	protected function _validateOptionValue($optionKey, &$optionValue)
-	{
-		if ('limit' == $optionKey)
-		{
-			if (empty($optionValue))
-			{
-				$optionValue = 5;
-			}
-		}
+    protected function _getConfiguration()
+    {
+        return array(
+            'name' => '[Tinhte] XenTag - Tagged Threads',
+            'options' => array(
+                'tags' => XenForo_Input::STRING,
+                'limit' => XenForo_Input::UINT,
+                'as_guest' => XenForo_Input::UINT,
+            ),
+            'useCache' => true,
+            'useUserCache' => true,
+            'cacheSeconds' => 3600, // cache for 1 hour
+        );
+    }
 
-		return true;
-	}
+    protected function _getOptionsTemplate()
+    {
+        return 'tinhte_xentag_widget_tagged_threads_options';
+    }
 
-	protected function _getRenderTemplate(array $widget, $positionCode, array $params)
-	{
-		return 'tinhte_xentag_widget_tagged_threads';
-	}
+    protected function _validateOptionValue($optionKey, &$optionValue)
+    {
+        if ('limit' == $optionKey) {
+            if (empty($optionValue)) {
+                $optionValue = 5;
+            }
+        }
 
-	protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template)
-	{
-		$threads = array();
+        return true;
+    }
 
-		$tags = Tinhte_XenTag_Helper::explodeTags($widget['options']['tags']);
-		$tagsText = array();
+    protected function _getRenderTemplate(array $widget, $positionCode, array $params)
+    {
+        return 'tinhte_xentag_widget_tagged_threads';
+    }
 
-		foreach ($tags as $tag)
-		{
-			$tag = trim($tag);
-			if (!empty($tag))
-			{
-				$tagsText[] = $tag;
-			}
-		}
+    protected function _render(array $widget, $positionCode, array $params, XenForo_Template_Abstract $template)
+    {
+        $threads = array();
 
-		if (!empty($tagsText))
-		{
-			$core = WidgetFramework_Core::getInstance();
+        $core = WidgetFramework_Core::getInstance();
 
-			/* @var $threadModel XenForo_Model_Thread */
-			$threadModel = $core->getModelFromCache('XenForo_Model_Thread');
+        /* @var $tagModel XenForo_Model_Tag */
+        $tagModel = $core->getModelFromCache('XenForo_Model_Tag');
+        $tagsText = $tagModel->splitTags($widget['options']['tags']);
 
-			/* @var $tagModel Tinhte_XenTag_Model_Tag */
-			$tagModel = $core->getModelFromCache('Tinhte_XenTag_Model_Tag');
+        if (!empty($tagsText)) {
+            $tags = $tagModel->getTags($tagsText);
 
-			$tags = $tagModel->getTagsByText($tagsText);
+            /* @var $searchModel XenForo_Model_Search */
+            $searchModel = $core->getModelFromCache('XenForo_Model_Search');
+            $tagConstraint = implode(' ', array_keys($tags));
+            $constraints = array(
+                Tinhte_XenTag_Constants::SEARCH_CONSTRAINT_TAGS => $tagConstraint
+            );
 
-			$threadIds = array();
-			foreach ($tags as $tag)
-			{
-				$latest = Tinhte_XenTag_Helper::unserialize($tag['latest_tagged_contents']);
+            $searcher = new XenForo_Search_Searcher($searchModel);
+            $searchQuery = '';
+            $order = 'date';
 
-				if (empty($latest))
-				{
-					// for some reason, the latest_tagged_contents field is empty
-					// this is illogical because at least there is 1 tagged content (current thread)
-					// so we will rebuild the tag...
-					$latest = $tagModel->updateTag($tag['tag_id']);
-				}
+            $typeHandler = $searchModel->getSearchDataHandler('thread');
+            $results = $searcher->searchType($typeHandler, $searchQuery, $constraints, $order, false, $widget['options']['limit'] * 10);
 
-				if (!empty($latest))
-				{
-					foreach ($latest as $taggedContent)
-					{
-						if ($taggedContent['content_type'] == 'thread')
-						{
-							$threadIds[] = $taggedContent['content_id'];
-						}
-					}
-				}
-			}
+            if (!empty($results)) {
+                $threadIds = array();
+                foreach ($results as $result) {
+                    if ($result[0] === 'thread') {
+                        $threadIds[] = $result[1];
+                    }
+                }
 
-			if (!empty($threadIds))
-			{
-				$threadIds = array_unique($threadIds);
-				$forumIds = $this->_helperGetForumIdsFromOption(array(), $params, empty($widget['options']['as_guest']) ? false : true);
-				// quick way to get all viewable forum ids
+                $threadIds = array_unique($threadIds);
+                $forumIds = $this->_helperGetForumIdsFromOption(array(), $params, empty($widget['options']['as_guest']) ? false : true);
 
-				$conditions = array(
-					'node_id' => $forumIds,
-					Tinhte_XenTag_XenForo_Model_Thread::CONDITIONS_THREAD_ID => $threadIds,
-					'deleted' => false,
-					'moderated' => false,
-				);
-				$fetchOptions = array(
-					'limit' => $widget['options']['limit'],
-					'join' => XenForo_Model_Thread::FETCH_AVATAR,
-					'order' => 'post_date',
-					'orderDirection' => 'desc',
-				);
+                $conditions = array(
+                    'node_id' => $forumIds,
+                    Tinhte_XenTag_XenForo_Model_Thread::CONDITIONS_THREAD_ID => $threadIds,
+                    'deleted' => false,
+                    'moderated' => false,
+                );
+                $fetchOptions = array(
+                    'limit' => $widget['options']['limit'],
+                    'join' => XenForo_Model_Thread::FETCH_AVATAR,
+                    'order' => 'post_date',
+                    'orderDirection' => 'desc',
+                );
 
-				$threads = $threadModel->getThreads($conditions, $fetchOptions);
-			}
-		}
+                /* @var $threadModel XenForo_Model_Thread */
+                $threadModel = $core->getModelFromCache('XenForo_Model_Thread');
+                $threads = $threadModel->getThreads($conditions, $fetchOptions);
+            }
+        }
 
-		$template->setParam('threads', $threads);
+        $template->setParam('threads', $threads);
 
-		return $template->render();
-	}
-
-	public function useUserCache(array $widget)
-	{
-		if (!empty($widget['options']['as_guest']))
-		{
-			// using guest permission
-			// there is no reason to use the user cache
-			return false;
-		}
-
-		return parent::useUserCache($widget);
-	}
+        return $template->render();
+    }
 
 }

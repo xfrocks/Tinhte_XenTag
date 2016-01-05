@@ -2,61 +2,44 @@
 
 abstract class Tinhte_XenTag_ContentWrapper_Abstract
 {
-	protected $_html = '';
-	protected $_tagsOrTexts = array();
-	protected $_useGlobalTags = false;
+    static protected $_tagModel = false;
+    protected $_html = '';
+    protected $_tags = array();
+    protected $_useGlobalTags = false;
 
-	static protected $_tagModel = false;
+    public function __toString()
+    {
+        return strval($this->render());
+    }
 
-	public function __toString()
-	{
-		return strval($this->render());
-	}
+    public function render()
+    {
+        if ($this->_useGlobalTags) {
+            $globalTags = $this->_getTagModel()->Tinhte_XenTag_getTagsFromCache();
+            foreach ($globalTags as $tag) {
+                $this->_tags[$tag['tag_id']] = $tag;
+            }
+        }
 
-	public function render()
-	{
-		if ($this->_useGlobalTags)
-		{
-			$globalTagsOrTexts = $this->_getTagModel()->getTagsOrTextsFromCache();
+        if (!empty($this->_tags)) {
+            $autoTagOptions = array('onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'));
 
-			$tagsOrTexts = array();
-			foreach ($this->_tagsOrTexts as $tagOrText)
-			{
-				$tagText = Tinhte_XenTag_Helper::getTextFromTagOrText($tagOrText);
-				$tagsOrTexts[Tinhte_XenTag_Helper::getNormalizedTagText($tagText)] = $tagOrText;
-			}
-			foreach ($globalTagsOrTexts as $globalTagOrText)
-			{
-				$globalTagText = Tinhte_XenTag_Helper::getTextFromTagOrText($globalTagOrText);
-				$tagsOrTexts[Tinhte_XenTag_Helper::getNormalizedTagText($globalTagText)] = $globalTagOrText;
-			}
+            return Tinhte_XenTag_Integration::autoTag($this->_html, $this->_tags, $autoTagOptions);
+        } else {
+            return $this->_html;
+        }
+    }
 
-			$this->_tagsOrTexts = $tagsOrTexts;
-		}
+    /**
+     * @return Tinhte_XenTag_XenForo_Model_Tag
+     */
+    protected function _getTagModel()
+    {
+        if (self::$_tagModel === false) {
+            self::$_tagModel = XenForo_Model::create('XenForo_Model_Tag');
+        }
 
-		if (!empty($this->_tagsOrTexts))
-		{
-			$autoTagOptions = array('onceOnly' => Tinhte_XenTag_Option::get('autoTagOnceOnly'));
-
-			return Tinhte_XenTag_Integration::autoTag($this->_html, $this->_tagsOrTexts, $autoTagOptions);
-		}
-		else
-		{
-			return $this->_html;
-		}
-	}
-
-	/**
-	 * @return Tinhte_XenTag_Model_Tag
-	 */
-	protected function _getTagModel()
-	{
-		if (self::$_tagModel === false)
-		{
-			self::$_tagModel = XenForo_Model::create('Tinhte_XenTag_Model_Tag');
-		}
-
-		return self::$_tagModel;
-	}
+        return self::$_tagModel;
+    }
 
 }
