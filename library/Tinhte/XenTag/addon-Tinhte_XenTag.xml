@@ -466,6 +466,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="2030"/>
     </option>
+    <option option_id="Tinhte_XenTag_tagsBelowFirstPost" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
     <option option_id="Tinhte_XenTag_trendingDays" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>14</default_value>
       <edit_format_params>min=1
@@ -530,6 +536,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_prioritizePages_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize pages in tagged content listing. The higher the value, the higher pages will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources" version_id="75" version_string="1.6-dev"><![CDATA[Prioritize Resources]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display Tags Below First Post]]></phrase>
+    <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to display thread tags below its first post.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays" version_id="137" version_string="3.1.0"><![CDATA[Trending: Days for calculation]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays_explain" version_id="137" version_string="3.1.0"><![CDATA[Only content tagged within specified number of days will be taken into account when Trending is calculated.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingMax" version_id="137" version_string="3.1.0"><![CDATA[Trending: Maximum Tags]]></phrase>
@@ -963,6 +971,21 @@ a.Tinhte_XenTag_TagLink:focus {
 </xen:if>]]></template>
   </templates>
   <public_template_modifications>
+    <modification template="post" modification_key="tinhte_xentag_display_tag_in_first_post" description="Display tags below first post." execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[</xen:set>
+	
+</xen:include>]]></find>
+      <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_tagsBelowFirstPost}">
+    <xen:if is="{$post.post_id} == {$thread.first_post_id}">
+        <xen:include template="helper_tag_list">
+			<xen:map from="$thread.tagsList" to="$tags" />
+			<xen:set var="$editUrl">{xen:if $canEditTags, {xen:link threads/tags, $thread}}</xen:set>
+		</xen:include>
+    </xen:if>
+</xen:if>
+
+$0]]></replace>
+    </modification>
     <modification template="editor" modification_key="tinhte_xentag_editor" description="Insert bb code js." execution_order="10" enabled="1" action="preg_replace">
       <find><![CDATA[#^.+$#s]]></find>
       <replace><![CDATA[$0
