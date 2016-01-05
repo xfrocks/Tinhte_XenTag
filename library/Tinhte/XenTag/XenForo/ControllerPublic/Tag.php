@@ -49,6 +49,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
 
     public function actionTag()
     {
+        if ($this->_input->filterSingle('preview', XenForo_Input::BOOLEAN)) {
+            return $this->responseReroute('XenForo_ControllerPublic_Tag', 'preview');
+        }
+
         $GLOBALS[Tinhte_XenTag_Constants::GLOBALS_CONTROLLERPUBLIC_TAG_TAG] = $this;
 
         $response = parent::actionTag();
@@ -205,4 +209,19 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
         return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
     }
 
+    public function actionPreview()
+    {
+        $tagModel = $this->_getTagModel();
+
+        $tagUrl = $this->_input->filterSingle('tag_url', XenForo_Input::STRING);
+        $tag = $tagModel->getTagByUrl($tagUrl);
+        if (!$tag) {
+            return $this->responseError(new XenForo_Phrase('requested_tag_not_found'), 404);
+        }
+
+        $viewParams = array(
+            'tag' => $tag,
+        );
+        return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Preview', 'tinhte_xentag_tag_preview', $viewParams);
+    }
 }

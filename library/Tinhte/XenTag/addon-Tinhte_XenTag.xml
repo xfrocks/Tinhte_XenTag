@@ -517,6 +517,8 @@ step=7</edit_format_params>
     <phrase title="style_property_group_Tinhte_XenTag_master_desc" version_id="74" version_string="1.5.3b"><![CDATA[Styling properties for contents tagging.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showIconInTagLink_description_master" version_id="74" version_string="1.5.3b"><![CDATA[Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showIconInTagLink_master" version_id="74" version_string="1.5.3b"><![CDATA[Show Icon in Tag Link]]></phrase>
+    <phrase title="style_property_tinhte_xentag_showPreview_description_master" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to show preview when user hover a tag link.]]></phrase>
+    <phrase title="style_property_tinhte_xentag_showPreview_master" version_id="3010500" version_string="3.1.5"><![CDATA[Show Preview]]></phrase>
     <phrase title="tinhte_xentag_all_contents_tagged_x" version_id="3010500" version_string="3.1.5"><![CDATA[These are all contents from {board_title} tagged {tag_text}.]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_all_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag all tags (with limitation)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_disabled" version_id="15" version_string="0.9.8.5"><![CDATA[Disabled]]></phrase>
@@ -562,6 +564,7 @@ To disable all emails:
 
 {board_link}]]></phrase>
     <phrase title="tinhte_xentag_watch_tag_email_footer_2_html" version_id="115" version_string="1.9.1-dev"><![CDATA[If you no longer wish to receive these emails, you may <a href="{disable_this_link}" style="{link_style}">disable emails from this tag</a> or  <a href="{disable_all_link}" style="{link_style}">disable all emails</a>.]]></phrase>
+    <phrase title="tinhte_xentag_x_contents_tagged" version_id="3010500" version_string="3.1.5"><![CDATA[{count} contents tagged.]]></phrase>
     <phrase title="tinhte_xentag_x_tagged_reply_thread_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged a reply to the thread {title} with a tag you are watching.]]></phrase>
     <phrase title="tinhte_xentag_x_tagged_resource_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged the resource {title} with a tag you are watching.]]></phrase>
     <phrase title="tinhte_xentag_x_tagged_thread_y" version_id="115" version_string="1.9.1-dev"><![CDATA[{name} tagged a thread called {title} with a tag you are watching.]]></phrase>
@@ -572,6 +575,7 @@ To disable all emails:
   <route_prefixes/>
   <style_properties>
     <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[1]]></property>
+    <property property_name="tinhte_xentag_showPreview" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Preview" description="Enable this option to show preview when user hover a tag link." css_components="" scalar_type="boolean" scalar_parameters="" display_order="1" sub_group="preview"><![CDATA[1]]></property>
     <group group_name="Tinhte_XenTag" display_order="9999">
       <title>[Tinhte] XenTag</title>
       <description>Styling properties for contents tagging.</description>
@@ -590,7 +594,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="139" version_string="3.1.2"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3010500" version_string="3.1.5"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
@@ -602,7 +606,11 @@ a.Tinhte_XenTag_TagLink:focus {
 	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
 	padding-right: 12px !important;
 }
-</xen:if>]]></template>
+</xen:if>
+
+.previewTooltip.tagPreview .text {
+	margin-left: 0;
+}]]></template>
     <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:link tags, '', 't={$tagText}'}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}><span class="hash">#</span><span class="text">{$displayText}</span></a>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tag}">
@@ -628,6 +636,10 @@ a.Tinhte_XenTag_TagLink:focus {
 	<xen:include template="helper_tag_list">
 		<xen:map from="$Tinhte_XenTag_tagsList" to="$tags" />
 	</xen:include>
+</xen:if>]]></template>
+    <template title="tinhte_xentag_preview_js" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:if is="{xen:property tinhte_xentag_showPreview}">
+	<xen:require js="js/Tinhte/XenTag/preview.js" />
+	<xen:include template="preview_tooltip" />
 </xen:if>]]></template>
     <template title="tinhte_xentag_search_result_forum" version_id="134" version_string="2.1.4b"><![CDATA[<li id="tinhte_xentag_forum-{$forum.node_id}" class="searchResult tinhte_xentag_forum primaryContent">
 
@@ -696,6 +708,31 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
+    <template title="tinhte_xentag_tag_preview" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:require css="tinhte_xentag.css" />
+
+<div class="previewTooltip tagPreview">
+	<div class="text">
+		<blockquote class="previewText">
+			<xen:if is="{$tag.tinhte_xentag_title}">
+				{$tag.tinhte_xentag_title}
+			<xen:else />
+				{$tag.tag}
+			</xen:if>
+		</blockquote>
+		
+		<div class="posterDate muted">
+			<xen:if is="{$tag.tinhte_xentag_description}">
+				{$tag.tinhte_xentag_description}
+			<xen:else />
+				{xen:phrase tinhte_xentag_x_contents_tagged,
+					'count={xen:number $tag.use_count}'}
+			</xen:if>
+		</div>
+	</div>
+</div>
+
+<xen:edithint template="tinhte_xentag_tag_view" />
+<xen:edithint template="thread_list_item_preview" />]]></template>
     <template title="tinhte_xentag_tag_view" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
 	<xen:title>{$tag.tinhte_xentag_title}{xen:helper pagenumber, $page}</xen:title>
 <xen:else />
@@ -922,6 +959,12 @@ a.Tinhte_XenTag_TagLink:focus {
 <xen:include template="tinhte_xentag_pagenode_container_article" />
 
 $2]]></replace>
+    </modification>
+    <modification template="page_container_js_body" modification_key="tinhte_xentag_preview_js" description="Insert preview js." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#\A.+\z#s]]></find>
+      <replace><![CDATA[$0
+
+<xen:include template="tinhte_xentag_preview_js" />]]></replace>
     </modification>
     <modification template="tag_search" modification_key="tinhte_xentag_tag_search" description="Insert trending tags." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[</form>]]></find>
