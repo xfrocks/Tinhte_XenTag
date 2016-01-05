@@ -1053,7 +1053,7 @@ a.Tinhte_XenTag_TagLink:focus {
     <template title="tinhte_xentag_hook_thread_view_pagenav_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_pagenav_above'">
 	<xen:include template="tinhte_xentag_tags_thread_view" />
 </xen:if>]]></template>
-    <template title="tinhte_xentag_hook_thread_view_qr_after" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_qr_below'">
+    <template title="tinhte_xentag_hook_thread_view_qr_after" version_id="133" version_string="2.1.4"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_qr_below'">
 	<xen:include template="tinhte_xentag_tags_thread_view" />
 </xen:if>]]></template>
     <template title="tinhte_xentag_hook_thread_view_qr_before" version_id="1" version_string="0.9"><![CDATA[<xen:if is="{xen:helper Tinhte_XenTag_getOption, 'displayPosition'} == 'thread_qr_above'">
@@ -1767,7 +1767,7 @@ window.Tinhte_XenTag_maximumHashtags = parseInt('{$forum.Tinhte_XenTag_maximumHa
 </xen:include>]]></find>
       <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_displayTagBelowFirstPost}==true">
 			<xen:if is="{$post.post_id} === {$thread.first_post_id}">
-				<xen:hook name="thread_view_qr_after" params="{xen:array 'thread={$thread}'}" />
+				<xen:include template="tinhte_xentag_tags_thread_view" />
 			</xen:if>
 		</xen:if>
 $0]]></replace>
