@@ -46,5 +46,16 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
         return $result;
     }
 
+    public function updateThreadViews()
+    {
+        parent::updateThreadViews();
+
+        if (Tinhte_XenTag_Option::get('logView')) {
+            /** @var Tinhte_XenTag_Model_TagView $tagViewModel */
+            $tagViewModel = $this->getModelFromCache('Tinhte_XenTag_Model_TagView');
+            $tagViewModel->updateTagViews();
+        }
+    }
+
 
 }

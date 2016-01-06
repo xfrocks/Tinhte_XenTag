@@ -442,6 +442,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1"/>
     </option>
+    <option option_id="Tinhte_XenTag_logView" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
     <option option_id="Tinhte_XenTag_modLog" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>1</default_value>
       <edit_format_params></edit_format_params>
@@ -528,6 +534,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_inwordAc_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to suggest tags for auto completion with in-word match. By default, XenForo only suggest matching starting from the beginning. Please note that this feature may impact server performance, especially with large database of tags.]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder" version_id="137" version_string="3.1.0"><![CDATA[Keep Tag Order]]></phrase>
     <phrase title="option_Tinhte_XenTag_keepOrder_explain" version_id="137" version_string="3.1.0"><![CDATA[Enable this option to maintain tag order as entered in the list. By default, XenForo discards this ordering and shows them in alphabetical order.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_logView" version_id="3020000" version_string="3.2.0"><![CDATA[Log Tag View]]></phrase>
+    <phrase title="option_Tinhte_XenTag_logView_explain" version_id="3020000" version_string="3.2.0"><![CDATA[Enable this option to keep track of views of tag page. As of XenForo 1.5.4, XenForo does not log this information.]]></phrase>
     <phrase title="option_Tinhte_XenTag_modLog" version_id="3010401" version_string="3.1.4"><![CDATA[Keep Moderator Log for Tag Edit]]></phrase>
     <phrase title="option_Tinhte_XenTag_modLog_explain" version_id="3010401" version_string="3.1.4"><![CDATA[Enable this option to insert moderator log entry when thread tags are edited. As of XenForo 1.5.3, XenForo does not log this action.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeForums" version_id="70" version_string="1.5"><![CDATA[Prioritize Forums]]></phrase>
@@ -773,19 +781,22 @@ a.Tinhte_XenTag_TagLink:focus {
 
 <xen:edithint template="tinhte_xentag_tag_view" />
 <xen:edithint template="thread_list_item_preview" />]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
+    <template title="tinhte_xentag_tag_view" version_id="3020000" version_string="3.2.0"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
 	<xen:title>{$tag.tinhte_xentag_title}{xen:helper pagenumber, $page}</xen:title>
 <xen:else />
 	<xen:title>{$tag.tag}{xen:helper pagenumber, $page}</xen:title>
 </xen:if>
 
-<xen:set var="$descriptionPage"> {xen:if '{$page} > 1', '{xen:phrase tinhte_xentag_page_x, 'page={$page}'}'}</xen:set>
+<xen:set var="$descriptionSuffix"><xen:if is="{$xenOptions.Tinhte_XenTag_logView} && {$tag.tinhte_xentag_view_count} > 0">
+	{xen:phrase views}: {xen:number $tag.tinhte_xentag_view_count}.
+	</xen:if><xen:if is="{$page} > 1">
+	{xen:phrase tinhte_xentag_page_x, 'page={$page}'}</xen:if></xen:set>
 <xen:if is="{$tag.tinhte_xentag_description}">
-	<xen:description>{$tag.tinhte_xentag_description}{$descriptionPage}</xen:description>
+	<xen:description>{$tag.tinhte_xentag_description}{$descriptionSuffix}</xen:description>
 <xen:elseif is="{$xenOptions.Tinhte_XenTag_defaultDescription}" />
 	<xen:description>{xen:phrase tinhte_xentag_all_contents_tagged_x,
 		'board_title={$xenOptions.boardTitle}',
-		'tag_text={$tag.tag}'}{$descriptionPage}</xen:description>
+		'tag_text={$tag.tag}'}{$descriptionSuffix}</xen:description>
 </xen:if>
 
 <div class="linkGroup">

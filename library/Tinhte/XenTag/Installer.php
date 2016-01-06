@@ -66,6 +66,14 @@ class Tinhte_XenTag_Installer
             'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_url` TEXT',
             'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_url`',
         ),
+        array(
+            'table' => 'xf_tag',
+            'field' => 'tinhte_xentag_view_count',
+            'showTablesQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'showColumnsQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_view_count\'',
+            'alterTableAddColumnQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_view_count` INT(10) UNSIGNED DEFAULT \'0\'',
+            'alterTableDropColumnQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_view_count`',
+        ),
     );
 
     public static function install($existingAddOn, $addOnData)
@@ -172,6 +180,13 @@ class Tinhte_XenTag_Installer
 				WHERE permission_group_id = 'general' AND permission_id = 'cleanSpam'
 			", Tinhte_XenTag_Constants::PERM_USER_EDIT);
         }
+
+        $db->query('
+            CREATE TABLE IF NOT EXISTS `xf_tinhte_xentag_tag_view` (
+                `tag_id` int(10) unsigned NOT NULL,
+                KEY `tag_id` (`tag_id`)
+            ) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+        ');
     }
 
     protected static function uninstallCustomized()
@@ -191,7 +206,8 @@ class Tinhte_XenTag_Installer
         $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_TagHandler_Forum');
         $db->query('DELETE FROM xf_content_type_field WHERE field_value = ?', 'Tinhte_XenTag_TagHandler_Page');
 
-        // it's safe to drop our tables completely now
+        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_view`;');
+        // it's safe to drop our tables completely now (see uninstallVersion134)
         $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag`;');
         $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tagged_content`;');
 
@@ -225,7 +241,6 @@ class Tinhte_XenTag_Installer
 
         // do not drop `tag` and `tagged_content` tables for now to avoid losing important data
         // they will be dropped when the add-on is uninstalled
-        $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_view`;');
         $db->query('DROP TABLE IF EXISTS `xf_tinhte_xentag_tag_day_view`;');
 
         foreach (array(

@@ -84,6 +84,12 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             return;
         }
 
+        if (Tinhte_XenTag_Option::get('logView')) {
+            /** @var Tinhte_XenTag_Model_TagView $tagViewModel */
+            $tagViewModel = $this->getModelFromCache('Tinhte_XenTag_Model_TagView');
+            $tagViewModel->logTagView($tag['tag_id']);
+        }
+
         if ($this->_input->filterSingle('tag_url', XenForo_Input::STRING) !== $tagUrl
             || $this->_noRedirect()
         ) {

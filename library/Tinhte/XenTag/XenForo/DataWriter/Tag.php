@@ -27,6 +27,11 @@ class Tinhte_XenTag_XenForo_DataWriter_Tag extends XFCP_Tinhte_XenTag_XenForo_Da
             'default' => '',
         );
 
+        $fields['xf_tag']['tinhte_xentag_view_count'] = array(
+            'type' => XenForo_DataWriter::TYPE_UINT,
+            'default' => 0,
+        );
+
         return $fields;
     }
 
