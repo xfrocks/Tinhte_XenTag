@@ -472,6 +472,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="2030"/>
     </option>
+    <option option_id="Tinhte_XenTag_renderRss" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="1"/>
+    </option>
     <option option_id="Tinhte_XenTag_tagsBelowFirstPost" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>1</default_value>
       <edit_format_params></edit_format_params>
@@ -544,6 +550,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_prioritizePages_explain" version_id="70" version_string="1.5"><![CDATA[Enter the display order to prioritize pages in tagged content listing. The higher the value, the higher pages will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources" version_id="75" version_string="1.6-dev"><![CDATA[Prioritize Resources]]></phrase>
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_renderRss" version_id="3020000" version_string="3.2.0"><![CDATA[Render RSS]]></phrase>
+    <phrase title="option_Tinhte_XenTag_renderRss_explain" version_id="3020000" version_string="3.2.0"><![CDATA[Enable this option to generate rss feed for tags. As of XenForo 1.5.4, XenForo does not support this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display Tags Below First Post]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to display thread tags below its first post.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays" version_id="137" version_string="3.1.0"><![CDATA[Trending: Days for calculation]]></phrase>
@@ -781,11 +789,10 @@ a.Tinhte_XenTag_TagLink:focus {
 
 <xen:edithint template="tinhte_xentag_tag_view" />
 <xen:edithint template="thread_list_item_preview" />]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="3020000" version_string="3.2.0"><![CDATA[<xen:if is="{$tag.tinhte_xentag_title}">
-	<xen:title>{$tag.tinhte_xentag_title}{xen:helper pagenumber, $page}</xen:title>
-<xen:else />
-	<xen:title>{$tag.tag}{xen:helper pagenumber, $page}</xen:title>
-</xen:if>
+    <template title="tinhte_xentag_tag_view" version_id="3020000" version_string="3.2.0"><![CDATA[<xen:set var="$tagTitle">{xen:if '{$tag.tinhte_xentag_title}',
+	$tag.tinhte_xentag_title,
+	$tag.tag}</xen:set>
+<xen:title>{xen:raw $tagTitle}{xen:helper pagenumber, $page}</xen:title>
 
 <xen:set var="$descriptionSuffix"><xen:if is="{$xenOptions.Tinhte_XenTag_logView} && {$tag.tinhte_xentag_view_count} > 0">
 	{xen:phrase views}: {xen:number $tag.tinhte_xentag_view_count}.
@@ -797,6 +804,11 @@ a.Tinhte_XenTag_TagLink:focus {
 	<xen:description>{xen:phrase tinhte_xentag_all_contents_tagged_x,
 		'board_title={$xenOptions.boardTitle}',
 		'tag_text={$tag.tag}'}{$descriptionSuffix}</xen:description>
+</xen:if>
+
+<xen:if is="{$xenOptions.Tinhte_XenTag_renderRss}">
+	<xen:container var="$head.rss"><xen:comment>
+		</xen:comment><link rel="alternate" type="application/rss+xml" title="{xen:phrase rss_feed_for_x, 'title={$tagTitle}'}" href="{xen:link tags/index.rss, $tag}" /></xen:container>
 </xen:if>
 
 <div class="linkGroup">

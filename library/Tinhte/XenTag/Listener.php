@@ -36,6 +36,7 @@ class Tinhte_XenTag_Listener
             'XenForo_Search_DataHandler_Post',
 
             'XenForo_ViewPublic_Page_View',
+            'XenForo_ViewPublic_Tag_View',
             'XenForo_ViewPublic_Thread_View',
             'XenForo_ViewPublic_Thread_ViewNewPosts',
 
