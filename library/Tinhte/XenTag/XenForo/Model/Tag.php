@@ -346,5 +346,44 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 
         return $tags;
     }
+	
+	public function getTagList($containing = null, array $fetchOptions = array())
+	{
+		$limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
+
+		if ($containing && strlen($containing))
+		{
+			$containingSql = "AND tag LIKE " . XenForo_Db::quoteLike($containing, 'lr');
+		}
+		else
+		{
+			$containingSql = '';
+		}
+
+		if (isset($fetchOptions['order']))
+		{
+			switch ($fetchOptions['order'])
+			{
+				case 'use_count': $orderBy = 'use_count DESC'; break;
+				case 'last_use_date': $orderBy = 'last_use_date DESC'; break;
+				case 'tinhte_xentag_view_count': $orderBy = 'tinhte_xentag_view_count DESC'; break;
+				case 'tag':
+				default: $orderBy = 'tag';
+			}
+		}
+		else
+		{
+			$orderBy = 'tag';
+		}
+
+		return $this->fetchAllKeyed($this->limitQueryResults(
+			"
+				SELECT *
+				FROM xf_tag
+				WHERE 1=1 {$containingSql}
+				ORDER BY {$orderBy}
+			", $limitOptions['limit'], $limitOptions['offset']
+		), 'tag_id');
+	}
 
 }

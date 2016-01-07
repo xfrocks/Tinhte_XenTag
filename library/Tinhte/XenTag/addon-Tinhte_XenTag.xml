@@ -95,6 +95,12 @@
 </xen:if>
 $0]]></replace>
     </modification>
+    <modification template="tag_list" modification_key="tinhte_xentag_add_option_view" description="Add option &quot;Views&quot; in &quot;Ordered By&quot;" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[</xen:select>
+	</span>]]></find>
+      <replace><![CDATA[<xen:option value="tinhte_xentag_view_count">{xen:phrase tinhte_views}</xen:option>
+$0]]></replace>
+    </modification>
     <modification template="forum_edit" modification_key="tinhte_xentag_admin_forum_edit_panes" description="Insert tag edit fields for forum." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<!-- slot: after_description -->]]></find>
       <replace><![CDATA[$0
