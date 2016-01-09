@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.1" version_id="3020100" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.2" version_id="3020200" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions>
     <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
@@ -764,7 +764,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_preview" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_preview" version_id="3020100" version_string="3.2.1"><![CDATA[<xen:require css="tinhte_xentag.css" />
 
 <div class="previewTooltip tagPreview">
 	<div class="text">
@@ -780,9 +780,13 @@ a.Tinhte_XenTag_TagLink:focus {
 			<xen:if is="{$tag.tinhte_xentag_description}">
 				{$tag.tinhte_xentag_description}
 			<xen:else />
-				{xen:phrase tinhte_xentag_x_contents_tagged,
-					'count={xen:number $tag.use_count}'}
+				{xen:phrase tinhte_xentag_all_contents_tagged_x,
+					'board_title={$xenOptions.boardTitle}',
+					'tag_text={$tag.tag}'}
 			</xen:if>
+
+			{xen:phrase tinhte_xentag_x_contents_tagged,
+					'count={xen:number $tag.use_count}'}
 		</div>
 	</div>
 </div>
