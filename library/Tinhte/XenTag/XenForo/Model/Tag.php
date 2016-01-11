@@ -62,7 +62,6 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
     public function getTags(array $tags, &$notFound = array())
     {
         $result = parent::getTags($tags, $notFound);
-
         if (is_array($this->_Tinhte_XenTag_queriedTags)) {
             $this->_Tinhte_XenTag_queriedTags += $result;
         }
@@ -349,41 +348,47 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 	
 	public function getTagList($containing = null, array $fetchOptions = array())
 	{
-		$limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
+        $limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
 
-		if ($containing && strlen($containing))
-		{
-			$containingSql = "AND tag LIKE " . XenForo_Db::quoteLike($containing, 'lr');
-		}
-		else
-		{
-			$containingSql = '';
-		}
+        if ($containing && strlen($containing))
+        {
+            $containingSql = "AND tag LIKE " . XenForo_Db::quoteLike($containing, 'lr');
+        }
+        else
+        {
+            $containingSql = '';
+        }
 
-		if (isset($fetchOptions['order']))
-		{
-			switch ($fetchOptions['order'])
-			{
-				case 'use_count': $orderBy = 'use_count DESC'; break;
-				case 'last_use_date': $orderBy = 'last_use_date DESC'; break;
-				case 'tinhte_xentag_view_count': $orderBy = 'tinhte_xentag_view_count DESC'; break;
-				case 'tag':
-				default: $orderBy = 'tag';
-			}
-		}
-		else
-		{
-			$orderBy = 'tag';
-		}
+        if (isset($fetchOptions['order']))
+        {
+            switch ($fetchOptions['order'])
+            {
+                case 'use_count': $orderBy = 'use_count DESC'; break;
+                case 'last_use_date': $orderBy = 'last_use_date DESC'; break;
+                case 'tag':
+                default: $orderBy = 'tag';
+            }
+        }
+        else
+        {
+            $orderBy = 'tag';
+        }
 
-		return $this->fetchAllKeyed($this->limitQueryResults(
-			"
-				SELECT *
-				FROM xf_tag
-				WHERE 1=1 {$containingSql}
-				ORDER BY {$orderBy}
-			", $limitOptions['limit'], $limitOptions['offset']
-		), 'tag_id');
+        $tagList = parent::getTagList($containing,$fetchOptions);
+
+        if($fetchOptions['order'] == 'tinhte_xentag_view_count')
+        {
+            $tagList = array_replace($this->fetchAllKeyed($this->limitQueryResults(
+                "
+                    SELECT *
+                    FROM xf_tag
+                    WHERE 1=1 {$containingSql}
+                    ORDER BY tinhte_xentag_view_count DESC
+                ", $limitOptions['limit'], $limitOptions['offset']
+            ), 'tag_id'),$tagList);
+        }
+
+        return $tagList;
 	}
 
 }

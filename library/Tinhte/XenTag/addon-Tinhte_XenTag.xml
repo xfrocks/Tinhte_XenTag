@@ -88,10 +88,10 @@
   </admin_templates>
   <admin_template_modifications>
     <modification template="tag_list" modification_key="tinhte_xentag_add_column_views" description="Add column &quot;Views&quot; next to &quot;Total&quot;" execution_order="10" enabled="1" action="str_replace">
-      <find><![CDATA[<th>&nbsp;</th>
+      <find><![CDATA[<th>{xen:phrase last_used}</th>
 		<th>&nbsp;</th>]]></find>
       <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_logView}==true">
-    <th>{xen:phrase tinhte_views}</th>
+    <th>{xen:phrase tinhte_xentag_option_views}</th>
 </xen:if>
 $0]]></replace>
     </modification>
@@ -106,7 +106,7 @@ $0]]></replace>
 			<xen:option value="tag">{xen:phrase tag}</xen:option>
 			<xen:option value="use_count">{xen:phrase total}</xen:option>
 			<xen:option value="last_use_date">{xen:phrase last_used}</xen:option>
-			<xen:option value="tinhte_xentag_view_count">{xen:phrase tinhte_views}</xen:option>
+			<xen:option value="tinhte_xentag_view_count">{xen:phrase tinhte_xentag_option_views}</xen:option>
 		</xen:select>
 <xen:else />
 $0
@@ -125,11 +125,11 @@ $0
 <xen:include template="tinhte_xentag_admin_page_edit_basic_information" />]]></replace>
     </modification>
     <modification template="tag_list" modification_key="tinhte_xentag_get_data_from_view_count" description="Get data from tinhte_xentag_view_count" execution_order="10" enabled="1" action="str_replace">
-      <find><![CDATA[<td class="dataOptions">]]></find>
-      <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_logView}==true">
+      <find><![CDATA[<td>{xen:number $tag.use_count}</td>]]></find>
+      <replace><![CDATA[$0
+<xen:if is="{$xenOptions.Tinhte_XenTag_logView}==true">
     <td>{xen:number $tag.tinhte_xentag_view_count}</td>
-</xen:if>
-$0]]></replace>
+</xen:if>]]></replace>
     </modification>
     <modification template="helper_thread_search_criteria" modification_key="tinhte_xentag_helper_thread_search_criteria" description="Insert our criteria for thread search." execution_order="10" enabled="1" action="preg_replace">
       <find><![CDATA[#\A.+\z#s]]></find>
@@ -595,7 +595,6 @@ step=7</edit_format_params>
     <phrase title="style_property_tinhte_xentag_showIconInTagLink_master" version_id="74" version_string="1.5.3b"><![CDATA[Show Icon in Tag Link]]></phrase>
     <phrase title="style_property_tinhte_xentag_showPreview_description_master" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to show preview when user hover a tag link.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showPreview_master" version_id="3010500" version_string="3.1.5"><![CDATA[Show Preview]]></phrase>
-    <phrase title="tinhte_views" version_id="3020000" version_string="3.2.0"><![CDATA[Views]]></phrase>
     <phrase title="tinhte_xentag_all_contents_tagged_x" version_id="3010500" version_string="3.1.5"><![CDATA[These are all contents from {board_title} tagged {tag_text}.]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_all_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag all tags (with limitation)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_disabled" version_id="15" version_string="0.9.8.5"><![CDATA[Disabled]]></phrase>
@@ -608,6 +607,7 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tags" version_id="3010500" version_string="3.1.5"><![CDATA[New Tags]]></phrase>
+    <phrase title="tinhte_xentag_option_views" version_id="3020000" version_string="3.2.0"><![CDATA[Views]]></phrase>
     <phrase title="tinhte_xentag_page_x" version_id="3010500" version_string="3.1.5"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
     <phrase title="tinhte_xentag_replace_tags" version_id="3010500" version_string="3.1.5"><![CDATA[Replace Tags]]></phrase>
