@@ -3,6 +3,7 @@
 class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_Tag
 {
     protected $_Tinhte_XenTag_queriedTags = null;
+    private $_Tinhte_XenTag_checkLimitQueryResultViewCount = false;
 
     public function getTagListForEdit($contentType, $contentId, $editOthers, $userId = null)
     {
@@ -348,47 +349,28 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 	
 	public function getTagList($containing = null, array $fetchOptions = array())
 	{
-        $limitOptions = $this->prepareLimitFetchOptions($fetchOptions);
-
-        if ($containing && strlen($containing))
+        if(isset($fetchOptions['order'])
+            && $fetchOptions['order']=='tinhte_xentag_view_count')
         {
-            $containingSql = "AND tag LIKE " . XenForo_Db::quoteLike($containing, 'lr');
-        }
-        else
-        {
-            $containingSql = '';
+            $this->_Tinhte_XenTag_checkLimitQueryResultViewCount = true;
         }
 
-        if (isset($fetchOptions['order']))
-        {
-            switch ($fetchOptions['order'])
-            {
-                case 'use_count': $orderBy = 'use_count DESC'; break;
-                case 'last_use_date': $orderBy = 'last_use_date DESC'; break;
-                case 'tag':
-                default: $orderBy = 'tag';
-            }
-        }
-        else
-        {
-            $orderBy = 'tag';
-        }
-
-        $tagList = parent::getTagList($containing,$fetchOptions);
-
-        if($fetchOptions['order'] == 'tinhte_xentag_view_count')
-        {
-            $tagList = array_replace($this->fetchAllKeyed($this->limitQueryResults(
-                "
-                    SELECT *
-                    FROM xf_tag
-                    WHERE 1=1 {$containingSql}
-                    ORDER BY tinhte_xentag_view_count DESC
-                ", $limitOptions['limit'], $limitOptions['offset']
-            ), 'tag_id'),$tagList);
-        }
+        $tagList = parent::getTagList($containing, $fetchOptions);
+        $this->_Tinhte_XenTag_checkLimitQueryResultViewCount = false;
 
         return $tagList;
 	}
+
+    public function limitQueryResults($query, $limit, $offset = 0)
+    {
+        if($this->_Tinhte_XenTag_checkLimitQueryResultViewCount == true)
+        {
+            $query = str_replace('ORDER BY tag', 'ORDER BY tinhte_xentag_view_count DESC', $query);
+        }
+        
+        $limitQueryResults = parent::limitQueryResults($query, $limit, $offset);
+
+        return $limitQueryResults;
+    }
 
 }
