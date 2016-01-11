@@ -3,7 +3,7 @@
 class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_Tag
 {
     protected $_Tinhte_XenTag_queriedTags = null;
-    private $_Tinhte_XenTag_checkLimitQueryResultViewCount = false;
+    protected $_Tinhte_XenTag_checkLimitQueryResultViewCount = false;
 
     public function getTagListForEdit($contentType, $contentId, $editOthers, $userId = null)
     {
@@ -63,6 +63,7 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
     public function getTags(array $tags, &$notFound = array())
     {
         $result = parent::getTags($tags, $notFound);
+
         if (is_array($this->_Tinhte_XenTag_queriedTags)) {
             $this->_Tinhte_XenTag_queriedTags += $result;
         }
@@ -367,10 +368,8 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         {
             $query = str_replace('ORDER BY tag', 'ORDER BY tinhte_xentag_view_count DESC', $query);
         }
-        
-        $limitQueryResults = parent::limitQueryResults($query, $limit, $offset);
 
-        return $limitQueryResults;
+        return parent::limitQueryResults($query, $limit, $offset);
     }
 
 }
