@@ -259,11 +259,9 @@ class Tinhte_XenTag_Installer
         }
 
         $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_page');
-        $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_forum');
         $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_resource');
         $db->query('DELETE FROM xf_content_type WHERE content_type = ?', 'tinhte_xentag_tag');
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_page');
-        $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_forum');
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_resource');
         $db->query('DELETE FROM xf_content_type_field WHERE content_type = ?', 'tinhte_xentag_tag');
     }
