@@ -127,10 +127,23 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 
     protected function _getCacheId(array $widget, $positionCode, array $params, array $suffix = array())
     {
-        if (!empty($widget['options']['forums'])) {
-            $forumIds = $this->_helperGetForumIdsFromOption($widget['options']['forums'], $params, true);
-            if (!empty($forumIds)) {
-                $suffix[] = md5(serialize($forumIds));
+        if (!empty($widget['options']['forums'])
+            && $this->_helperDetectSpecialForums($widget['options']['forums'])
+        ) {
+            if (is_callable(array($this, '_helperGetForumIdForCache'))) {
+                $forumId = $this->_helperGetForumIdForCache($widget['options']['forums'], $params, true);
+                if (!empty($forumId)) {
+                    $suffix[] = 'f' . $forumId;
+                }
+            } else {
+                $forumIds = $this->_helperGetForumIdsFromOption($widget['options']['forums'], $params, true);
+                if (!empty($forumIds)) {
+                    $forumSuffix = implode('|', $forumIds);
+                    if (strlen($forumSuffix) > 32) {
+                        $forumSuffix = md5(serialize($forumIds));
+                    }
+                    $suffix[] = 'f' . $forumSuffix;
+                }
             }
         }
 
