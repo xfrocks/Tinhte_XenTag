@@ -87,11 +87,10 @@
 <xen:include template="tinhte_xentag_widget_trending_options" />]]></template>
   </admin_templates>
   <admin_template_modifications>
-    <modification template="tag_list" modification_key="tinhte_xentag_add_column_views" description="Add column &quot;Views&quot; next to &quot;Total&quot;" execution_order="10" enabled="1" action="str_replace">
-      <find><![CDATA[<th>{xen:phrase last_used}</th>
-		<th>&nbsp;</th>]]></find>
+    <modification template="tag_list" modification_key="tinhte_xentag_add_column_views" description="Add column &quot;Views&quot; next to &quot;Total&quot;" execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[<.+d\}+.\/+t.>]]></find>
       <replace><![CDATA[<xen:if is="{$xenOptions.Tinhte_XenTag_logView}==true">
-    <th>{xen:phrase tinhte_xentag_option_views}</th>
+    <th>{xen:phrase views}</th>
 </xen:if>
 $0]]></replace>
     </modification>
@@ -106,7 +105,7 @@ $0]]></replace>
 			<xen:option value="tag">{xen:phrase tag}</xen:option>
 			<xen:option value="use_count">{xen:phrase total}</xen:option>
 			<xen:option value="last_use_date">{xen:phrase last_used}</xen:option>
-			<xen:option value="tinhte_xentag_view_count">{xen:phrase tinhte_xentag_option_views}</xen:option>
+			<xen:option value="tinhte_xentag_view_count">{xen:phrase views}</xen:option>
 		</xen:select>
 <xen:else />
 $0
@@ -615,7 +614,6 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_new_tagged_resource_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New resource with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tagged_thread_x" version_id="115" version_string="1.9.1-dev"><![CDATA[{title} - New thread with watched tag]]></phrase>
     <phrase title="tinhte_xentag_new_tags" version_id="3010500" version_string="3.1.5"><![CDATA[New Tags]]></phrase>
-    <phrase title="tinhte_xentag_option_views" version_id="3020000" version_string="3.2.0"><![CDATA[Views]]></phrase>
     <phrase title="tinhte_xentag_page_x" version_id="3010500" version_string="3.1.5"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
     <phrase title="tinhte_xentag_replace_tags" version_id="3010500" version_string="3.1.5"><![CDATA[Replace Tags]]></phrase>
@@ -748,14 +746,13 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
-    <template title="tinhte_xentag_tag_edit" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
+    <template title="tinhte_xentag_tag_edit" version_id="3020200" version_string="3.2.2"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 <xen:h1>{xen:phrase edit}</xen:h1>
 
 <xen:navigation>
 	<xen:breadcrumb href="{xen:link tags}">{xen:phrase tags}</xen:breadcrumb>
 	<xen:breadcrumb href="{xen:link tags, $tag}">{xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:breadcrumb>
 </xen:navigation>
-
 <form method="post" class="xenForm formOverlay" action="{xen:link 'tags/edit', $tag}">
 
 	<dl class="ctrlUnit">
@@ -797,7 +794,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_preview" version_id="3020100" version_string="3.2.1"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_preview" version_id="3020200" version_string="3.2.2"><![CDATA[<xen:require css="tinhte_xentag.css" />
 
 <div class="previewTooltip tagPreview">
 	<div class="text">
@@ -826,7 +823,7 @@ a.Tinhte_XenTag_TagLink:focus {
 
 <xen:edithint template="tinhte_xentag_tag_view" />
 <xen:edithint template="thread_list_item_preview" />]]></template>
-    <template title="tinhte_xentag_tag_view" version_id="3020000" version_string="3.2.0"><![CDATA[<xen:set var="$tagTitle">{xen:if '{$tag.tinhte_xentag_title}',
+    <template title="tinhte_xentag_tag_view" version_id="3020200" version_string="3.2.2"><![CDATA[<xen:set var="$tagTitle">{xen:if '{$tag.tinhte_xentag_title}',
 	$tag.tinhte_xentag_title,
 	$tag.tag}</xen:set>
 <xen:title>{xen:raw $tagTitle}{xen:helper pagenumber, $page}</xen:title>
@@ -856,6 +853,15 @@ a.Tinhte_XenTag_TagLink:focus {
 	<xen:if is="{$Tinhte_XenTag_canWatch}">
 		<a href="{xen:link 'tags/watch-confirm', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $Tinhte_XenTag_tagIsWatched, '{xen:phrase tinhte_xentag_unwatch_tag}', '{xen:phrase tinhte_xentag_watch_tag}'}</a>
 	</xen:if>
+<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Chỉnh sửa tại đây @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+<!--<xen:if is="{$Tinhte_XenTag_canEdit}">
+	<form action="{xen:link 'tags', $tag}" method="POST" class="OverlayTrigger" name="frmUploadImageCoverTag" enctype="multipart/form-data">
+		<label>Select File</label>
+		<input name="imageCoverTag" type="file" class="file" />
+		<input type="submit" value="OK" name="submitUploadCoverImageTag" />
+	</form>
+</xen:if>-->
+<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Kết thúc chỉnh sửa @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
 </div>]]></template>
     <template title="tinhte_xentag_tag_watch" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tagWatch}">
 	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
