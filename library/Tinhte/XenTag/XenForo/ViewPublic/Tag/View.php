@@ -5,6 +5,32 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
     protected $_Tinhte_XenTag_buggyXmlNamespace = null;
     protected $_Tinhte_XenTag_bbCodeParsers = array();
 
+    public function prepareParams()
+    {
+        parent::prepareParams();
+
+        if (isset($this->_params[__METHOD__])) {
+            return;
+        }
+        $this->_params[__METHOD__] = true;
+
+        if (Tinhte_XenTag_Option::get('seoKwStuffing')
+            && isset($this->_params['results']['results'])
+            && !empty($this->_params['tag']['tinhte_xentag_title'])
+        ) {
+            foreach ($this->_params['results']['results'] as &$resultRef) {
+                if (!empty($resultRef['content']['title'])) {
+                    $resultRef['content']['title'] = preg_replace(
+                        '#^\[' . preg_quote($this->_params['tag']['tinhte_xentag_title'], '#') . '\]\s+#i',
+                        '',
+                        $resultRef['content']['title']
+                    );
+                }
+            }
+        }
+    }
+
+
     /**
      * @return string
      * @throws Zend_Exception

@@ -44,6 +44,9 @@ class Tinhte_XenTag_Option
 
             case 'tagMinLength':
                 return $options->get('tagLength', 'min');
+
+            case 'seoKwStuffing':
+                return true;
         }
 
         return $options->get($keyPrefix . $key);
