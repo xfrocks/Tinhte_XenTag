@@ -50,7 +50,7 @@ class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetR
             }
         }
 
-        return true;
+        return parent::_validateOptionValue($optionKey, $optionValue);
     }
 
     protected function _getRenderTemplate(array $widget, $positionCode, array $params)

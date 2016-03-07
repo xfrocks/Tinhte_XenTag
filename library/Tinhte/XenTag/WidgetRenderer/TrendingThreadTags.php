@@ -53,7 +53,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
             }
         }
 
-        return true;
+        return parent::_validateOptionValue($optionKey, $optionValue);
     }
 
     protected function _getRenderTemplate(array $widget, $positionCode, array $params)
