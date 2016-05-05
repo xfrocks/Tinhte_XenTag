@@ -509,6 +509,14 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1"/>
     </option>
+    <option option_id="Tinhte_XenTag_suggestThreads" edit_format="spinbox" data_type="integer" can_backup="1">
+      <default_value>20</default_value>
+      <edit_format_params>Min = 0
+Max = 99999
+Step = 1</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="130"/>
+    </option>
     <option option_id="Tinhte_XenTag_tagsBelowFirstPost" edit_format="onoff" data_type="unsigned_integer" can_backup="1">
       <default_value>1</default_value>
       <edit_format_params></edit_format_params>
@@ -583,6 +591,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_prioritizeResources_explain" version_id="75" version_string="1.6-dev"><![CDATA[Enter the display order to prioritize resources in tagged content listing. The higher the value, the higher forums will showup in the list. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_renderRss" version_id="3020000" version_string="3.2.0"><![CDATA[Render RSS]]></phrase>
     <phrase title="option_Tinhte_XenTag_renderRss_explain" version_id="3020000" version_string="3.2.0"><![CDATA[Enable this option to generate rss feed for tags. As of XenForo 1.5.4, XenForo does not support this feature.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_suggestThreads" version_id="3020200" version_string="3.2.2"><![CDATA[Number of thread-with-the-same-tag will be shown]]></phrase>
+    <phrase title="option_Tinhte_XenTag_suggestThreads_explain" version_id="3020200" version_string="3.2.2"><![CDATA[Suggest a number of thread have the same tag when user want to view a thread that system not allow to]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display Tags Below First Post]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to display thread tags below its first post.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays" version_id="137" version_string="3.1.0"><![CDATA[Trending: Days for calculation]]></phrase>
@@ -659,7 +669,11 @@ To disable all emails:
     <phrase title="tinhte_xentag_you_sure_you_want_to_update_notification_settings_for_all_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Are you sure you want to update your email notification settings for all tags?]]></phrase>
     <phrase title="tinhte_xentag_you_sure_you_want_to_update_notification_settings_for_one_tag" version_id="115" version_string="1.9.1-dev"><![CDATA[Are you sure you want to update your email notification settings for one tag?]]></phrase>
   </phrases>
-  <route_prefixes/>
+  <route_prefixes>
+    <route_type type="public">
+      <prefix original_prefix="suggest-thread" class="Tinhte_XenTag_Route_Prefix_Content" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
   <style_properties>
     <property property_name="tinhte_xentag_showIconInTagLink" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Icon in Tag Link" description="Enable this option to show a small icon for the tag link. The icon must be placed in the image path defined by the style. To be exact: @imagePath/Tinhte/XenTag/tag.png." css_components="" scalar_type="boolean" scalar_parameters="" display_order="200" sub_group="bbcode"><![CDATA[1]]></property>
     <property property_name="tinhte_xentag_showPreview" property_type="scalar" definition="1" group_name="Tinhte_XenTag" title="Show Preview" description="Enable this option to show preview when user hover a tag link." css_components="" scalar_type="boolean" scalar_parameters="" display_order="1" sub_group="preview"><![CDATA[1]]></property>
@@ -746,6 +760,43 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
+    <template title="tinhte_xentag_suggest_thread_list" version_id="3020200" version_string="3.2.2"><![CDATA[<xen:include template="helper_login_form" />
+
+<div class="discussionList section sectionMain">
+	<dl class="sectionHeaders">
+		<dt class="posterAvatar"><a><span>{xen:phrase sort_by}:</span></a></dt>
+		<dd class="main">
+			<a href="{xen:link forums, $forum, '_params={$orderParams.title}'}" class="title"><span>{xen:phrase title}{xen:helper sortArrow, $order, $orderDirection, title}</span></a>
+			<a href="{xen:link forums, $forum, '_params={$orderParams.post_date}'}" class="postDate"><span>{xen:phrase start_date}{xen:helper sortArrow, $order, $orderDirection, post_date}</span></a>
+		</dd>
+		<dd class="stats">
+			<a href="{xen:link forums, $forum, '_params={$orderParams.reply_count}'}" class="major"><span>{xen:phrase replies}{xen:helper sortArrow, $order, $orderDirection, reply_count}</span></a>
+			<a href="{xen:link forums, $forum, '_params={$orderParams.view_count}'}" class="minor"><span>{xen:phrase views}{xen:helper sortArrow, $order, $orderDirection, view_count}</span></a>
+		</dd>
+		<dd class="lastPost"><a href="{xen:link forums, $forum, '_params={$orderParams.last_post_date}'}"><span>{xen:phrase last_message}{xen:helper sortArrow, $order, $orderDirection, last_post_date}</span></a></dd>
+	</dl>
+	
+	<ol class="discussionListItems">
+	<xen:if is="{$threads}">
+		<xen:set var="$showLastPageNumbers">1</xen:set>
+		<xen:set var="$linkPrefix">1</xen:set>
+				
+		<xen:hook name="thread_list_threads">
+		<xen:foreach loop="$threads" value="$thread">
+			<xen:include template="thread_list_item" />
+		</xen:foreach>
+		</xen:hook>
+		
+		<xen:edithint template="thread_list_item_edit" />
+	<xen:else />
+		<li class="primaryContent">{xen:phrase there_no_threads_to_display}</li>
+	</xen:if>
+	<xen:if is="{$showDateLimitDisabler}">
+		<li class="discussionListItem"><div class="noteRow secondary"><a href="{xen:link forums, $forum, '_params={$pageNavParams}', 'no_date_limit=1', 'page={xen:if "{$page} > 1", $page}'}">{xen:phrase click_here_to_display_older_threads}</a></div></li>
+	</xen:if>
+	</ol>
+<div>
+]]></template>
     <template title="tinhte_xentag_tag_edit" version_id="3020200" version_string="3.2.2"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 <xen:h1>{xen:phrase edit}</xen:h1>
 
