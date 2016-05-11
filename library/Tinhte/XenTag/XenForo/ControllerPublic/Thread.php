@@ -22,7 +22,6 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
         try {
             return parent::actionIndex();
         } catch (XenForo_ControllerResponse_Exception $e) {
-            XenForo_Phrase::loadPhrases('tinhte_xentag_sorry_this_thread_can_not_display');
             $visitor = XenForo_Visitor::getInstance();
 
             $threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
@@ -40,17 +39,14 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 'watchUserId' => $visitor['user_id'],
                 'postCountUserId' => $visitor['user_id'],
             );
+            $threadError = $threadModel->getThreadById($threadId, $threadFetchOptions);
             $threads = $threadModel->getThreadsByIds($contents, $threadFetchOptions);
             krsort($threads);
 
-            $nodeId = array();
-            foreach ($threads AS $thread) {
-                $nodeId[] = $thread['node_id'];
-            }
-            $forumId = array_unique($nodeId);
+            $forumIdOfErrorThread = $threadError['node_id'];
 
             $forum = $this->getHelper('ForumThreadPost')->assertForumValidAndViewable(
-                $forumId[0],
+                $forumIdOfErrorThread,
                 $this->_getForumFetchOptions()
             );
             $inlineModOptions = array();

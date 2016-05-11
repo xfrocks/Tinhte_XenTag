@@ -57,5 +57,4 @@ class Tinhte_XenTag_XenForo_Model_Thread extends XFCP_Tinhte_XenTag_XenForo_Mode
         }
     }
 
-
 }
