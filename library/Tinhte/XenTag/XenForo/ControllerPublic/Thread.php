@@ -39,18 +39,21 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 'watchUserId' => $visitor['user_id'],
                 'postCountUserId' => $visitor['user_id'],
             );
-            $threadError = $threadModel->getThreadById($threadId, $threadFetchOptions);
             $threads = $threadModel->getThreadsByIds($contents, $threadFetchOptions);
             krsort($threads);
 
-            $forumIdOfErrorThread = $threadError['node_id'];
+            $nodeId = array();
+            foreach ($threads AS $thread) {
+                $nodeId[] = $thread['node_id'];
+            }
+            $forumIds = array_unique($nodeId);
 
-            $forum = $this->getHelper('ForumThreadPost')->assertForumValidAndViewable(
-                $forumIdOfErrorThread,
-                $this->_getForumFetchOptions()
-            );
+            $forums = $this->getModelFromCache('XenForo_Model_Forum')->getForumsByIds($forumIds);
             $inlineModOptions = array();
             foreach ($threads AS &$thread) {
+                $forumId = $thread['node_id'];
+                $forum = $forums[$forumId];
+
                 $threadModOptions = $threadModel->addInlineModOptionToThread($thread, $forum);
                 $inlineModOptions += $threadModOptions;
 
