@@ -512,7 +512,6 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     <option option_id="Tinhte_XenTag_suggestThreads" edit_format="spinbox" data_type="integer" can_backup="1">
       <default_value>20</default_value>
       <edit_format_params>Min = 0
-Max = 99999
 Step = 1</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="130"/>

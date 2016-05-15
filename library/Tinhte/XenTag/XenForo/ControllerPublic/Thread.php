@@ -25,11 +25,14 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
             $visitor = XenForo_Visitor::getInstance();
 
             $threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
-            $numberOfContent = XenForo_Application::get('options')->Tinhte_XenTag_suggestThreads;
+            $numberOfContent = Tinhte_XenTag_Option::get('suggestThreads');
+            if ($numberOfContent <= 0) {
+                throw new XenForo_Exception($e);
+            }
 
             /** @var Tinhte_XenTag_Model_Content $contentModel */
-            $contentModel = $this->getModelFromCache('Tinhte_XenTag_Model_Content');
-            $contents = $contentModel->getListContentHaveTheSameTag($threadId, $numberOfContent);
+            $contentModel = $this->getModelFromCache('Tinhte_XenTag_Model_Search');
+            $contents = $contentModel->getThreadIdsRelatedToThreadId($threadId, $numberOfContent);
 
             /** @var XenForo_Model_Thread $threadModel */
             $threadModel = $this->getModelFromCache('XenForo_Model_Thread');
@@ -67,16 +70,6 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
 
             return $this->responseView('Tinhte_XenTag_ViewPublic_Content', 'tinhte_xentag_suggest_thread_list', $viewParam);
         }
-    }
-
-    protected function _getForumFetchOptions()
-    {
-        $userId = XenForo_Visitor::getUserId();
-
-        return array(
-            'readUserId' => $userId,
-            'watchUserId' => $userId
-        );
     }
 
 }
