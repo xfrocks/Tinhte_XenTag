@@ -83,7 +83,9 @@ class Tinhte_XenTag_Model_Search extends XenForo_Model
                                         FROM xf_tag_content C
                                         WHERE C.content_id = '. $threadId .'
                                             AND C.content_type = "thread"
-                                    ) AND content_id <> '. $threadId .'
+                                    )
+                                    AND content_id <> '. $threadId .'
+                                    AND content_type = "thread"
                     ORDER BY content_id DESC
                 ', $limit
             )

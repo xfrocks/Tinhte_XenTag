@@ -27,12 +27,12 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
             $threadId = $this->_input->filterSingle('thread_id', XenForo_Input::UINT);
             $numberOfContent = Tinhte_XenTag_Option::get('suggestThreads');
             if ($numberOfContent <= 0) {
-                throw new XenForo_Exception($e);
+                throw $e;
             }
 
-            /** @var Tinhte_XenTag_Model_Content $contentModel */
-            $contentModel = $this->getModelFromCache('Tinhte_XenTag_Model_Search');
-            $contents = $contentModel->getThreadIdsRelatedToThreadId($threadId, $numberOfContent);
+            /** @var Tinhte_XenTag_Model_Search $searchModel */
+            $searchModel = $this->getModelFromCache('Tinhte_XenTag_Model_Search');
+            $threadIds = $searchModel->getThreadIdsRelatedToThreadId($threadId, $numberOfContent);
 
             /** @var XenForo_Model_Thread $threadModel */
             $threadModel = $this->getModelFromCache('XenForo_Model_Thread');
@@ -42,7 +42,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 'watchUserId' => $visitor['user_id'],
                 'postCountUserId' => $visitor['user_id'],
             );
-            $threads = $threadModel->getThreadsByIds($contents, $threadFetchOptions);
+            $threads = $threadModel->getThreadsByIds($threadIds, $threadFetchOptions);
             krsort($threads);
 
             $nodeId = array();
