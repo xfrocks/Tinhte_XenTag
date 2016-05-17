@@ -276,16 +276,31 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return $tags;
     }
 
-    public function Tinhte_XenTag_getTrendingTags($cutoff, $limit)
+    public function Tinhte_XenTag_getTrendingTags($cutoff, $limit, $cutoffCreated = 0)
     {
         if ($limit === 0) {
             return array();
+        }
+
+        $tagIds = null;
+        if ($cutoffCreated > 0) {
+            $tagIds = $this->_getDb()->fetchCol('
+                SELECT tag_id
+                FROM `xf_tag`
+                WHERE tinhte_xentag_create_date > ?
+            ', $cutoffCreated);
+
+            if (empty($tagIds)) {
+                return array();
+            }
         }
 
         $counts = $this->_getDb()->fetchPairs('
             SELECT tag_id, COUNT(*) AS tagged_count
             FROM `xf_tag_content`
             WHERE add_date > ?
+                ' . ($tagIds === null ? ''
+                    : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
             GROUP BY tag_id
             ORDER BY tagged_count DESC
             LIMIT ?;
@@ -314,17 +329,18 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
     }
 
 
-    public function Tinhte_XenTag_rebuildTrendingCache()
+    public function Tinhte_XenTag_rebuildTrendingCache(array $options)
     {
-        $cutoff = XenForo_Application::$time - Tinhte_XenTag_Option::get('trendingDays') * 86400;
-        $limit = Tinhte_XenTag_Option::get('trendingMax');
-
-        $tags = $this->Tinhte_XenTag_getTrendingTags($cutoff, $limit);
+        $tags = $this->Tinhte_XenTag_getTrendingTags(
+            XenForo_Application::$time - $options['days'] * 86400,
+            $options['max'],
+            XenForo_Application::$time - $options['daysCreated'] * 86400);
 
         $this->_getDataRegistryModel()->set(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING, array(
             'tags' => $tags,
             'time' => XenForo_Application::$time,
             'version' => Tinhte_XenTag_Constants::DATA_REGISTRY_TRENDING_VERSION,
+            'optionsSerialized' => serialize($options),
         ));
 
         return $tags;
@@ -333,14 +349,22 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
     public function Tinhte_XenTag_getTrendingFromCache()
     {
         $cache = $this->_getDataRegistryModel()->get(Tinhte_XenTag_Constants::DATA_REGISTRY_KEY_TRENDING);
+        $options = array(
+            'days' => Tinhte_XenTag_Option::get('trendingDays'),
+            'daysCreated' => Tinhte_XenTag_Option::get('trendingDaysCreated'),
+            'max' => Tinhte_XenTag_Option::get('trendingMax'),
+        );
 
         if (!isset($cache['version'])
             || $cache['version'] < Tinhte_XenTag_Constants::DATA_REGISTRY_TRENDING_VERSION
             || !isset($cache['time'])
             || XenForo_Application::$time - $cache['time'] > Tinhte_XenTag_Option::get('trendingTtl') * 86400
+            || !isset($cache['optionsSerialized'])
+            || $cache['optionsSerialized'] !== serialize($options)
+            || (!empty($_REQUEST['_Tinhte_XenTag_noCache']) && XenForo_Visitor::getInstance()->isSuperAdmin())
         ) {
             // cache not found or expired
-            $tags = $this->Tinhte_XenTag_rebuildTrendingCache();
+            $tags = $this->Tinhte_XenTag_rebuildTrendingCache($options);
         } else {
             $tags = $cache['tags'];
         }

@@ -32,6 +32,11 @@ class Tinhte_XenTag_XenForo_DataWriter_Tag extends XFCP_Tinhte_XenTag_XenForo_Da
             'default' => 0,
         );
 
+        $fields['xf_tag']['tinhte_xentag_create_date'] = array(
+            'type' => XenForo_DataWriter::TYPE_UINT,
+            'default' => XenForo_Application::$time,
+        );
+
         return $fields;
     }
 

@@ -18,6 +18,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
             'options' => array(
                 'forums' => XenForo_Input::ARRAY_SIMPLE,
                 'days' => XenForo_Input::UINT,
+                'days_created' => XenForo_Input::UINT,
                 'limit' => XenForo_Input::UINT
             ),
             'useCache' => true,
@@ -41,21 +42,6 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
         return parent::_renderOptions($template);
     }
 
-    protected function _validateOptionValue($optionKey, &$optionValue)
-    {
-        if ('days' == $optionKey) {
-            if (empty($optionValue)) {
-                $optionValue = Tinhte_XenTag_Option::get('trendingDays');
-            }
-        } elseif ('limit' == $optionKey) {
-            if (empty($optionValue)) {
-                $optionValue = Tinhte_XenTag_Option::get('trendingMax');
-            }
-        }
-
-        return parent::_validateOptionValue($optionKey, $optionValue);
-    }
-
     protected function _getRenderTemplate(array $widget, $positionCode, array $params)
     {
         return 'tinhte_xentag_widget_trending';
@@ -74,6 +60,13 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
         }
         $cutoff = XenForo_Application::$time - $days * 86400;
 
+        if (!empty($widget['options']['days_created'])) {
+            $daysCreated = $widget['options']['days_created'];
+        } else {
+            $daysCreated = Tinhte_XenTag_Option::get('trendingDaysCreated');
+        }
+        $cutoffCreated = XenForo_Application::$time - $daysCreated * 86400;
+
         if (!empty($widget['options']['limit'])) {
             $limit = $widget['options']['limit'];
         } else {
@@ -86,12 +79,28 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
         }
 
         $db = XenForo_Application::getDb();
+
+        $tagIds = null;
+        if ($cutoffCreated > 0) {
+            $tagIds = $db->fetchCol('
+                SELECT tag_id
+                FROM `xf_tag`
+                WHERE tinhte_xentag_create_date > ?
+            ', $cutoffCreated);
+
+            if (empty($tagIds)) {
+                return array();
+            }
+        }
+
         $counts = $db->fetchPairs('
 			SELECT tag_content.tag_id, COUNT(*) AS tagged_count
 			FROM `xf_tag_content` AS tag_content
 			' . (!empty($forumIds) ? 'INNER JOIN `xf_thread` AS thread
 				ON (thread.thread_id = tag_content.content_id)' : '') . '
 			WHERE tag_content.content_type = "thread" AND tag_content.add_date > ?
+			    ' . ($tagIds === null ? ''
+                    : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
 				' . (!empty($forumIds) ? 'AND thread.node_id IN (' . $db->quote($forumIds) . ')' : '') . '
 			GROUP BY tag_content.tag_id
 			ORDER BY tagged_count DESC

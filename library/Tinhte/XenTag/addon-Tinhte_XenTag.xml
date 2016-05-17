@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.2" version_id="3020203" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.2" version_id="3020204" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions>
     <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
@@ -73,7 +73,18 @@
 <xen:checkboxunit label="">
 	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
 </xen:checkboxunit>]]></template>
-    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDays}:" name="{$namePrefix}days" value="{xen:if '!empty({$options.days})', $options.days, $xenOptions.Tinhte_XenTag_trendingDays}" min="1" step="7" />
+    <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDays}:"
+				 explain="{xen:phrase option_Tinhte_XenTag_trendingDays_explain}"
+				 name="{$namePrefix}days"
+				 value="{xen:if '!empty({$options.days})',
+						$options.days, $xenOptions.Tinhte_XenTag_trendingDays}"
+				 min="1" step="7" />
+
+<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDaysCreated}:"
+				 name="{$namePrefix}days_created"
+				 value="{xen:if '!empty({$options.days_created})',
+						$options.days_created, $xenOptions.Tinhte_XenTag_trendingDaysCreated}"
+				 step="7" />
 
 <xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, $xenOptions.Tinhte_XenTag_trendingMax}" min="1" step="5">
 	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase tinhte_xentag_tags_lowercase}"}</xen:explain>
@@ -516,6 +527,12 @@ step=7</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="100"/>
     </option>
+    <option option_id="Tinhte_XenTag_trendingDaysCreated" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>30</default_value>
+      <edit_format_params>step=7</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="100"/>
+    </option>
     <option option_id="Tinhte_XenTag_trendingMax" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>10</default_value>
       <edit_format_params>min=0
@@ -579,7 +596,9 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_renderRss_explain" version_id="3020000" version_string="3.2.0"><![CDATA[Enable this option to generate rss feed for tags. As of XenForo 1.5.4, XenForo does not support this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display Tags Below First Post]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to display thread tags below its first post.]]></phrase>
-    <phrase title="option_Tinhte_XenTag_trendingDays" version_id="137" version_string="3.1.0"><![CDATA[Trending: Days for calculation]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDays" version_id="3020203" version_string="3.2.2"><![CDATA[Trending: Tagged Days]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDaysCreated" version_id="3020203" version_string="3.2.2"><![CDATA[Trending: Creation Days]]></phrase>
+    <phrase title="option_Tinhte_XenTag_trendingDaysCreated_explain" version_id="3020203" version_string="3.2.2"><![CDATA[Only content created within specified number of days will be taken into account when Trending is calculated.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays_explain" version_id="137" version_string="3.1.0"><![CDATA[Only content tagged within specified number of days will be taken into account when Trending is calculated.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingMax" version_id="137" version_string="3.1.0"><![CDATA[Trending: Maximum Tags]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingMax_explain" version_id="137" version_string="3.1.0"><![CDATA[]]></phrase>

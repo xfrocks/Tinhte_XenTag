@@ -17,6 +17,7 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
             'name' => '[Tinhte] XenTag - Trending',
             'options' => array(
                 'days' => XenForo_Input::UINT,
+                'days_created' => XenForo_Input::UINT,
                 'limit' => XenForo_Input::UINT
             ),
             'useCache' => true,
@@ -27,21 +28,6 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
     protected function _getOptionsTemplate()
     {
         return 'tinhte_xentag_widget_trending_options';
-    }
-
-    protected function _validateOptionValue($optionKey, &$optionValue)
-    {
-        if ('days' == $optionKey) {
-            if (empty($optionValue)) {
-                $optionValue = Tinhte_XenTag_Option::get('trendingDays');
-            }
-        } elseif ('limit' == $optionKey) {
-            if (empty($optionValue)) {
-                $optionValue = Tinhte_XenTag_Option::get('trendingMax');
-            }
-        }
-
-        return parent::_validateOptionValue($optionKey, $optionValue);
     }
 
     protected function _getRenderTemplate(array $widget, $positionCode, array $params)
@@ -62,13 +48,20 @@ class Tinhte_XenTag_WidgetRenderer_Trending extends WidgetFramework_WidgetRender
         }
         $cutoff = XenForo_Application::$time - $days * 86400;
 
+        if (!empty($widget['options']['days_created'])) {
+            $daysCreated = $widget['options']['days_created'];
+        } else {
+            $daysCreated = Tinhte_XenTag_Option::get('trendingDaysCreated');
+        }
+        $cutoffCreated = XenForo_Application::$time - $daysCreated * 86400;
+
         if (!empty($widget['options']['limit'])) {
             $limit = $widget['options']['limit'];
         } else {
             $limit = Tinhte_XenTag_Option::get('trendingMax');
         }
 
-        $tags = $tagModel->Tinhte_XenTag_getTrendingTags($cutoff, $limit);
+        $tags = $tagModel->Tinhte_XenTag_getTrendingTags($cutoff, $limit, $cutoffCreated);
         $tagsLevels = $tagModel->getTagCloudLevels($tags);
 
         $template->setParam('tags', $tags);
