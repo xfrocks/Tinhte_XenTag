@@ -250,12 +250,7 @@ class Tinhte_XenTag_Integration
         }
         $bbCodeFormatter = $_formatters[$bbCodeFormatterClass];
 
-        if (XenForo_Application::$versionId > 1020000) {
-            $bbCodeParser = XenForo_BbCode_Parser::create($bbCodeFormatter);
-        } else {
-            $bbCodeParser = new XenForo_BbCode_Parser($bbCodeFormatter);
-        }
-
+        $bbCodeParser = XenForo_BbCode_Parser::create($bbCodeFormatter);
         $bbCodeEdited = $bbCodeParser->render($bbCode);
 
         /** @var Tinhte_XenTag_BbCode_Formatter_HashtagPick $bbCodeFormatter */

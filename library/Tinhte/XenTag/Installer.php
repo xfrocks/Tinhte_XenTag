@@ -235,9 +235,7 @@ class Tinhte_XenTag_Installer
 
     private static function upgradeFrom134()
     {
-        if (XenForo_Application::$versionId > 1020000) {
-            XenForo_Application::defer('Tinhte_XenTag_Deferred_UpgradeFrom134', array());
-        }
+        XenForo_Application::defer('Tinhte_XenTag_Deferred_UpgradeFrom134', array());
     }
 
     private static function uninstallVersion134()
