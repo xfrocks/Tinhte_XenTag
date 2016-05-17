@@ -52,7 +52,7 @@ class Tinhte_XenTag_Listener
         }
     }
 
-    public static function template_create(&$templateName, array &$params, XenForo_Template_Abstract $template)
+    public static function template_create(&$templateName, array &$params)
     {
         switch ($templateName) {
             case 'post':
@@ -61,8 +61,11 @@ class Tinhte_XenTag_Listener
         }
     }
 
-    public static function file_health_check(XenForo_ControllerAdmin_Abstract $controller, array &$hashes)
-    {
+    public static function file_health_check(
+        /** @noinspection PhpUnusedParameterInspection */
+        XenForo_ControllerAdmin_Abstract $controller,
+        array &$hashes
+    ) {
         $hashes += Tinhte_XenTag_FileSums::getHashes();
     }
 

@@ -35,7 +35,7 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
         parent::preLoadTemplates($view);
     }
 
-    public function renderTagTag(array $tag, array $rendererStates)
+    public function renderTagTag(array $tag)
     {
         $tagText = $this->stringifyTree($tag['children']);
         $displayText = $tagText;
@@ -57,13 +57,14 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
             ));
             return $template->render();
         } else {
-            // sometime we don't have a view
-            // so just render everything ourself...
-            return '<a href="' . XenForo_Link::buildPublicLink('tags', null, array('t' => $tagText)) . '" class="Tinhte_XenTag_TagLink">' . htmlentities($displayText) . '</a>';
+            /** @noinspection HtmlUnknownTarget */
+            return sprintf('<a href="%s" class="Tinhte_XenTag_TagLink">%s</a>',
+                XenForo_Link::buildPublicLink('tags', null, array('t' => $tagText)),
+                htmlentities($displayText));
         }
     }
 
-    public function renderTagHashtag(array $tag, array $rendererStates)
+    public function renderTagHashtag(array $tag)
     {
         $tagText = $this->stringifyTree($tag['children']);
         if (substr($tagText, 0, 1) === '#') {
@@ -79,9 +80,11 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
             ));
             return $template->render();
         } else {
-            // sometime we don't have a view
-            // so just render everything ourself...
-            return '<a href="' . XenForo_Link::buildPublicLink('tags', null, array('t' => $tagText)) . '" class="Tinhte_XenTag_HashTag"><span class="hash">#</span><span class="text">' . htmlentities($displayText) . '</span></a>';
+            /** @noinspection HtmlUnknownTarget */
+            return sprintf('<a href="%s" class="Tinhte_XenTag_HashTag">'
+                . '<span class="hash">#</span><span class="text">%s</span></a>',
+                XenForo_Link::buildPublicLink('tags', null, array('t' => $tagText)),
+                htmlentities($displayText));
         }
     }
 

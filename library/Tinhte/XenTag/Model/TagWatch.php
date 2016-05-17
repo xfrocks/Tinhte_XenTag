@@ -23,12 +23,16 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
 		', array($userId));
     }
 
-    public function sendNotificationToWatchUsersOnTagged($tags, array $contentData = array(), array $permissionConfig = array())
-    {
+    public function sendNotificationToWatchUsersOnTagged(
+        $tags,
+        array $contentData = array(),
+        array $permissionConfig = array()
+    ) {
         /** @var XenForo_Model_User $userModel */
         $userModel = $this->getModelFromCache('XenForo_Model_User');
 
-        list($noEmail, $noAlert) = Tinhte_XenTag_Integration::getNoEmailAndAlert($contentData['content_type'], $contentData['content_id']);
+        list($noEmail, $noAlert) = Tinhte_XenTag_Integration::getNoEmailAndAlert(
+            $contentData['content_type'], $contentData['content_id']);
         $emailed = array();
         $alerted = array();
 
@@ -55,7 +59,8 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
         if (!empty($permissionConfig['content_type'])
             && !empty($permissionConfig['content_id'])
         ) {
-            $users = $this->getUsersWatchingTags(array_keys($tags), $permissionConfig['content_type'], $permissionConfig['content_id']);
+            $users = $this->getUsersWatchingTags(array_keys($tags),
+                $permissionConfig['content_type'], $permissionConfig['content_id']);
         } else {
             $users = $this->getUsersWatchingTags(array_keys($tags));
         }
@@ -81,7 +86,9 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
             }
 
             $globalPermissions = XenForo_Permission::unserializePermissions($user['global_permission_cache']);
-            if (!XenForo_Permission::hasPermission($globalPermissions, 'general', Tinhte_XenTag_Constants::PERM_USER_WATCH)) {
+            if (!XenForo_Permission::hasPermission($globalPermissions,
+                'general', Tinhte_XenTag_Constants::PERM_USER_WATCH)
+            ) {
                 // no tag watch permission (or revoked)
                 continue;
             }
@@ -115,10 +122,12 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
                     && $parseBbCode
                 ) {
                     $bbCodeParserText = XenForo_BbCode_Parser::create(XenForo_BbCode_Formatter_Base::create('Text'));
-                    $contentData['messageText'] = new XenForo_BbCode_TextWrapper($contentData['message'], $bbCodeParserText);
+                    $contentData['messageText'] = new XenForo_BbCode_TextWrapper(
+                        $contentData['message'], $bbCodeParserText);
 
                     $bbCodeParserHtml = XenForo_BbCode_Parser::create(XenForo_BbCode_Formatter_Base::create('HtmlEmail'));
-                    $contentData['messageHtml'] = new XenForo_BbCode_TextWrapper($contentData['message'], $bbCodeParserHtml);
+                    $contentData['messageHtml'] = new XenForo_BbCode_TextWrapper(
+                        $contentData['message'], $bbCodeParserHtml);
                 }
 
                 if (!empty($contentData['title'])
@@ -161,7 +170,9 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
             }
         }
 
-        Tinhte_XenTag_Integration::updateNoEmailAndAlert($contentData['content_type'], $contentData['content_id'], $emailed, $alerted);
+        Tinhte_XenTag_Integration::updateNoEmailAndAlert(
+            $contentData['content_type'], $contentData['content_id'],
+            $emailed, $alerted);
     }
 
     public function getUsersWatchingTags($tagIds, $permissionContentType = '', $permissionContentId = 0)
@@ -260,16 +271,20 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
 
         switch ($state) {
             case 'watch_email':
-                return $db->update('xf_tinhte_xentag_tag_watch', array('send_email' => 1), "user_id = " . $db->quote($userId));
+                return $db->update('xf_tinhte_xentag_tag_watch', array('send_email' => 1),
+                    "user_id = " . $db->quote($userId));
 
             case 'watch_no_email':
-                return $db->update('xf_tinhte_xentag_tag_watch', array('send_email' => 0), "user_id = " . $db->quote($userId));
+                return $db->update('xf_tinhte_xentag_tag_watch', array('send_email' => 0),
+                    "user_id = " . $db->quote($userId));
 
             case 'watch_alert':
-                return $db->update('xf_tinhte_xentag_tag_watch', array('send_alert' => 1), "user_id = " . $db->quote($userId));
+                return $db->update('xf_tinhte_xentag_tag_watch', array('send_alert' => 1),
+                    "user_id = " . $db->quote($userId));
 
             case 'watch_no_alert':
-                return $db->update('xf_tinhte_xentag_tag_watch', array('send_alert' => 0), "user_id = " . $db->quote($userId));
+                return $db->update('xf_tinhte_xentag_tag_watch', array('send_alert' => 0),
+                    "user_id = " . $db->quote($userId));
 
             case '':
                 return $db->delete('xf_tinhte_xentag_tag_watch', "user_id = " . $db->quote($userId));

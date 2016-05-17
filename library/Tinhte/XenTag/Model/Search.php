@@ -2,8 +2,13 @@
 
 class Tinhte_XenTag_Model_Search extends XenForo_Model
 {
-    public function prioritizeResults(array &$results, XenForo_Search_Searcher $searcher, $searchQuery, array $constraints = array(), $order = 'date')
-    {
+    public function prioritizeResults(
+        array &$results,
+        XenForo_Search_Searcher $searcher,
+        $searchQuery,
+        array $constraints = array(),
+        $order = 'date'
+    ) {
         // prioritize contents by doing a second search for prioritized contents
         // this may cause performance issue but shouldn't make a big impact
         // admin can easily disable the feature in AdminCP

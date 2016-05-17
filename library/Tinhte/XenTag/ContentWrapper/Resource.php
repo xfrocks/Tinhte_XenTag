@@ -27,7 +27,8 @@ class Tinhte_XenTag_ContentWrapper_Resource extends Tinhte_XenTag_ContentWrapper
     public static function wrap(array &$update, array &$resource)
     {
         if (isset($update['messageHtml'])) {
-            $update['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Resource($update['messageHtml'], $update, $resource);
+            $update['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Resource(
+                $update['messageHtml'], $update, $resource);
         }
     }
 

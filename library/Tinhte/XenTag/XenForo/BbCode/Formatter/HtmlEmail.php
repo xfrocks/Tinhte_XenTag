@@ -17,7 +17,7 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_HtmlEmail extends XFCP_Tinhte_XenTa
         return $tags;
     }
 
-    public function renderTagHashtag(array $tag, array $rendererStates)
+    public function renderTagHashtag(array $tag)
     {
         $tagText = $this->stringifyTree($tag['children']);
         if (substr($tagText, 0, 1) === '#') {
@@ -27,7 +27,10 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_HtmlEmail extends XFCP_Tinhte_XenTa
         $tag = array('tag_text' => $tagText);
         $displayText = $tagText;
 
-        return '#<a href="' . XenForo_Link::buildPublicLink('tags', $tag) . '" style="text-decoration: none">' . htmlentities($displayText) . '</a>';
+        /** @noinspection HtmlUnknownTarget */
+        return sprintf('#<a href="%s" style="text-decoration: none">%s</a>',
+            XenForo_Link::buildPublicLink('tags', $tag),
+            htmlentities($displayText));
     }
 
 }

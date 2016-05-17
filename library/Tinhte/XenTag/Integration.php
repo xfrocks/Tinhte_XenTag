@@ -85,6 +85,7 @@ class Tinhte_XenTag_Integration
 
                         if (strlen($replacement) === 0) {
                             // in case template system hasn't been initialized
+                            /** @noinspection HtmlUnknownTarget */
                             $replacement = sprintf('<a href="%s">%s</a>', XenForo_Link::buildPublicLink('tags', $tag), $displayText);
                         }
 

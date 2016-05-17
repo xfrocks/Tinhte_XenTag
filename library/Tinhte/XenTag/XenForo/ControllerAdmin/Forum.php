@@ -15,7 +15,8 @@ class Tinhte_XenTag_XenForo_ControllerAdmin_Forum extends XFCP_Tinhte_XenTag_Xen
             if (!empty($response->params['forum']['node_id'])) {
                 /** @var XenForo_Model_Tag $tagModel */
                 $tagModel = $this->getModelFromCache('XenForo_Model_Tag');
-                $editTags = $tagModel->getTagListForEdit(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $response->params['forum']['node_id'], true);
+                $editTags = $tagModel->getTagListForEdit(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM,
+                    $response->params['forum']['node_id'], true);
                 $response->params['Tinhte_XenTag_tags'] = $editTags;
             }
         }

@@ -61,7 +61,8 @@ class Tinhte_XenTag_TagHandler_Post extends XenForo_TagHandler_Abstract
 
     public function canViewResult(array $result, array $viewingUser)
     {
-        return $this->_getPostModel()->canViewPost($result, $result, $result, $null, $result['permissions'], $viewingUser);
+        return $this->_getPostModel()->canViewPost($result, $result, $result,
+            $null, $result['permissions'], $viewingUser);
     }
 
     public function prepareResult(array $result, array $viewingUser)

@@ -87,8 +87,9 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
 
     protected function _Tinhte_XenTag_prepareRssEntry(
         /** @noinspection PhpUnusedParameterInspection */
-        $result, Zend_Feed_Writer_Feed $feed)
-    {
+        $result,
+        Zend_Feed_Writer_Feed $feed
+    ) {
         $entry = false;
 
         if ($result[XenForo_Model_Search::CONTENT_TYPE] == 'thread') {
@@ -114,7 +115,8 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
                 $wordTrimmed = XenForo_Helper_String::wholeWordTrim($thread['message'], $discussionRssContentLength);
                 $snippet = $bbCodeSnippetParser->render($wordTrimmed, $rendererStates);
                 if ($snippet != $thread['message']) {
-                    $snippet .= "\n\n[url='" . XenForo_Link::buildPublicLink('canonical:threads', $thread) . "']" . $thread['title'] . '[/url]';
+                    $snippet .= "\n\n[url='" . XenForo_Link::buildPublicLink('canonical:threads',
+                            $thread) . "']" . $thread['title'] . '[/url]';
                 }
 
                 $content = trim($bbCodeParser->render($snippet, $rendererStates));

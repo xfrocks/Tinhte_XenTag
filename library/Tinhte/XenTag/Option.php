@@ -52,7 +52,7 @@ class Tinhte_XenTag_Option
         return $options->get($keyPrefix . $key);
     }
 
-    public static function verifyTagMaxLength(&$value, XenForo_DataWriter $dw, $fieldName)
+    public static function verifyTagMaxLength(&$value)
     {
         if ($value > 100) {
             $value = 100;

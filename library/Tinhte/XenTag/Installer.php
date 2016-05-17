@@ -132,8 +132,11 @@ class Tinhte_XenTag_Installer
 
     /* End auto-generated lines of code. Feel free to make changes below */
 
-    protected static function installCustomized($existingAddOn, $addOnData)
-    {
+    protected static function installCustomized(
+        $existingAddOn,
+        /** @noinspection PhpUnusedParameterInspection */
+        $addOnData
+    ) {
         if (XenForo_Application::$versionId < 1020000) {
             throw new XenForo_Exception('XenForo v1.2.0+ is required.');
         }

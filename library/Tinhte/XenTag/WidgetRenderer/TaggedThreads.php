@@ -83,7 +83,8 @@ class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetR
             $order = 'date';
 
             $typeHandler = $searchModel->getSearchDataHandler('thread');
-            $results = $searcher->searchType($typeHandler, $searchQuery, $constraints, $order, false, $widget['options']['limit'] * 10);
+            $results = $searcher->searchType($typeHandler, $searchQuery, $constraints,
+                $order, false, $widget['options']['limit'] * 10);
 
             if (!empty($results)) {
                 $threadIds = array();
@@ -94,7 +95,8 @@ class Tinhte_XenTag_WidgetRenderer_TaggedThreads extends WidgetFramework_WidgetR
                 }
 
                 $threadIds = array_unique($threadIds);
-                $forumIds = $this->_helperGetForumIdsFromOption(array(), $params, empty($widget['options']['as_guest']) ? false : true);
+                $forumIds = $this->_helperGetForumIdsFromOption(array(), $params,
+                    empty($widget['options']['as_guest']) ? false : true);
 
                 $conditions = array(
                     'node_id' => $forumIds,
