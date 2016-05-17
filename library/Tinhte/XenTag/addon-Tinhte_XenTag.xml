@@ -818,6 +818,18 @@ a.Tinhte_XenTag_TagLink:focus {
 
 <xen:edithint template="tinhte_xentag_tag_view" />
 <xen:edithint template="thread_list_item_preview" />]]></template>
+    <template title="tinhte_xentag_tag_search" version_id="3020203" version_string="3.2.2"><![CDATA[<xen:if is="{$Tinhte_XenTag_trendingTags}">
+		<div class="section">
+			<h3 class="textHeading">{xen:phrase tinhte_xentag_trending}</h3>
+			<ul class="tagCloud">
+			<xen:foreach loop="$Tinhte_XenTag_trendingTags" key="$tagId" value="$tag">
+				<li><a href="{xen:link tags, $tag}" class="tagCloudTag tagCloudTag{$Tinhte_XenTag_trendingTagsLevels.{$tagId}}">{$tag.tag}</a></li>
+			</xen:foreach>
+			</ul>
+		</div>
+	</xen:if>
+
+<xen:edithint template="tag_search" />]]></template>
     <template title="tinhte_xentag_tag_view" version_id="3020000" version_string="3.2.0"><![CDATA[<xen:set var="$tagTitle">{xen:if '{$tag.tinhte_xentag_title}',
 	$tag.tinhte_xentag_title,
 	$tag.tag}</xen:set>
