@@ -520,6 +520,12 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="1"/>
     </option>
+    <option option_id="Tinhte_XenTag_threadNotAvailableSuggestLimit" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>20</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Tinhte_XenTag" display_order="500"/>
+    </option>
     <option option_id="Tinhte_XenTag_trendingDays" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>14</default_value>
       <edit_format_params>step=7</edit_format_params>
@@ -595,6 +601,8 @@ step=7</edit_format_params>
     <phrase title="option_Tinhte_XenTag_renderRss_explain" version_id="3020000" version_string="3.2.0"><![CDATA[Enable this option to generate rss feed for tags. As of XenForo 1.5.4, XenForo does not support this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost" version_id="3010500" version_string="3.1.5"><![CDATA[Display Tags Below First Post]]></phrase>
     <phrase title="option_Tinhte_XenTag_tagsBelowFirstPost_explain" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to display thread tags below its first post.]]></phrase>
+    <phrase title="option_Tinhte_XenTag_threadNotAvailableSuggestLimit" version_id="3020300" version_string="3.2.3"><![CDATA[Suggest Threads]]></phrase>
+    <phrase title="option_Tinhte_XenTag_threadNotAvailableSuggestLimit_explain" version_id="3020300" version_string="3.2.3"><![CDATA[Enter number of threads to suggest when user opens a thread without viewing permissions. Enter 0 to disable this feature.]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDays" version_id="3020203" version_string="3.2.2"><![CDATA[Trending: Tagged Days]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDaysCreated" version_id="3020203" version_string="3.2.2"><![CDATA[Trending: Creation Days]]></phrase>
     <phrase title="option_Tinhte_XenTag_trendingDaysCreated_explain" version_id="3020203" version_string="3.2.2"><![CDATA[Only content created within specified number of days will be taken into account when Trending is calculated.]]></phrase>
@@ -641,6 +649,8 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_this_is_list_of_all_tags_that_you_watching" version_id="115" version_string="1.9.1-dev"><![CDATA[This is a list of all the tags that you are watching.]]></phrase>
     <phrase title="tinhte_xentag_this_is_the_message_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the message they posted]]></phrase>
     <phrase title="tinhte_xentag_this_is_the_resource_they_posted" version_id="115" version_string="1.9.1-dev"><![CDATA[This is the resource they posted]]></phrase>
+    <phrase title="tinhte_xentag_thread_not_available" version_id="3020300" version_string="3.2.3"><![CDATA[Thread Unavailable]]></phrase>
+    <phrase title="tinhte_xentag_thread_not_available_notice" version_id="3020300" version_string="3.2.3"><![CDATA[Sorry, your requested thread is currently not available. The following threads may be relevant to what you are looking for:]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_resource_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this resource, click here]]></phrase>
     <phrase title="tinhte_xentag_to_view_this_thread_click_here" version_id="115" version_string="1.9.1-dev"><![CDATA[To view this thread, click here]]></phrase>
     <phrase title="tinhte_xentag_trending" version_id="137" version_string="3.1.0"><![CDATA[Trending]]></phrase>
@@ -693,7 +703,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="3010500" version_string="3.1.5"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3020300" version_string="3.2.3"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
@@ -934,6 +944,49 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
+    <template title="tinhte_xentag_thread_related_threads" version_id="3020300" version_string="3.2.3"><![CDATA[<xen:require css="discussion_list.css" />
+<xen:require css="tinhte_xentag.css" />
+
+<xen:title>{xen:helper threadPrefix, $thread, escaped}{$thread.title}{xen:helper pagenumber, $page}</xen:title>
+<xen:h1>{xen:phrase tinhte_xentag_thread_not_available}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+	<xen:breadcrumb href="{xen:link threads, $thread}">{$thread.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:set var="$notices.block.threadNotAvailable.message">{xen:phrase tinhte_xentag_thread_not_available_notice}</xen:set>
+<xen:set var="$notices.block.threadNotAvailable.wrap">1</xen:set>
+<xen:include template="notices">
+	<xen:edithint template="notice" />
+</xen:include>
+
+<div class="discussionList section sectionMain">
+	<dl class="sectionHeaders">
+		<dt class="posterAvatar"><a><span>&nbsp;</span></a></dt>
+		<dd class="main">
+			<a class="title"><span>{xen:phrase title}</span></a>
+		</dd>
+		<dd class="stats">
+			<a class="major"><span>{xen:phrase replies}</span></a>
+			<a class="minor"><span>{xen:phrase views}</span></a>
+		</dd>
+		<dd class="lastPost"><a><span>{xen:phrase last_message}</span></a></dd>
+	</dl>
+	
+	<ol class="discussionListItems">
+		<xen:set var="$showLastPageNumbers">1</xen:set>
+		<xen:set var="$linkPrefix">1</xen:set>
+
+		<xen:hook name="thread_list_threads">
+		<xen:foreach loop="$threads" value="$thread">
+			<xen:include template="thread_list_item" />
+		</xen:foreach>
+		</xen:hook>
+	</ol>
+</div>
+
+<xen:edithint template="thread_list" />]]></template>
     <template title="tinhte_xentag_watched_tags" version_id="134" version_string="2.1.4b"><![CDATA[<xen:title>{xen:phrase tinhte_xentag_watched_tags}</xen:title>
 <xen:description>{xen:phrase tinhte_xentag_this_is_list_of_all_tags_that_you_watching}</xen:description>
 

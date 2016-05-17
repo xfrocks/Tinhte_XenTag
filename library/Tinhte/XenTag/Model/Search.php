@@ -76,4 +76,23 @@ class Tinhte_XenTag_Model_Search extends XenForo_Model
         $results = array_values($results);
     }
 
+    public function getThreadIdsRelatedToThreadId($threadId, $limit)
+    {
+        return $this->_getDb()->fetchCol(
+            $this->limitQueryResults('
+                SELECT DISTINCT content_id
+                FROM xf_tag_content
+                WHERE tag_id IN (
+                        SELECT tag_id
+                        FROM xf_tag_content
+                        WHERE content_id = ' . $this->_getDb()->quote($threadId) . '
+                            AND content_type = "thread"
+                    )
+                    AND content_id <> ' . $this->_getDb()->quote($threadId) . '
+                    AND content_type = "thread"
+                ORDER BY content_id DESC
+            ', $limit)
+        );
+    }
+
 }
