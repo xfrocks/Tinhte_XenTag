@@ -522,8 +522,7 @@ disabled = {xen:phrase tinhte_xentag_auto_tag_mode_disabled}</edit_format_params
     </option>
     <option option_id="Tinhte_XenTag_trendingDays" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
       <default_value>14</default_value>
-      <edit_format_params>min=1
-step=7</edit_format_params>
+      <edit_format_params>step=7</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Tinhte_XenTag" display_order="100"/>
     </option>

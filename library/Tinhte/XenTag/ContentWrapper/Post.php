@@ -36,14 +36,16 @@ class Tinhte_XenTag_ContentWrapper_Post extends Tinhte_XenTag_ContentWrapper_Abs
             if (!empty($params['posts'])) {
                 foreach ($params['posts'] as &$post) {
                     if (isset($post['messageHtml'])) {
-                        $post['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Post($post['messageHtml'], $post, $params['thread']);
+                        $post['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Post($post['messageHtml'], $post,
+                            $params['thread']);
                     }
                 }
             }
 
             if (!empty($params['post'])) {
                 if (isset($params['post']['messageHtml'])) {
-                    $params['post']['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Post($params['post']['messageHtml'], $params['post'], $params['thread']);
+                    $params['post']['messageHtml'] = new Tinhte_XenTag_ContentWrapper_Post($params['post']['messageHtml'],
+                        $params['post'], $params['thread']);
                 }
             }
         }

@@ -48,8 +48,10 @@ class Tinhte_XenTag_Integration
 
         $html = strval($html);
         $htmlNullified = utf8_strtolower($html);
-        $htmlNullified = preg_replace_callback('#<a[^>]+>.+?</a>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'), $htmlNullified);
-        $htmlNullified = preg_replace_callback('#<[^>]+>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'), $htmlNullified);
+        $htmlNullified = preg_replace_callback('#<a[^>]+>.+?</a>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'),
+            $htmlNullified);
+        $htmlNullified = preg_replace_callback('#<[^>]+>#', array(__CLASS__, '_autoTag_nullifyHtmlCallback'),
+            $htmlNullified);
 
         // prepare the options
         $onceOnly = empty($options['onceOnly']) ? false : true;
@@ -86,11 +88,13 @@ class Tinhte_XenTag_Integration
                         if (strlen($replacement) === 0) {
                             // in case template system hasn't been initialized
                             /** @noinspection HtmlUnknownTarget */
-                            $replacement = sprintf('<a href="%s">%s</a>', XenForo_Link::buildPublicLink('tags', $tag), $displayText);
+                            $replacement = sprintf('<a href="%s">%s</a>', XenForo_Link::buildPublicLink('tags', $tag),
+                                $displayText);
                         }
 
                         $html = utf8_substr_replace($html, $replacement, $pos, $tagLength);
-                        $htmlNullified = utf8_substr_replace($htmlNullified, str_repeat('_', utf8_strlen($replacement)), $pos, $tagLength);
+                        $htmlNullified = utf8_substr_replace($htmlNullified, str_repeat('_', utf8_strlen($replacement)),
+                            $pos, $tagLength);
 
                         // sondh@2012-09-20
                         // keep track of the auto tagged tags

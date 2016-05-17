@@ -8,7 +8,8 @@ class Tinhte_XenTag_XenForo_Search_DataHandler_Post extends XFCP_Tinhte_XenTag_X
 
         if (isset($data[Tinhte_XenTag_Constants::FIELD_POST_TAGS])) {
             $title = '';
-            Tinhte_XenTag_Helper::prepareSearchIndex($title, $metadata, $data[Tinhte_XenTag_Constants::FIELD_POST_TAGS]);
+            Tinhte_XenTag_Helper::prepareSearchIndex($title, $metadata,
+                $data[Tinhte_XenTag_Constants::FIELD_POST_TAGS]);
             $indexer = new Tinhte_XenTag_XenForo_Search_Indexer($indexer, $metadata);
         }
 

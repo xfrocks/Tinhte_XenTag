@@ -114,28 +114,36 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         }
     }
 
-    public function Tinhte_XenTag_canWatchTag(/** @noinspection PhpUnusedParameterInspection */
-        array $tag, &$errorPhraseKey = '', array $viewingUser = null)
-    {
+    public function Tinhte_XenTag_canWatchTag(
+        /** @noinspection PhpUnusedParameterInspection */
+        array $tag,
+        &$errorPhraseKey = '',
+        array $viewingUser = null
+    ) {
         $this->standardizeViewingUserReference($viewingUser);
 
         if (empty($viewingUser['user_id'])) {
             return false;
         }
 
-        return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_WATCH);
+        return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general',
+            Tinhte_XenTag_Constants::PERM_USER_WATCH);
     }
 
-    public function Tinhte_XenTag_canEditTag(/** @noinspection PhpUnusedParameterInspection */
-        array $tag, &$errorPhraseKey = '', array $viewingUser = null)
-    {
+    public function Tinhte_XenTag_canEditTag(
+        /** @noinspection PhpUnusedParameterInspection */
+        array $tag,
+        &$errorPhraseKey = '',
+        array $viewingUser = null
+    ) {
         $this->standardizeViewingUserReference($viewingUser);
 
         if (empty($viewingUser['user_id'])) {
             return false;
         }
 
-        return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general', Tinhte_XenTag_Constants::PERM_USER_EDIT);
+        return !!XenForo_Permission::hasPermission($viewingUser['permissions'], 'general',
+            Tinhte_XenTag_Constants::PERM_USER_EDIT);
     }
 
     public function Tinhte_XenTag_getTagsByIds(array $ids)
@@ -236,7 +244,10 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
 		', $tagId);
         $prioritizedContentIds = array();
         while ($dbResult = $dbResults->fetch()) {
-            $prioritizedContentIds[$dbResult['tag_content_id']] = array($dbResult['content_type'], $dbResult['content_id']);
+            $prioritizedContentIds[$dbResult['tag_content_id']] = array(
+                $dbResult['content_type'],
+                $dbResult['content_id']
+            );
         }
         if (empty($prioritizedContentIds)) {
             // no prioritized results could be found, do nothing
@@ -300,7 +311,7 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
             FROM `xf_tag_content`
             WHERE add_date > ?
                 ' . ($tagIds === null ? ''
-                    : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
+                : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
             GROUP BY tag_id
             ORDER BY tagged_count DESC
             LIMIT ?;

@@ -100,7 +100,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
 				ON (thread.thread_id = tag_content.content_id)' : '') . '
 			WHERE tag_content.content_type = "thread" AND tag_content.add_date > ?
 			    ' . ($tagIds === null ? ''
-                    : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
+                : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
 				' . (!empty($forumIds) ? 'AND thread.node_id IN (' . $db->quote($forumIds) . ')' : '') . '
 			GROUP BY tag_content.tag_id
 			ORDER BY tagged_count DESC

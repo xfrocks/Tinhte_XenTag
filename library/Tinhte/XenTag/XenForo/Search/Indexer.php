@@ -16,10 +16,19 @@ class Tinhte_XenTag_XenForo_Search_Indexer extends XenForo_Search_Indexer
         $this->_extraMetadata = $extraMetadata;
     }
 
-    public function insertIntoIndex($contentType, $contentId, $title, $message, $itemDate, $userId, $discussionId = 0, array $metadata = array())
-    {
+    public function insertIntoIndex(
+        $contentType,
+        $contentId,
+        $title,
+        $message,
+        $itemDate,
+        $userId,
+        $discussionId = 0,
+        array $metadata = array()
+    ) {
         $metadata = XenForo_Application::mapMerge($metadata, $this->_extraMetadata);
-        $this->_otherIndexer->insertIntoIndex($contentType, $contentId, $title, $message, $itemDate, $userId, $discussionId, $metadata);
+        $this->_otherIndexer->insertIntoIndex($contentType, $contentId, $title, $message, $itemDate, $userId,
+            $discussionId, $metadata);
     }
 
 }

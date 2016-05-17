@@ -80,10 +80,12 @@ class Tinhte_XenTag_Search_DataHandler_Forum extends XenForo_Search_DataHandler_
         $metadata = array();
 
         if (isset($data[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS])) {
-            Tinhte_XenTag_Helper::prepareSearchIndex($title, $metadata, $data[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
+            Tinhte_XenTag_Helper::prepareSearchIndex($title, $metadata,
+                $data[Tinhte_XenTag_Constants::FIELD_FORUM_TAGS]);
         }
 
-        $indexer->insertIntoIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $data['node_id'], $title, $data['description'], XenForo_Application::$time, 0, 0, $metadata);
+        $indexer->insertIntoIndex(Tinhte_XenTag_Constants::CONTENT_TYPE_FORUM, $data['node_id'], $title,
+            $data['description'], XenForo_Application::$time, 0, 0, $metadata);
     }
 
     protected function _updateIndex(XenForo_Search_Indexer $indexer, array $data, array $fieldUpdates)
