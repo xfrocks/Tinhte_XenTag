@@ -39,12 +39,18 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 throw $e;
             }
 
+            $threadFetchOptions = array(
+                'join' => XenForo_Model_Thread::FETCH_USER,
+                'readUserId' => $visitor['user_id'],
+                'watchUserId' => $visitor['user_id'],
+                'postCountUserId' => $visitor['user_id'],
+            );
             $threadIds = $searchModel->getThreadIdsRelatedToThreadId($threadId, $limit * 3);
             if (empty($threadIds)) {
                 throw $e;
             }
 
-            $theThread = $threadModel->getThreadById($threadId);
+            $theThread = $threadModel->getThreadById($threadId, $threadFetchOptions);
             if (empty($theThread)) {
                 throw $e;
             }
@@ -53,12 +59,6 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 throw $e;
             }
 
-            $threadFetchOptions = array(
-                'join' => XenForo_Model_Thread::FETCH_USER,
-                'readUserId' => $visitor['user_id'],
-                'watchUserId' => $visitor['user_id'],
-                'postCountUserId' => $visitor['user_id'],
-            );
             $threads = $threadModel->getThreadsByIds($threadIds, $threadFetchOptions);
             krsort($threads);
 
@@ -96,18 +96,14 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 throw $e;
             }
 
-            $viewParam = array(
-                'threads' => $preparedThreads,
-
-                'thread' => $theThread,
-                'forum' => $theForum,
-                'nodeBreadCrumbs' => $ftpHelper->getNodeBreadCrumbs($theForum),
-            );
+            $viewParams = $this->_getDefaultViewParams($theForum, $theThread, array());
+            $viewParams['threads'] = $preparedThreads;
+            $viewParams['nodeBreadCrumbs'] = $ftpHelper->getNodeBreadCrumbs($theForum);
 
             $response = $this->responseView(
                 'Tinhte_XenTag_ViewPublic_Thread_RelatedThreads',
                 'tinhte_xentag_thread_related_threads',
-                $viewParam
+                $viewParams
             );
 
             $response->responseCode = 403;
