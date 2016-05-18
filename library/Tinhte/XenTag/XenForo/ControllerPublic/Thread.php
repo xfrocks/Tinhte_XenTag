@@ -22,6 +22,9 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
         try {
             return parent::actionIndex();
         } catch (XenForo_ControllerResponse_Exception $e) {
+            if (!($e->getControllerResponse() instanceof XenForo_ControllerResponse_Error)) {
+                throw $e;
+            }
             $visitor = XenForo_Visitor::getInstance();
 
             /** @var XenForo_Model_Thread $threadModel */
