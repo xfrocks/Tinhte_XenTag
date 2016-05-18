@@ -64,8 +64,11 @@ class Tinhte_XenTag_XenForo_BbCode_Formatter_Base extends XFCP_Tinhte_XenTag_Xen
         }
     }
 
-    public function renderTagHashtag(array $tag)
-    {
+    public function renderTagHashtag(
+        array $tag,
+        /** @noinspection PhpUnusedParameterInspection */
+        array $rendererStates
+    ) {
         $tagText = $this->stringifyTree($tag['children']);
         if (substr($tagText, 0, 1) === '#') {
             $tagText = substr($tagText, 1);
