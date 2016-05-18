@@ -89,7 +89,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
             ', $cutoffCreated);
 
             if (empty($tagIds)) {
-                return array();
+                return '';
             }
         }
 
@@ -124,6 +124,9 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
                     $tags[$tagId]['use_count'] = $count;
                 }
             }
+        }
+        if (empty($tags)) {
+            return '';
         }
 
         $tagsLevels = $tagModel->getTagCloudLevels($tags);
