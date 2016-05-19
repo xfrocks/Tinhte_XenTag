@@ -21,7 +21,7 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
                 utf8_strtolower($this->_params['tag']['tag']),
             );
             if (!empty($this->_params['tag']['tinhte_xentag_title'])) {
-                $prefixCandidates = utf8_strtolower($this->_params['tag']['tinhte_xentag_title']);
+                $prefixCandidates[] = utf8_strtolower($this->_params['tag']['tinhte_xentag_title']);
             }
 
             foreach ($this->_params['results']['results'] as &$resultRef) {
