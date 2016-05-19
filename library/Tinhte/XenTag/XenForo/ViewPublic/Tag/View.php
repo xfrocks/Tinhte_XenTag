@@ -16,13 +16,30 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
 
         if (Tinhte_XenTag_Option::get('seoKwStuffing')
             && isset($this->_params['results']['results'])
-            && !empty($this->_params['tag']['tinhte_xentag_title'])
         ) {
+            $prefixCandidates = array(
+                utf8_strtolower($this->_params['tag']['tag']),
+            );
+            if (!empty($this->_params['tag']['tinhte_xentag_title'])) {
+                $prefixCandidates = utf8_strtolower($this->_params['tag']['tinhte_xentag_title']);
+            }
+
             foreach ($this->_params['results']['results'] as &$resultRef) {
                 if (!empty($resultRef['content']['title'])) {
-                    $resultRef['content']['title'] = preg_replace(
-                        '#^\[' . preg_quote($this->_params['tag']['tinhte_xentag_title'], '#') . '\]\s+#i',
-                        '',
+                    $resultRef['content']['title'] = preg_replace_callback(
+                        '#^\[(?<prefix>[^\]]+)\]\s+#i',
+                        function (array $matches) use ($prefixCandidates) {
+                            $prefix = $matches['prefix'];
+                            $prefix = utf8_strtolower($prefix);
+                            foreach ($prefixCandidates as $prefixCandidate) {
+                                if (strpos($prefixCandidate, $prefix) === 0) {
+                                    // partial match found, remove the prefix
+                                    return '';
+                                }
+                            }
+
+                            return $matches[0];
+                        },
                         $resultRef['content']['title']
                     );
                 }

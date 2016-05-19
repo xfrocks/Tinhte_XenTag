@@ -137,6 +137,10 @@ class Tinhte_XenTag_Installer
         /** @noinspection PhpUnusedParameterInspection */
         $addOnData
     ) {
+        if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50300) {
+            throw new XenForo_Exception('PHP 5.3+ is required');
+        }
+
         if (XenForo_Application::$versionId < 1020000) {
             throw new XenForo_Exception('XenForo v1.2.0+ is required.');
         }
