@@ -1121,11 +1121,11 @@ a.Tinhte_XenTag_TagLink:focus {
 
 $0]]></replace>
     </modification>
-    <modification template="editor_js_setup" modification_key="tinhte_xentag_editor_js_setup" description="Insert bb code js." execution_order="10" enabled="1" action="preg_replace">
-      <find><![CDATA[#\A.+\z#s]]></find>
+    <modification template="editor" modification_key="tinhte_xentag_editor" description="Insert bb code js." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#^.+$#s]]></find>
       <replace><![CDATA[$0
 
-<xen:if is="{$xenOptions.Tinhte_XenTag_useHashtag}">
+<xen:if is="{$showWysiwyg} && {$xenOptions.Tinhte_XenTag_useHashtag}">
 	<xen:require css="tinhte_xentag.css" />
 	<xen:require js="js/Tinhte/XenTag/bb_code_edit.js" />
 </xen:if>]]></replace>
