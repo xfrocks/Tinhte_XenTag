@@ -22,9 +22,19 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
         try {
             return parent::actionIndex();
         } catch (XenForo_ControllerResponse_Exception $e) {
-            if (!($e->getControllerResponse() instanceof XenForo_ControllerResponse_Error)) {
+            $shouldHandle = false;
+            $response = $e->getControllerResponse();
+            if ($response instanceof XenForo_ControllerResponse_Error) {
+                $shouldHandle = true;
+            } elseif ($response instanceof XenForo_ControllerResponse_Reroute) {
+                if ($response->controllerName == 'XenForo_ControllerPublic_Error') {
+                    $shouldHandle = true;
+                }
+            }
+            if (!$shouldHandle) {
                 throw $e;
             }
+
             $visitor = XenForo_Visitor::getInstance();
 
             /** @var XenForo_Model_Thread $threadModel */
