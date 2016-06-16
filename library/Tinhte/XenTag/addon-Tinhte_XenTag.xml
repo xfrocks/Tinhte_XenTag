@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.4" version_id="3020408" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Tinhte_XenTag" title="[Tinhte] XenTag" version_string="3.2.4" version_id="3020409" url="" install_callback_class="Tinhte_XenTag_Installer" install_callback_method="install" uninstall_callback_class="Tinhte_XenTag_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions>
     <admin_permission admin_permission_id="Tinhte_XenTag" display_order="9999"/>
@@ -703,7 +703,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="3020300" version_string="3.2.3"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3020408" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
@@ -715,11 +715,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
 	padding-right: 12px !important;
 }
-</xen:if>
-
-.previewTooltip.tagPreview .text {
-	margin-left: 0;
-}]]></template>
+</xen:if>]]></template>
     <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:link tags, '', 't={$tagText}'}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}><span class="hash">#</span><span class="text">{$displayText}</span></a>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tag}">
@@ -817,9 +813,15 @@ a.Tinhte_XenTag_TagLink:focus {
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 	<input type="hidden" name="_xfConfirm" value="1" />
 </form>]]></template>
-    <template title="tinhte_xentag_tag_preview" version_id="3020100" version_string="3.2.1"><![CDATA[<xen:require css="tinhte_xentag.css" />
+    <template title="tinhte_xentag_tag_preview" version_id="3020408" version_string="3.2.4"><![CDATA[<xen:set var="$imageUrl"><xen:comment>$imageUrl</xen:comment></xen:set>
 
-<div class="previewTooltip tagPreview">
+<div class="previewTooltip {xen:if '{$imageUrl}', tagPreviewWithImage, tagPreview}">
+	<xen:if is="{$imageUrl}">
+		<div class="avatar">
+			<img src="{$imageUrl}" class="img s" />
+		</div>
+	</xen:if>
+
 	<div class="text">
 		<blockquote class="previewText">
 			<xen:if is="{$tag.tinhte_xentag_title}">
@@ -1106,6 +1108,14 @@ a.Tinhte_XenTag_TagLink:focus {
 </xen:if>]]></template>
   </templates>
   <public_template_modifications>
+    <modification template="EXTRA.css" modification_key="tinhte_xentag_EXTRA_css" description="Some required css rules." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#\A.*\z#s]]></find>
+      <replace><![CDATA[$0
+
+.previewTooltip.tagPreview .text {
+	margin-left: 0;
+}]]></replace>
+    </modification>
     <modification template="post" modification_key="tinhte_xentag_display_tag_in_first_post" description="Display tags below first post." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[</xen:set>
 	
