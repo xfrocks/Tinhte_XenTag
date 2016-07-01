@@ -185,6 +185,10 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
         }
 
+        $editorHelper = $this->getHelper('Editor');
+        $richtext = $editorHelper->getMessageText('richtext', $this->_input);
+        $richtext = XenForo_Helper_String::autoLinkBbCode($richtext);
+
         if ($this->isConfirmedPost()) {
             $dwData = $this->_input->filter(array(
                 'tinhte_xentag_title' => XenForo_Input::STRING,
@@ -194,6 +198,7 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
 
             $dw = XenForo_DataWriter::create('XenForo_DataWriter_Tag');
             $dw->setExistingData($tag, true);
+            $dw->set('tinhte_xentag_richtext', $richtext);
             $dw->bulkSet($dwData);
             $dw->save();
 
@@ -212,7 +217,21 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             'tag' => $tag,
         );
 
+        //variable mới chuyển từ XenTagSpecial qua
+        $GLOBALS['Tinhte_XenTag_XenForo_ControllerPublic_Tag::actionEdit'] = $this;
+
         return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
+    }
+
+    //method mới thêm, chuyển từ XenTagSpecial tương ứng qua
+    public function Tinhte_XenTag_actionEdit(XenForo_DataWriter_Tag $dw)
+    {
+        /** @var XenForo_ControllerHelper_Editor $editorHelper */
+        $editorHelper = $this->getHelper('Editor');
+        $richtext = $editorHelper->getMessageText('richtext', $this->_input);
+        $richtext = XenForo_Helper_String::autoLinkBbCode($richtext);
+
+        $dw->set('tinhte_xentag_richtext', $richtext);
     }
 
     public function actionPreview()

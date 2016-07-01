@@ -82,6 +82,14 @@ class Tinhte_XenTag_Installer
             'addQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_create_date` INT(10) UNSIGNED DEFAULT \'0\'',
             'dropQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_create_date`',
         ),
+        array(
+            'table' => 'xf_tag',
+            'tableCheckQuery' => 'SHOW TABLES LIKE \'xf_tag\'',
+            'field' => 'tinhte_xentag_richtext',
+            'checkQuery' => 'SHOW COLUMNS FROM `xf_tag` LIKE \'tinhte_xentag_richtext\'',
+            'addQuery' => 'ALTER TABLE `xf_tag` ADD COLUMN `tinhte_xentag_richtext` TEXT',
+            'dropQuery' => 'ALTER TABLE `xf_tag` DROP COLUMN `tinhte_xentag_richtext`',
+        ),
     );
 
     public static function install($existingAddOn, $addOnData)

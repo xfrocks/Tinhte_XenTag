@@ -45,6 +45,17 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
                 }
             }
         }
+
+        // Đoạn dưới cuối này được chuyển từ 'Tinhte_XenTagSpecial_XenForo_ViewPublic_Tag_View' sang, đã sửa xentagspecial thành xentag
+        if (empty($this->_params['tag']['tinhte_xentag_richtext'])) {
+            return;
+        }
+        $formatter = XenForo_BbCode_Formatter_Base::create('Base', array('view' => $this));
+        $parser = new XenForo_BbCode_Parser($formatter);
+        $richtextHtml = XenForo_ViewPublic_Helper_Message::getBbCodeWrapper($this->_params['tag'], $parser, array(
+            'messageKey' => 'tinhte_xentag_richtext',
+        ));
+        $this->_params['tag']['tinhte_xentag_richtext'] = $richtextHtml;
     }
 
 
