@@ -1,7 +1,5 @@
 <?php
-/**
- * Nội dung file này được chuyển từ Tinhte_XenTagSpecial_Tinhte_XenTag_ViewPublic_Tag_Edit qua
- */
+
 class Tinhte_XenTag_ViewPublic_Tag_Edit extends XenForo_ViewPublic_Base
 {
     public function renderHtml()

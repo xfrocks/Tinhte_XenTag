@@ -46,7 +46,6 @@ class Tinhte_XenTag_XenForo_ViewPublic_Tag_View extends XFCP_Tinhte_XenTag_XenFo
             }
         }
 
-        // Đoạn dưới cuối này được chuyển từ 'Tinhte_XenTagSpecial_XenForo_ViewPublic_Tag_View' sang, đã sửa xentagspecial thành xentag
         if (empty($this->_params['tag']['tinhte_xentag_richtext'])) {
             return;
         }
