@@ -119,7 +119,9 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Thread
                 $viewParams
             );
 
-            $response->responseCode = 403;
+            // sondh@20160713 changed response code from 403 to 200
+            // because crawler seems to be unhappy with 4xx responses
+            $response->responseCode = 200;
 
             return $response;
         }
