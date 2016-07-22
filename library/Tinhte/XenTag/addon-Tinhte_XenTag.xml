@@ -705,7 +705,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="3020409" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3020408" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
