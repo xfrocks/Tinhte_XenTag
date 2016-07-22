@@ -637,9 +637,11 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_page_x" version_id="3010500" version_string="3.1.5"><![CDATA[Page {page}.]]></phrase>
     <phrase title="tinhte_xentag_related_threads" version_id="89" version_string="1.7.2"><![CDATA[Related Threads]]></phrase>
     <phrase title="tinhte_xentag_replace_tags" version_id="3010500" version_string="3.1.5"><![CDATA[Replace Tags]]></phrase>
+    <phrase title="tinhte_xentag_richtext" version_id="3020409" version_string="3.2.4"><![CDATA[Information]]></phrase>
     <phrase title="tinhte_xentag_staff" version_id="136" version_string="3.0.1"><![CDATA[Staff Only]]></phrase>
     <phrase title="tinhte_xentag_staff_explain" version_id="136" version_string="3.0.1"><![CDATA[Making a tag staff only prevents it from being used by unauthorized users. User must be a member of a user group with "Use staff-only tags" permission.]]></phrase>
     <phrase title="tinhte_xentag_stop_watching_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Stop watching tags]]></phrase>
+    <phrase title="tinhte_xentag_tagged_contents" version_id="3020409" version_string="3.2.4"><![CDATA[Tagged Contents]]></phrase>
     <phrase title="tinhte_xentag_tagged_threads" version_id="89" version_string="1.7.2"><![CDATA[Tagged Threads]]></phrase>
     <phrase title="tinhte_xentag_tagged_threads_limit_explain" version_id="21" version_string="0.10"><![CDATA[Please note that there is a hard limit for each tag: only {limit} latest tagged contents is saved. In order to maintain good performance, this widget will only use that information (instead of querying the xf_tinhte_xentag_tagged_content table directly).]]></phrase>
     <phrase title="tinhte_xentag_tagged_threads_tags_explain" version_id="21" version_string="0.10"><![CDATA[The list of tags separated by comma. Only threads that has been tagged with specified tags will show up.]]></phrase>
@@ -703,7 +705,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="3020408" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3020409" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
@@ -715,7 +717,14 @@ a.Tinhte_XenTag_TagLink:focus {
 	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
 	padding-right: 12px !important;
 }
-</xen:if>]]></template>
+</xen:if>
+
+#TagPanes.sectionMain {
+	border-top: 0;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	margin-top: 0;
+}]]></template>
     <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:link tags, '', 't={$tagText}'}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}><span class="hash">#</span><span class="text">{$displayText}</span></a>]]></template>
     <template title="tinhte_xentag_bb_code_tag_tag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tag}">
@@ -764,7 +773,7 @@ a.Tinhte_XenTag_TagLink:focus {
 	</div>
 
 </li>]]></template>
-    <template title="tinhte_xentag_tag_edit" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
+    <template title="tinhte_xentag_tag_edit" version_id="3020409" version_string="3.2.4"><![CDATA[<xen:title>{xen:phrase edit}: {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 <xen:h1>{xen:phrase edit}</xen:h1>
 
 <xen:navigation>
@@ -803,6 +812,11 @@ a.Tinhte_XenTag_TagLink:focus {
 				   value="{$tag.tinhte_xentag_url}" class="textCtrl" />
 			<p class="explain">{xen:phrase tinhte_xentag_url_explain}</p>
 		</dd>
+	</dl>
+	
+	<dl class="ctrlUnit fullWidth">
+		<dt></dt>
+		<dd>{xen:raw $editorTemplate}</dd>
 	</dl>
 
 	<dl class="ctrlUnit submitUnit">
@@ -891,6 +905,25 @@ a.Tinhte_XenTag_TagLink:focus {
 		<a href="{xen:link 'tags/watch-confirm', $tag}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $Tinhte_XenTag_tagIsWatched, '{xen:phrase tinhte_xentag_unwatch_tag}', '{xen:phrase tinhte_xentag_watch_tag}'}</a>
 	</xen:if>
 </div>]]></template>
+    <template title="tinhte_xentag_tag_view_tabs" version_id="3020409" version_string="3.2.4"><![CDATA[<xen:if hascontent="true">
+<xen:require css="tinhte_xentag.css" />
+
+<ul class="tabs mainTabs Tabs" data-panes="#TagPanes > li" data-history="on">
+	<li><a href="{$requestPaths.requestUri}#taggedContents">{xen:phrase tinhte_xentag_tagged_contents}</a></li>
+	<li><a href="{$requestPaths.requestUri}#richtext">{xen:phrase tinhte_xentag_richtext}</a></li>
+</ul>
+
+<ul id="TagPanes" class="section sectionMain">
+	<li id="taggedContents" class="searchResults">
+		{xen:raw $taggedContents}
+	</li>
+	<li id="richtext">
+		<xen:contentcheck>
+		{xen:raw $tag.tinhte_xentag_richtext}
+		</xen:contentcheck>
+	</li>
+</ul>
+</xen:if>]]></template>
     <template title="tinhte_xentag_tag_watch" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tagWatch}">
 	<xen:title>{xen:phrase tinhte_xentag_unwatch_tag} - {xen:if '{$tag.tinhte_xentag_title}', $tag.tinhte_xentag_title, $tag.tag}</xen:title>
 	<xen:h1>{xen:phrase tinhte_xentag_unwatch_tag}</xen:h1>
@@ -1165,6 +1198,21 @@ $2]]></replace>
       <replace><![CDATA[$0
 
 <xen:include template="tinhte_xentag_preview_js" />]]></replace>
+    </modification>
+    <modification template="tag_view" modification_key="tinhte_xentag_render_tab" description="Render tag view tabs." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#(<div[^>]+searchResults[^>]+>)(.+?<div[^>]+searchResultSummary[^>]>.+?</div>)#s]]></find>
+      <replace><![CDATA[<xen:if hascontent="true">
+	<xen:contentcheck>
+		<xen:include template="tinhte_xentag_tag_view_tabs">
+			<xen:set var="$taggedContents">
+				$2
+			</xen:set>
+		</xen:include>
+	</xen:contentcheck>
+	<div><xen:comment>This is for the div.searchResults closing tag that we removed its opening tag</xen:comment>
+<xen:else />
+$0
+</xen:if>]]></replace>
     </modification>
     <modification template="tag_search" modification_key="tinhte_xentag_tag_search" description="Insert trending tags." execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[</form>]]></find>

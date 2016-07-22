@@ -36,6 +36,7 @@ class Tinhte_XenTag_DevHelper_Config extends DevHelper_Config_Base
             'tinhte_xentag_url' => array('name' => 'tinhte_xentag_url', 'type' => 'string', 'default' => ''),
             'tinhte_xentag_view_count' => array('name' => 'tinhte_xentag_view_count', 'type' => 'uint', 'default' => 0),
             'tinhte_xentag_create_date' => array('name' => 'tinhte_xentag_create_date', 'type' => 'uint', 'default' => 0),
+            'tinhte_xentag_richtext' => array('name' => 'tinhte_xentag_richtext', 'type' => 'string'),
         ),
     );
     protected $_exportPath = '/Users/sondh/XenForo/Tinhte/XenTag';
