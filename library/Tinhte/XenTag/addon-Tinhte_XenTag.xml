@@ -1192,8 +1192,8 @@ $2]]></replace>
 
 <xen:include template="tinhte_xentag_preview_js" />]]></replace>
     </modification>
-    <modification template="tag_view" modification_key="tinhte_xentag_renderTab" description="Render tag view tabs." execution_order="10" enabled="1" action="preg_replace">
-      <find><![CDATA[#(<div[^>]+ searchResults[^>]+>)(.+?</ol>)#s]]></find>
+    <modification template="tag_view" modification_key="tinhte_xentag_render_tab" description="Render tag view tabs." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#(<div[^>].*\n.*\n.*\n.*\n)(<ol[^>].*searchResults[^>].*\n.*\n.*\n.*\n.\/ol>)#s]]></find>
       <replace><![CDATA[<xen:if hascontent="true">
 	<xen:contentcheck>
 		<xen:include template="tinhte_xentag_tag_view_tabs">

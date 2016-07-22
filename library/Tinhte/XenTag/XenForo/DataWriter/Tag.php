@@ -52,12 +52,6 @@ class Tinhte_XenTag_XenForo_DataWriter_Tag extends XFCP_Tinhte_XenTag_XenForo_Da
             $controller->Tinhte_XenTag_actionSave($this);
         }
 
-        if (isset($GLOBALS['Tinhte_XenTag_XenForo_ControllerPublic_Tag::actionEdit'])) {
-            /** @var Tinhte_XenTag_XenForo_ControllerPublic_Tag $controller */
-            $controller = $GLOBALS['Tinhte_XenTag_XenForo_ControllerPublic_Tag::actionEdit'];
-            $controller->Tinhte_XenTag_actionEdit($this);
-        }
-
         parent::_preSave();
     }
 

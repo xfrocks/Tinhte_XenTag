@@ -217,8 +217,6 @@ class Tinhte_XenTag_XenForo_ControllerPublic_Tag extends XFCP_Tinhte_XenTag_XenF
             'tag' => $tag,
         );
 
-        $GLOBALS['Tinhte_XenTag_XenForo_ControllerPublic_Tag::actionEdit'] = $this;
-
         return $this->responseView('Tinhte_XenTag_ViewPublic_Tag_Edit', 'tinhte_xentag_tag_edit', $viewParams);
     }
 
