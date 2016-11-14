@@ -89,7 +89,7 @@
             var hashtagLastLookup = false;
             var hashtagLoadTimer = 0;
             var hashtagTriggerResults = function (text) {
-                if (hashtagLastLookup && hashtagLastLookup == name) {
+                if (hashtagLastLookup && hashtagLastLookup == text) {
                     return;
                 }
 
