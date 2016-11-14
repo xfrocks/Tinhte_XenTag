@@ -705,7 +705,7 @@ To disable all emails:
     <template title="alert_resource_update_tinhte_xentag_tag_watch" version_id="115" version_string="1.9.1-dev"><![CDATA[{xen:phrase tinhte_xentag_x_tagged_resource_y,
 	'name={xen:helper username, $user, 'subject'}',
 	'title=<a href="{xen:link resources, $content}" class="PopupItemLink">{xen:helper resourcePrefix, $content}{$content.resource_title}</a>'}]]></template>
-    <template title="tinhte_xentag.css" version_id="3020409" version_string="3.2.4"><![CDATA[.Tinhte_XenTag_Copyright {
+    <template title="tinhte_xentag.css" version_id="3020500" version_string="3.2.5"><![CDATA[.Tinhte_XenTag_Copyright {
 	float: right;
 }
 
@@ -714,8 +714,10 @@ a.Tinhte_XenTag_TagLink:link,
 a.Tinhte_XenTag_TagLink:visited,
 a.Tinhte_XenTag_TagLink:hover,
 a.Tinhte_XenTag_TagLink:focus {
-	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat;
-	padding-right: 12px !important;
+	background: url('{xen:property imagePath}/Tinhte/XenTag/tag.png') bottom right no-repeat !important;
+	display: inline !important;
+	margin: 0 !important;
+	padding: 0 12px 0 0 !important;
 }
 </xen:if>
 
@@ -727,12 +729,11 @@ a.Tinhte_XenTag_TagLink:focus {
 }]]></template>
     <template title="tinhte_xentag_bb_code_tag_hashtag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:require css="tinhte_xentag.css" /><xen:comment>
 </xen:comment><a href="{xen:link tags, '', 't={$tagText}'}" class="Tinhte_XenTag_HashTag"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}><span class="hash">#</span><span class="text">{$displayText}</span></a>]]></template>
-    <template title="tinhte_xentag_bb_code_tag_tag" version_id="134" version_string="2.1.4b"><![CDATA[<xen:if is="{$tag}">
-	<xen:set var="$href">{xen:link tags, $tag}</xen:set>
-<xen:else />
-	<xen:set var="$href">{xen:link tags, '', 't={$tagText}'}</xen:set>
-</xen:if><xen:require css="tinhte_xentag.css" /><xen:comment>
-</xen:comment><a href="{xen:raw $href}" class="Tinhte_XenTag_TagLink"{xen:if '{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
+    <template title="tinhte_xentag_bb_code_tag_tag" version_id="3020500" version_string="3.2.5"><![CDATA[<xen:if is="{$tag}"><xen:set var="$href">{xen:link tags, $tag}</xen:set><xen:else
+/><xen:set var="$href">{xen:link tags, '', 't={$tagText}'}</xen:set></xen:if><xen:comment>
+</xen:comment><xen:require css="tinhte_xentag.css" /><xen:comment>
+</xen:comment><a href="{xen:raw $href}" class="Tinhte_XenTag_TagLink"{xen:if
+'{xen:helper Tinhte_XenTag_getOption, linkTargetBlank}', ' target="_blank"'}>{$displayText}</a>]]></template>
     <template title="tinhte_xentag_copyright" version_id="139" version_string="3.1.2"><![CDATA[<xen:comment>Please do not remove this copyright notice. Thank you.</xen:comment>
 
 <xen:require css="tinhte_xentag.css" />
