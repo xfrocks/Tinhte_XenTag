@@ -71,10 +71,19 @@ class Tinhte_XenTag_Listener
 
     public static function widget_framework_ready(array &$renderers)
     {
+        $addOns = XenForo_Application::get('addOns');
+        if (empty($addOns['widget_framework'])) {
+            return;
+        }
+        $wfVersionId = $addOns['widget_framework'];
+
         $renderers[] = 'Tinhte_XenTag_WidgetRenderer_Cloud';
-        $renderers[] = 'Tinhte_XenTag_WidgetRenderer_RelatedThreads';
         $renderers[] = 'Tinhte_XenTag_WidgetRenderer_Trending';
         $renderers[] = 'Tinhte_XenTag_WidgetRenderer_TrendingThreadTags';
+
+        if ($wfVersionId >= 2060319) {
+            $renderers[] = 'Tinhte_XenTag_WidgetRenderer_RelatedThreads';
+        }
     }
 
 }

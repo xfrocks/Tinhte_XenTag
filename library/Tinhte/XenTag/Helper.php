@@ -27,14 +27,23 @@ class Tinhte_XenTag_Helper
         $array = $string;
 
         if (!is_array($array)) {
+            // TODO: use XenForo_Helper_Php::safeUnserialize
             $array = @unserialize($array);
         }
 
-        if (empty($array)) {
+        if (!is_array($array)) {
             $array = array();
         }
 
         return $array;
     }
 
+    public static function unserializeFromArray(array $array, $key)
+    {
+        if (!isset($array[$key])) {
+            return array();
+        }
+
+        return self::unserialize($array[$key]);
+    }
 }
