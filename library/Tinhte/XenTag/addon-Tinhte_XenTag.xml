@@ -1116,33 +1116,6 @@ a.Tinhte_XenTag_TagLink:focus {
 	</xen:foreach>
 	</ul>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_widget_related_threads" version_id="88" version_string="1.7.1"><![CDATA[<xen:if hascontent="true">
-    <div class="avatarList">
-        <ul>
-            <xen:contentcheck>
-                <xen:foreach loop="$threads" value="$thread">
-					<xen:if hascontent="true">
-						<xen:comment>[bd] Widget Framework 2.3.5+</xen:comment>
-						<xen:contentcheck>
-							<xen:include template="wf_widget_threads_thread_sidebar">
-								<xen:set var="$_secondRow">
-									{xen:phrase wf_x_posted, 'user=<a href="{xen:link 'members', {$thread}}">{$thread.username}</a>'} <xen:datetime time="{$thread.post_date}" />
-								</xen:set>
-							</xen:include>
-						</xen:contentcheck>
-					<xen:else />
-						<xen:comment>Older version of [bd] Widget Framework...</xen:comment>
-						<li>
-							<xen:avatar user="$thread" size="s" img="true" />
-							<xen:include template="wf_widget_threads_thread_title" />
-							<div class="userTitle">{xen:phrase wf_x_posted, 'user=<a href="{xen:link 'members', {$thread}}">{$thread.username}</a>'} <xen:datetime time="{$thread.post_date}" /></div>
-						</li>
-					</xen:if>
-            	</xen:foreach>
-            </xen:contentcheck>
-        </ul>
-    </div>
-</xen:if>]]></template>
     <template title="tinhte_xentag_widget_tagged_threads" version_id="21" version_string="0.10"><![CDATA[<xen:include template="tinhte_xentag_widget_related_threads" />]]></template>
     <template title="tinhte_xentag_widget_trending" version_id="137" version_string="3.1.0"><![CDATA[<xen:if is="{$tags}">
 	<xen:require css="tag.css" />
