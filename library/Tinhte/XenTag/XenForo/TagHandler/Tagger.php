@@ -35,18 +35,20 @@ class Tinhte_XenTag_XenForo_TagHandler_Tagger extends XFCP_Tinhte_XenTag_XenForo
             }
         }
 
-        if (count($staffTagsBeingAdded) > 0) {
-            $visitor = XenForo_Visitor::getInstance();
-            if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
-                $this->_Tinhte_XenTag_unauthorizedStaffTags = $staffTagsBeingAdded;
-            }
-        }
+        if (count($staffTagsBeingAdded) > 0 || count($staffTagsBeingRemoved) > 0) {
+            $userIsStaff = XenForo_Visitor::getInstance()->hasPermission('general',
+                Tinhte_XenTag_Constants::PERM_USER_IS_STAFF);
 
-        if (count($staffTagsBeingRemoved) > 0) {
-            // silently ignore it, regardless of $ignoreNonRemovable
-            foreach ($staffTagsBeingRemoved as $tagId => $tagText) {
-                if (isset($this->_removeTags[$tagId])) {
-                    unset($this->_removeTags[$tagId]);
+            if (!$userIsStaff) {
+                foreach ($staffTagsBeingAdded as $tagId => $unauthorizedStaffTag) {
+                    $this->_Tinhte_XenTag_unauthorizedStaffTags[$tagId] = $unauthorizedStaffTag;
+                }
+
+                // silently ignore removed staff tag, regardless of $ignoreNonRemovable
+                foreach ($staffTagsBeingRemoved as $tagId => $tagText) {
+                    if (isset($this->_removeTags[$tagId])) {
+                        unset($this->_removeTags[$tagId]);
+                    }
                 }
             }
         }
