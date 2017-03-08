@@ -765,8 +765,8 @@ a.Tinhte_XenTag_TagLink:focus {
 		<xen:map from="$Tinhte_XenTag_tagsList" to="$tags" />
 	</xen:include>
 </xen:if>]]></template>
-    <template title="tinhte_xentag_preview_js" version_id="3010500" version_string="3.1.5"><![CDATA[<xen:if is="{xen:property tinhte_xentag_showPreview}">
-	<xen:require js="js/Tinhte/XenTag/preview.js" />
+    <template title="tinhte_xentag_preview_js" version_id="3020570" version_string="3.2.5"><![CDATA[<xen:if is="{xen:property tinhte_xentag_showPreview}">
+	<xen:require js="js/Tinhte/XenTag/preview.min.js" />
 	<xen:include template="preview_tooltip" />
 </xen:if>]]></template>
     <template title="tinhte_xentag_search_result_forum" version_id="134" version_string="2.1.4b"><![CDATA[<li id="tinhte_xentag_forum-{$forum.node_id}" class="searchResult tinhte_xentag_forum primaryContent">
@@ -1157,7 +1157,7 @@ $0]]></replace>
 
 <xen:if is="{$showWysiwyg} && {$xenOptions.Tinhte_XenTag_useHashtag}">
 	<xen:require css="tinhte_xentag.css" />
-	<xen:require js="js/Tinhte/XenTag/bb_code_edit.js" />
+	<xen:require js="js/Tinhte/XenTag/bb_code_edit.min.js" />
 </xen:if>]]></replace>
     </modification>
     <modification template="forum_view" modification_key="tinhte_xentag_forum_view" description="Show tags in forum." execution_order="10" enabled="1" action="preg_replace">
