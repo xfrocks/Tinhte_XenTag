@@ -78,57 +78,7 @@ class Tinhte_XenTag_WidgetRenderer_TrendingThreadTags extends WidgetFramework_Wi
             $forumIds = $this->_helperGetForumIdsFromOption($widget['options']['forums'], $params, true);
         }
 
-        $db = XenForo_Application::getDb();
-
-        $tagIds = null;
-        if ($cutoffCreated > 0) {
-            $tagIds = $db->fetchCol('
-                SELECT tag_id
-                FROM `xf_tag`
-                WHERE tinhte_xentag_create_date > ?
-            ', $cutoffCreated);
-
-            if (empty($tagIds)) {
-                return '';
-            }
-        }
-
-        $counts = $db->fetchPairs('
-			SELECT tag_content.tag_id, COUNT(*) AS tagged_count
-			FROM `xf_tag_content` AS tag_content
-			' . (!empty($forumIds) ? 'INNER JOIN `xf_thread` AS thread
-				ON (thread.thread_id = tag_content.content_id)' : '') . '
-			WHERE tag_content.content_type = "thread" AND tag_content.add_date > ?
-			    ' . ($tagIds === null ? ''
-                : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
-				' . (!empty($forumIds) ? 'AND thread.node_id IN (' . $db->quote($forumIds) . ')' : '') . '
-			GROUP BY tag_content.tag_id
-			ORDER BY tagged_count DESC
-			LIMIT ?;
-		', array(
-            $cutoff,
-            $limit
-        ));
-
-        $tags = array();
-        if (!empty($counts)) {
-            $tagsDb = $tagModel->fetchAllKeyed('
-                SELECT *
-                FROM `xf_tag`
-                WHERE tag_id IN (' . $db->quote(array_keys($counts)) . ')
-            ', 'tag_id');
-
-            foreach ($counts as $tagId => $count) {
-                if (isset($tagsDb[$tagId])) {
-                    $tags[$tagId] = $tagsDb[$tagId];
-                    $tags[$tagId]['use_count'] = $count;
-                }
-            }
-        }
-        if (empty($tags)) {
-            return '';
-        }
-
+        $tags = $tagModel->Tinhte_XenTag_getTrendingThreadTags($cutoff, $limit, $cutoffCreated, $forumIds);
         $tagsLevels = $tagModel->getTagCloudLevels($tags);
 
         $template->setParam('tags', $tags);

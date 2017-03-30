@@ -293,52 +293,40 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
             return array();
         }
 
-        $tagIds = null;
-        if ($cutoffCreated > 0) {
-            $tagIds = $this->_getDb()->fetchCol('
-                SELECT tag_id
-                FROM `xf_tag`
-                WHERE tinhte_xentag_create_date > ?
-            ', $cutoffCreated);
-
-            if (empty($tagIds)) {
-                return array();
-            }
-        }
-
-        $counts = $this->_getDb()->fetchPairs('
-            SELECT tag_id, COUNT(*) AS tagged_count
-            FROM `xf_tag_content`
-            WHERE add_date > ?
-                ' . ($tagIds === null ? ''
-                : sprintf('AND tag_id IN (%s)', implode(',', $tagIds))) . '
-            GROUP BY tag_id
-            ORDER BY tagged_count DESC
-            LIMIT ?;
-        ', array(
-            $cutoff,
-            $limit,
-        ));
-
-        $tags = array();
-        if (!empty($counts)) {
-            $tagsDb = $this->fetchAllKeyed('
-                SELECT *
-                FROM `xf_tag`
-                WHERE tag_id IN (' . $this->_getDb()->quote(array_keys($counts)) . ')
-            ', 'tag_id');
-
-            foreach ($counts as $tagId => $count) {
-                if (isset($tagsDb[$tagId])) {
-                    $tags[$tagId] = $tagsDb[$tagId];
-                    $tags[$tagId]['use_count'] = $count;
-                }
-            }
-        }
+        $tags = $this->fetchAllKeyed($this->limitQueryResults('
+            SELECT tag.*, COUNT(tag_content.tag_content_id) AS use_count
+            FROM `xf_tag_content` AS tag_content
+            INNER JOIN `xf_tag` AS tag ON tag.tag_id = tag_content.tag_id
+            WHERE tag_content.add_date > ?
+                ' . ($cutoffCreated > 0 ? ('AND tag.tinhte_xentag_create_date > ' . intval($cutoffCreated)) : '') . '
+            GROUP BY tag_content.tag_id
+            ORDER BY use_count DESC
+        ', $limit), 'tag_id', $cutoff);
 
         return $tags;
     }
 
+    public function Tinhte_XenTag_getTrendingThreadTags($cutoff, $limit, $cutoffCreated = 0, array $forumIds = array())
+    {
+        if ($limit === 0) {
+            return array();
+        }
+
+        $tags = $this->fetchAllKeyed($this->limitQueryResults('
+            SELECT tag.*, COUNT(tag_content.tag_content_id) AS use_count
+            FROM `xf_tag_content` AS tag_content
+            INNER JOIN `xf_tag` AS tag ON tag.tag_id = tag_content.tag_id
+            ' . (count($forumIds) > 0 ? ('INNER JOIN `xf_thread` AS thread ON thread.thread_id = tag_content.content_id') : '') . '
+            WHERE tag_content.content_type = "thread"
+                AND tag_content.add_date > ?
+                ' . ($cutoffCreated > 0 ? ('AND tag.tinhte_xentag_create_date > ' . intval($cutoffCreated)) : '') . '
+                ' . (count($forumIds) > 0 ? ('AND thread.node_id IN (' . $this->_getDb()->quote($forumIds) . ')') : '') . '
+            GROUP BY tag_content.tag_id
+            ORDER BY use_count DESC
+        ', $limit), 'tag_id', $cutoff);
+
+        return $tags;
+    }
 
     public function Tinhte_XenTag_rebuildTrendingCache(array $options)
     {
