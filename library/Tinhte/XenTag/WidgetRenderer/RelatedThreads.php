@@ -61,7 +61,7 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
 
             $typeHandler = $searchModel->getSearchDataHandler('thread');
             $results = $searcher->searchType($typeHandler, $searchQuery, $constraints, $order, false,
-                $widget['options']['limit'] * 10);
+                $widget['options']['limit'] * 3);
 
             if (empty($results)) {
                 return array();
@@ -80,6 +80,8 @@ class Tinhte_XenTag_WidgetRenderer_RelatedThreads extends WidgetFramework_Widget
                 FROM xf_tag_content
                 WHERE tag_id IN (' . $db->quote(array_map('intval', array_keys($tags))) . ')
                     AND content_type = "thread"
+                ORDER BY content_date DESC
+                LIMIT ' . $widget['options']['limit'] * 3 . '
             ');
         }
 
