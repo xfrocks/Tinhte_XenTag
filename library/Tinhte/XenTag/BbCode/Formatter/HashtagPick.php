@@ -9,12 +9,27 @@ class Tinhte_XenTag_BbCode_Formatter_HashtagPick extends XFCP_Tinhte_XenTag_BbCo
         return $this->_Tinhte_XenTag_tagTexts;
     }
 
+    public function getTags()
+    {
+        $tags = parent::getTags();
+
+        $tags['hashtag'] = array(
+            'plainChildren' => true,
+            'callback' => array(
+                $this,
+                'pickHashtag'
+            )
+        );
+
+        return $tags;
+    }
+
     public function filterString($string, array $rendererStates)
     {
         return $string;
     }
 
-    public function renderTagHashtag(array $tag, array $rendererStates)
+    public function pickHashtag(array $tag, array $rendererStates)
     {
         $tagText = $this->stringifyTree($tag['children']);
         if (substr($tagText, 0, 1) === '#') {
@@ -32,5 +47,4 @@ class Tinhte_XenTag_BbCode_Formatter_HashtagPick extends XFCP_Tinhte_XenTag_BbCo
 
         return parent::renderTree($tree, $extraStates);
     }
-
 }

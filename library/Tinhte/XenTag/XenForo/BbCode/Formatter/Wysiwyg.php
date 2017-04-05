@@ -2,17 +2,17 @@
 
 class Tinhte_XenTag_XenForo_BbCode_Formatter_Wysiwyg extends XFCP_Tinhte_XenTag_XenForo_BbCode_Formatter_Wysiwyg
 {
-    public function getTags()
+    protected function _setupCustomTagInfo($tagName, array $tag)
     {
-        $tags = parent::getTags();
+        if ($tagName === 'hashtag') {
+            return array(
+                'replace' => array(
+                    '<span class="Tinhte_XenTag_HashTag" style="color: blue; text-decoration: underline">',
+                    '</span>'
+                ),
+            );
+        }
 
-        $tags['hashtag'] = array(
-            'replace' => array(
-                '<span class="Tinhte_XenTag_HashTag" style="color: blue; text-decoration: underline">',
-                '</span>'
-            ),
-        );
-
-        return $tags;
+        return parent::_setupCustomTagInfo($tagName, $tag);
     }
 }

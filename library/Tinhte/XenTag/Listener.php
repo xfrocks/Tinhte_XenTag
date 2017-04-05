@@ -6,11 +6,6 @@ class Tinhte_XenTag_Listener
     public static function load_class($class, array &$extend)
     {
         static $classes = array(
-            'XenForo_BbCode_Formatter_Base',
-            'XenForo_BbCode_Formatter_HtmlEmail',
-            'XenForo_BbCode_Formatter_Text',
-            'XenForo_BbCode_Formatter_Wysiwyg',
-
             'XenForo_ControllerAdmin_Forum',
             'XenForo_ControllerAdmin_Page',
             'XenForo_ControllerAdmin_Tag',
@@ -39,9 +34,6 @@ class Tinhte_XenTag_Listener
             'XenForo_ViewPublic_Tag_View',
             'XenForo_ViewPublic_Thread_View',
             'XenForo_ViewPublic_Thread_ViewNewPosts',
-
-            // XenForo 1.2+
-            'XenForo_Html_Renderer_BbCode',
 
             // XenForo 1.5+
             'XenForo_TagHandler_Tagger',
@@ -86,4 +78,48 @@ class Tinhte_XenTag_Listener
         }
     }
 
+    public static function bb_code_hashtag(array $tag, array $rendererStates, XenForo_BbCode_Formatter_Base $formatter)
+    {
+        $tagText = $formatter->stringifyTree($tag['children']);
+        if (substr($tagText, 0, 1) === '#') {
+            $tagText = substr($tagText, 1);
+        }
+
+        $displayText = $tagText;
+
+        $view = $formatter->getView();
+
+        if ($view) {
+            // standard rendering
+            $template = $view->createTemplateObject('tinhte_xentag_bb_code_tag_hashtag', array(
+                'tagText' => $tagText,
+                'displayText' => $displayText,
+            ));
+            return $template->render();
+        } elseif (is_callable(array($formatter, 'handleTag'))) {
+            // rendering text
+            return '#' . $tagText;
+        } else {
+            // rendering something else, most likely email
+            /** @noinspection HtmlUnknownTarget */
+            return sprintf('<a href="%s" class="Tinhte_XenTag_HashTag" style="text-decoration:none">'
+                . '<span class="hash">#</span><span class="text">%s</span></a>',
+                XenForo_Link::buildPublicLink('tags', null, array('t' => $tagText)),
+                htmlentities($displayText));
+        }
+    }
+
+    public static function load_class_XenForo_Html_Renderer_BbCode($class, array &$extend)
+    {
+        if ($class === 'XenForo_Html_Renderer_BbCode') {
+            $extend[] = 'Tinhte_XenTag_XenForo_Html_Renderer_BbCode';
+        }
+    }
+
+    public static function load_class_XenForo_BbCode_Formatter_Wysiwyg($class, array &$extend)
+    {
+        if ($class === 'XenForo_BbCode_Formatter_Wysiwyg') {
+            $extend[] = 'Tinhte_XenTag_XenForo_BbCode_Formatter_Wysiwyg';
+        }
+    }
 }
