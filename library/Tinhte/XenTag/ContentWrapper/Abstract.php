@@ -7,6 +7,13 @@ abstract class Tinhte_XenTag_ContentWrapper_Abstract
     protected $_tags = array();
     protected $_useGlobalTags = false;
 
+    protected function __construct($html, $tags, $useGlobalTags)
+    {
+        $this->_html = $html;
+        $this->_tags = $tags;
+        $this->_useGlobalTags = $useGlobalTags;
+    }
+
     public function __toString()
     {
         return strval($this->render());

@@ -32,8 +32,6 @@ class Tinhte_XenTag_Listener
 
             'XenForo_ViewPublic_Page_View',
             'XenForo_ViewPublic_Tag_View',
-            'XenForo_ViewPublic_Thread_View',
-            'XenForo_ViewPublic_Thread_ViewNewPosts',
 
             // XenForo 1.5+
             'XenForo_TagHandler_Tagger',
@@ -41,15 +39,6 @@ class Tinhte_XenTag_Listener
 
         if (in_array($class, $classes)) {
             $extend[] = 'Tinhte_XenTag_' . $class;
-        }
-    }
-
-    public static function template_create(&$templateName, array &$params)
-    {
-        switch ($templateName) {
-            case 'post':
-                Tinhte_XenTag_ContentWrapper_Post::wrap($params);
-                break;
         }
     }
 
@@ -120,6 +109,27 @@ class Tinhte_XenTag_Listener
     {
         if ($class === 'XenForo_BbCode_Formatter_Wysiwyg') {
             $extend[] = 'Tinhte_XenTag_XenForo_BbCode_Formatter_Wysiwyg';
+        }
+    }
+
+    public static function load_class_0bb181793ccd6591174690a2577cf7a8($class, array &$extend)
+    {
+        if ($class === 'XenResource_ViewPublic_Resource_Description') {
+            $extend[] = 'Tinhte_XenTag_XenResource_ViewPublic_Resource_Description';
+        }
+    }
+
+    public static function load_class_XenForo_ViewPublic_Thread_View($class, array &$extend)
+    {
+        if ($class === 'XenForo_ViewPublic_Thread_View') {
+            $extend[] = 'Tinhte_XenTag_XenForo_ViewPublic_Thread_View';
+        }
+    }
+
+    public static function load_class_XenForo_ViewPublic_Thread_ViewNewPosts($class, array &$extend)
+    {
+        if ($class === 'XenForo_ViewPublic_Thread_ViewNewPosts') {
+            $extend[] = 'Tinhte_XenTag_XenForo_ViewPublic_Thread_ViewNewPosts';
         }
     }
 }
