@@ -248,4 +248,11 @@ class Tinhte_XenTag_Listener
             $extend[] = 'Tinhte_XenTag_XenForo_ViewPublic_Tag_View';
         }
     }
+
+    public static function load_class_XenForo_ControllerPublic_Misc($class, array &$extend)
+    {
+        if ($class === 'XenForo_ControllerPublic_Misc') {
+            $extend[] = 'Tinhte_XenTag_XenForo_ControllerPublic_Misc';
+        }
+    }
 }

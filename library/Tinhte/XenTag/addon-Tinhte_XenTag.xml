@@ -192,6 +192,7 @@ $0]]></replace>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Tag" active="1" hint="XenForo_ControllerPublic_Tag" description="XenForo_ControllerPublic_Tag"/>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Thread" active="1" hint="XenForo_ControllerPublic_Thread" description="XenForo_ControllerPublic_Thread"/>
     <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Watched" active="1" hint="XenForo_ControllerPublic_Watched" description="XenForo_ControllerPublic_Watched"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Misc" active="1" hint="XenForo_ControllerPublic_Misc" description="XenForo_ControllerPublic_Misc"/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Discussion_Thread" active="1" hint="XenForo_DataWriter_Discussion_Thread" description="XenForo_DataWriter_Discussion_Thread"/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_4f477c58235ffb475271e2521731d700" active="1" hint="XenForo_DataWriter_DiscussionMessage_Post" description="XenForo_DataWriter_DiscussionMessage_Post"/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Forum" active="1" hint="XenForo_DataWriter_Forum" description="XenForo_DataWriter_Forum"/>
@@ -638,6 +639,7 @@ step=7</edit_format_params>
     <phrase title="style_property_tinhte_xentag_showPreview_description_master" version_id="3010500" version_string="3.1.5"><![CDATA[Enable this option to show preview when user hover a tag link.]]></phrase>
     <phrase title="style_property_tinhte_xentag_showPreview_master" version_id="3010500" version_string="3.1.5"><![CDATA[Show Preview]]></phrase>
     <phrase title="tinhte_xentag_all_contents_tagged_x" version_id="3010500" version_string="3.1.5"><![CDATA[These are all contents from {board_title} tagged {tag_text}.]]></phrase>
+    <phrase title="tinhte_xentag_auto_complete_x_is_staff_tag" version_id="3020570" version_string="3.2.5"><![CDATA[{tag} (only staff members can use this tag)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_all_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag all tags (with limitation)]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_disabled" version_id="15" version_string="0.9.8.5"><![CDATA[Disabled]]></phrase>
     <phrase title="tinhte_xentag_auto_tag_mode_thread_tags" version_id="15" version_string="0.9.8.5"><![CDATA[Auto tag thread tags only]]></phrase>

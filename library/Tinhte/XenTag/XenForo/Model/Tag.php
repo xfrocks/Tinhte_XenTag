@@ -276,10 +276,14 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         }
 
         $visitor = XenForo_Visitor::getInstance();
-        if (!$visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF)) {
-            foreach (array_keys($tags) as $tagId) {
-                if (!empty($tags[$tagId]['tinhte_xentag_staff'])) {
+        $isStaff = $visitor->hasPermission('general', Tinhte_XenTag_Constants::PERM_USER_IS_STAFF);
+        foreach (array_keys($tags) as $tagId) {
+            if (!empty($tags[$tagId]['tinhte_xentag_staff'])) {
+                if ($isStaff) {
+                    $GLOBALS[Tinhte_XenTag_Constants::GLOBALS_STAFF_TAGS_DURING_AC][$tagId] = $tags[$tagId];
+                } else {
                     unset($tags[$tagId]);
+                    continue;
                 }
             }
         }

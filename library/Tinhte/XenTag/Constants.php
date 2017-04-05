@@ -22,6 +22,7 @@ class Tinhte_XenTag_Constants
     const GLOBALS_CONTROLLERPUBLIC_THREAD_TAGS = 'Tinhte_XenTag_XenForo_ControllerPublic_Thread::actionTags';
     const GLOBALS_DEFERRED_THREAD_ACTION = 'Tinhte_XenTag_XenForo_Deferred_ThreadAction::execute';
     const GLOBALS_TAGGER_SAVE = 'Tinhte_XenTag_XenForo_TagHandler_Tagger::save';
+    const GLOBALS_STAFF_TAGS_DURING_AC = 'Tinhte_XenTag_staffTagsDuringAutoComplete';
 
     const PERM_USER_WATCH = 'Tinhte_XenTag_watch';
     const PERM_USER_IS_STAFF = 'Tinhte_XenTag_isStaff';
