@@ -69,19 +69,6 @@
 <xen:include template="wf_widget_options_threads">
 	<xen:set var="$hideThreadsFilter">1</xen:set>
 </xen:include>]]></template>
-    <template title="tinhte_xentag_widget_tagged_threads_options"><![CDATA[<xen:require js="js/xenforo/tag.js" />
-
-<xen:textboxunit label="{xen:phrase tags}:" name="{$namePrefix}tags" value="{$options.tags}" inputclass="TagInput">
-	<xen:explain>{xen:phrase tinhte_xentag_tagged_threads_tags_explain}</xen:explain>
-</xen:textboxunit>
-
-<xen:spinboxunit label="{xen:phrase wf_limit}:" name="{$namePrefix}limit" value="{xen:if '!empty({$options.limit})', $options.limit, 5}">
-	<xen:explain>{xen:phrase wf_limit_explain, "items={xen:phrase wf_threads}"} {xen:phrase tinhte_xentag_tagged_threads_limit_explain, 'limit={xen:helper Tinhte_XenTag_getOption, latestTaggedContentsLimit}'}</xen:explain>
-</xen:spinboxunit>
-
-<xen:checkboxunit label="">
-	<xen:option name="{$namePrefix}as_guest" value="1" selected="{$options.as_guest}">{xen:phrase wf_use_guest_permissions}</xen:option>
-</xen:checkboxunit>]]></template>
     <template title="tinhte_xentag_widget_trending_options"><![CDATA[<xen:spinboxunit label="{xen:phrase option_Tinhte_XenTag_trendingDays}:"
 				 explain="{xen:phrase option_Tinhte_XenTag_trendingDays_explain}"
 				 name="{$namePrefix}days"
@@ -194,18 +181,33 @@ $0]]></replace>
   <code_events/>
   <code_event_listeners>
     <listener event_id="file_health_check" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
-    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_TagHandler_Tagger" description="XenForo_TagHandler_Tagger"/>
-    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="XenForo_Deferred_ThreadAction" description="XenForo_Deferred_ThreadAction"/>
     <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Html_Renderer_BbCode" active="1" hint="XenForo_Html_Renderer_BbCode" description="XenForo_Html_Renderer_BbCode"/>
+    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_TagHandler_Tagger" active="1" hint="XenForo_TagHandler_Tagger" description="XenForo_TagHandler_Tagger"/>
+    <listener event_id="load_class" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Deferred_ThreadAction" active="1" hint="XenForo_Deferred_ThreadAction" description="XenForo_Deferred_ThreadAction"/>
     <listener event_id="load_class_bb_code" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_BbCode_Formatter_Wysiwyg" active="1" hint="XenForo_BbCode_Formatter_Wysiwyg" description="XenForo_BbCode_Formatter_Wysiwyg"/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
-    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class" active="1" hint="" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerAdmin_Forum" active="1" hint="XenForo_ControllerAdmin_Forum" description="XenForo_ControllerAdmin_Forum"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerAdmin_Page" active="1" hint="XenForo_ControllerAdmin_Page" description="XenForo_ControllerAdmin_Page"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerAdmin_Tag" active="1" hint="XenForo_ControllerAdmin_Tag" description="XenForo_ControllerAdmin_Tag"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerAdmin_Thread" active="1" hint="XenForo_ControllerAdmin_Thread" description="XenForo_ControllerAdmin_Thread"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Tag" active="1" hint="XenForo_ControllerPublic_Tag" description="XenForo_ControllerPublic_Tag"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Thread" active="1" hint="XenForo_ControllerPublic_Thread" description="XenForo_ControllerPublic_Thread"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ControllerPublic_Watched" active="1" hint="XenForo_ControllerPublic_Watched" description="XenForo_ControllerPublic_Watched"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Discussion_Thread" active="1" hint="XenForo_DataWriter_Discussion_Thread" description="XenForo_DataWriter_Discussion_Thread"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_4f477c58235ffb475271e2521731d700" active="1" hint="XenForo_DataWriter_DiscussionMessage_Post" description="XenForo_DataWriter_DiscussionMessage_Post"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Forum" active="1" hint="XenForo_DataWriter_Forum" description="XenForo_DataWriter_Forum"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Page" active="1" hint="XenForo_DataWriter_Page" description="XenForo_DataWriter_Page"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_DataWriter_Tag" active="1" hint="XenForo_DataWriter_Tag" description="XenForo_DataWriter_Tag"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Model_Forum" active="1" hint="XenForo_Model_Forum" description="XenForo_Model_Forum"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Model_ForumWatch" active="1" hint="XenForo_Model_ForumWatch" description="XenForo_Model_ForumWatch"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Model_Tag" active="1" hint="XenForo_Model_Tag" description="XenForo_Model_Tag"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Model_Thread" active="1" hint="XenForo_Model_Thread" description="XenForo_Model_Thread"/>
+    <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Search_DataHandler_Page" active="1" hint="XenForo_Search_DataHandler_Page" description="XenForo_Search_DataHandler_Page"/>
+    <listener event_id="load_class_search_data" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_Search_DataHandler_Post" active="1" hint="XenForo_Search_DataHandler_Post" description="XenForo_Search_DataHandler_Post"/>
     <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_0bb181793ccd6591174690a2577cf7a8" active="1" hint="XenResource_ViewPublic_Resource_Description" description="XenResource_ViewPublic_Resource_Description"/>
     <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ViewPublic_Thread_View" active="1" hint="XenForo_ViewPublic_Thread_View" description="XenForo_ViewPublic_Thread_View"/>
     <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ViewPublic_Thread_ViewNewPosts" active="1" hint="XenForo_ViewPublic_Thread_ViewNewPosts" description="XenForo_ViewPublic_Thread_ViewNewPosts"/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ViewPublic_Page_View" active="1" hint="XenForo_ViewPublic_Page_View" description="XenForo_ViewPublic_Page_View"/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="load_class_XenForo_ViewPublic_Tag_View" active="1" hint="XenForo_ViewPublic_Tag_View" description="XenForo_ViewPublic_Tag_View"/>
     <listener event_id="widget_framework_ready" execute_order="10" callback_class="Tinhte_XenTag_Listener" callback_method="widget_framework_ready" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
@@ -655,9 +657,6 @@ step=7</edit_format_params>
     <phrase title="tinhte_xentag_staff_explain" version_id="136" version_string="3.0.1"><![CDATA[Making a tag staff only prevents it from being used by unauthorized users. User must be a member of a user group with "Use staff-only tags" permission.]]></phrase>
     <phrase title="tinhte_xentag_stop_watching_tags" version_id="115" version_string="1.9.1-dev"><![CDATA[Stop watching tags]]></phrase>
     <phrase title="tinhte_xentag_tagged_contents" version_id="3020409" version_string="3.2.4"><![CDATA[Tagged Contents]]></phrase>
-    <phrase title="tinhte_xentag_tagged_threads" version_id="89" version_string="1.7.2"><![CDATA[Tagged Threads]]></phrase>
-    <phrase title="tinhte_xentag_tagged_threads_limit_explain" version_id="21" version_string="0.10"><![CDATA[Please note that there is a hard limit for each tag: only {limit} latest tagged contents is saved. In order to maintain good performance, this widget will only use that information (instead of querying the xf_tinhte_xentag_tagged_content table directly).]]></phrase>
-    <phrase title="tinhte_xentag_tagged_threads_tags_explain" version_id="21" version_string="0.10"><![CDATA[The list of tags separated by comma. Only threads that has been tagged with specified tags will show up.]]></phrase>
     <phrase title="tinhte_xentag_tags_first_few" version_id="3020500" version_string="3.2.5"><![CDATA[Tags To Process]]></phrase>
     <phrase title="tinhte_xentag_tags_first_few_explain" version_id="3020500" version_string="3.2.5"><![CDATA[Enter the number of tags of the current page to be considered when finding related contents. Enter 0 to use all tags (best to use with search engine).]]></phrase>
     <phrase title="tinhte_xentag_tags_lowercase" version_id="6" version_string="0.9.5"><![CDATA[tags]]></phrase>
