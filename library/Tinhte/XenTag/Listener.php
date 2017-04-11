@@ -255,4 +255,18 @@ class Tinhte_XenTag_Listener
             $extend[] = 'Tinhte_XenTag_XenForo_ControllerPublic_Misc';
         }
     }
+
+    public static function load_class_bdApi_ControllerApi_Index($class, array &$extend)
+    {
+        if ($class === 'bdApi_ControllerApi_Index') {
+            $extend[] = 'Tinhte_XenTag_bdApi_ControllerApi_Index';
+        }
+    }
+
+    public static function load_class_bdApi_ControllerApi_Tag($class, array &$extend)
+    {
+        if ($class === 'bdApi_ControllerApi_Tag') {
+            $extend[] = 'Tinhte_XenTag_bdApi_ControllerApi_Tag';
+        }
+    }
 }

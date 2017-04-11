@@ -294,6 +294,14 @@ class Tinhte_XenTag_Model_TagWatch extends XenForo_Model
         }
     }
 
+    public function prepareApiDataForTagWatch(array $data, array $tagWatch)
+    {
+        $data['follow']['alert'] = !empty($tagWatch['send_alert']);
+        $data['follow']['email'] = !empty($tagWatch['send_email']);
+
+        return $data;
+    }
+
     /**
      * @return XenForo_Model_Thread
      */
