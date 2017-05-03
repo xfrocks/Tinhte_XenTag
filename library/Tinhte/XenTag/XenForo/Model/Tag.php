@@ -402,4 +402,31 @@ class Tinhte_XenTag_XenForo_Model_Tag extends XFCP_Tinhte_XenTag_XenForo_Model_T
         return parent::limitQueryResults($query, $limit, $offset);
     }
 
+    public function prepareApiDataForTag(array $tag)
+    {
+        $data = call_user_func(array('parent', 'prepareApiDataForTag'), $tag);
+
+        if (!isset($data['links'])) {
+            $data['links'] = array();
+        }
+        if (is_array($data['links'])) {
+            $data['links']['followers'] = bdApi_Data_Helper_Core::safeBuildApiLink('tags/followers', $tag);
+        }
+
+        if (!isset($data['permissions'])) {
+            $data['permissions'] = array();
+        }
+        if (is_array($data['permissions'])) {
+            $data['permissions']['follow'] = $this->Tinhte_XenTag_canWatchTag($tag);
+
+            if ($data['permissions']['follow']) {
+                /** @var Tinhte_XenTag_Model_TagWatch $tagWatchModel */
+                $tagWatchModel = $this->getModelFromCache('Tinhte_XenTag_Model_TagWatch');
+                $tagWatch = $tagWatchModel->getUserTagWatchByIds(XenForo_Visitor::getUserId(), $tag['tag_id']);
+                $data['tag_is_followed'] = !!$tagWatch;
+            }
+        }
+
+        return $data;
+    }
 }

@@ -4,8 +4,7 @@ class Tinhte_XenTag_bdApi_ControllerApi_Tag extends XFCP_Tinhte_XenTag_bdApi_Con
 {
     public function actionGetFollowers()
     {
-        $tagText = $this->_input->filterSingle('t', XenForo_Input::STRING);
-        $tag = $this->_Tinhte_XenTag_assertTagValid($tagText);
+        $tag = $this->_Tinhte_XenTag_assertTagValidAndWatchable();
 
         $users = array();
 
@@ -33,11 +32,10 @@ class Tinhte_XenTag_bdApi_ControllerApi_Tag extends XFCP_Tinhte_XenTag_bdApi_Con
 
     public function actionPostFollowers()
     {
-        $tagText = $this->_input->filterSingle('t', XenForo_Input::STRING);
         $sendAlert = $this->_input->filterSingle('alert', XenForo_Input::UINT, array('default' => 1));
         $sendEmail = $this->_input->filterSingle('email', XenForo_Input::UINT);
 
-        $tag = $this->_Tinhte_XenTag_assertTagValid($tagText);
+        $tag = $this->_Tinhte_XenTag_assertTagValidAndWatchable();
 
         if (!$this->_Tinhte_XenTag_getTagModel()->Tinhte_XenTag_canWatchTag($tag, $errorPhraseKey)) {
             throw $this->getErrorOrNoPermissionResponseException($errorPhraseKey);
@@ -51,8 +49,7 @@ class Tinhte_XenTag_bdApi_ControllerApi_Tag extends XFCP_Tinhte_XenTag_bdApi_Con
 
     public function actionDeleteFollowers()
     {
-        $tagText = $this->_input->filterSingle('t', XenForo_Input::STRING);
-        $tag = $this->_Tinhte_XenTag_assertTagValid($tagText);
+        $tag = $this->_Tinhte_XenTag_assertTagValidAndWatchable();
 
         $this->_Tinhte_XenTag_getTagWatchModel()->setTagWatchState(XenForo_Visitor::getUserId(),
             $tag['tag_id'], null, null);
@@ -60,9 +57,20 @@ class Tinhte_XenTag_bdApi_ControllerApi_Tag extends XFCP_Tinhte_XenTag_bdApi_Con
         return $this->responseMessage(new XenForo_Phrase('changes_saved'));
     }
 
-    protected function _Tinhte_XenTag_assertTagValid($tagText)
+    protected function _Tinhte_XenTag_assertTagValidAndWatchable()
     {
-        $tag = $this->_Tinhte_XenTag_getTagModel()->getTag($tagText);
+        $tag = null;
+
+        $tagId = $this->_input->filterSingle('tag_id', XenForo_Input::UINT);
+        if (!empty($tagId)) {
+            $tag = $this->_Tinhte_XenTag_getTagModel()->getTagById($tagId);
+        } else {
+            $tagText = $this->_input->filterSingle('t', XenForo_Input::STRING);
+            if (!empty($tagText)) {
+                $tag = $this->_Tinhte_XenTag_getTagModel()->getTag($tagText);
+            }
+        }
+
         if (!$tag) {
             throw $this->responseException($this->responseError(new XenForo_Phrase('requested_tag_not_found'), 404));
         }
